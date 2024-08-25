@@ -3,7 +3,7 @@ import Hero from '@/components/custom-ui/Hero';
 import LatestProducts from '@/components/custom-ui/LatestProducts';
 import Services from '@/components/custom-ui/Services';
 
-// Spacing must be consistent on all pages, have skeletons when needed as fallback ui, upon clicking the hero go to products page for everything involving around products
+// Spacing must be consistent on all pages, have skeletons when needed as fallback ui, upon clicking the hero go to products page for everything involving around products, also set discounted price feature for each product
 export default function Home() {
   return (
     <main>

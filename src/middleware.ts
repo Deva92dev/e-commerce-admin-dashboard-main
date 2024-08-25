@@ -1,72 +1,50 @@
-import {
-  clerkClient,
-  clerkMiddleware,
-  createRouteMatcher,
-} from '@clerk/nextjs/server';
-import { NextResponse, NextRequest } from 'next/server';
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
-// Define which routes are protected
-const isProtectedRoute = createRouteMatcher(['/admin(.*)']);
+const isPublicRoute = createRouteMatcher([
+  "/",
+  "/products(.*)",
+  "/contact",
+  "/api/collections(.*)",
+  "/api/products(.*)",
+]);
 
-// Public routes that don't require authentication
-const isPublicRoute = createRouteMatcher(['/:path*']);
+const isAdminRoute = createRouteMatcher(["/admin(.*)", "/api/orders(.*)"]);
 
-// for admin user change later for client
-const ADMIN_IDENTIFIER = 'buildwith92deva@gmail.com';
+export default clerkMiddleware((auth, req) => {
+  const userId = auth().userId;
+  const isAdminUser = userId === process.env.ADMIN_USER_ID!;
+  // console.log("Logged in user ID:", userId);
+  // console.log("Request URL:", req.url);
+  // console.log("Request Method:", req.method);
+  // console.log("Is Admin User:", isAdminUser);
+  // console.log("Admin user ID from .env:", process.env.ADMIN_USER_ID);
 
-export default clerkMiddleware(async (auth, req: NextRequest) => {
-  const { userId } = await auth();
-
-  // Create a URL object from the current request URL
-  const url = req.nextUrl.clone();
-
-  // Allow access to public routes without authentication
-  if (isPublicRoute(req)) {
+  if (isPublicRoute(req) && req.method === "GET") {
+    console.log("Public GET route allowed");
     return NextResponse.next();
   }
 
-  // Allow sign-up and sign-in pages to be accessed without authentication
-  if (
-    url.pathname.startsWith('/sign-up') ||
-    url.pathname.startsWith('/sign-in')
-  ) {
-    return NextResponse.next();
-  }
-
-  // If user is not authenticated, redirect to sign-in page
-  if (!userId) {
-    url.pathname = '/sign-in';
-    url.searchParams.set('redirect_url', req.nextUrl.pathname); // Preserve the original destination
-    return NextResponse.redirect(url);
-  }
-
-  // Check if the route is protected and if the user has the required permissions
-  if (isProtectedRoute(req)) {
-    // Get the user's email or check the user ID
-    const user = await clerkClient.users.getUser(userId);
-    const isAdmin =
-      user.emailAddresses.some(
-        (email) => email.emailAddress === ADMIN_IDENTIFIER
-      ) || userId === ADMIN_IDENTIFIER;
-
-    if (!isAdmin) {
-      url.pathname = '/';
-      return NextResponse.redirect(url);
+  // Allow access to admin routes only for the admin user
+  if (isAdminRoute(req)) {
+    if (isAdminUser) {
+      console.log("Admin route accessed by admin user");
+      return NextResponse.next();
+    } else {
+      console.log("Admin route access denied for non-admin user");
+      return NextResponse.redirect(new URL("/", req.url));
     }
   }
 
-  // Proceed to the requested route if permissions are valid
-  return NextResponse.next();
+  // Protect the route if it's not public or if the method is not GET
+  auth().protect();
 });
 
 export const config = {
   matcher: [
-    // Apply middleware to the admin routes under dashboard
-    '/dashboard/admin/:path*',
-    // Apply middleware to API routes
-    '/api/:path*',
-    '/(api|trpc)(.*)',
-    // Skip Next.js internals and static files
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    // Skip Next.js internals and all static files, unless found in search params
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    // Always run for API routes
+    "/(api|trpc)(.*)",
   ],
 };

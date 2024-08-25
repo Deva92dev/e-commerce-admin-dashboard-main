@@ -7,50 +7,50 @@ import {
   ShoppingBag,
   Tag,
   UserRound,
-} from 'lucide-react';
+} from "lucide-react";
 
 // for dashboard
 export const navLinks = [
   {
-    url: '/admin',
+    url: "/admin",
     icon: <LayoutDashboard />,
-    label: 'Dashboard',
+    label: "Dashboard",
   },
   {
-    url: '/admin/collections',
+    url: "/admin/collections",
     icon: <Shapes />,
-    label: 'Collections',
+    label: "Collections",
   },
   {
-    url: '/admin/products',
+    url: "/admin/products",
     icon: <Tag />,
-    label: 'Products',
+    label: "Products",
   },
   {
-    url: '/admin/orders',
+    url: "/admin/order",
     icon: <ShoppingBag />,
-    label: 'Orders',
+    label: "Order",
   },
   {
-    url: '/admin/customers',
+    url: "/admin/customers",
     icon: <UserRound />,
-    label: 'Customers',
+    label: "Customers",
   },
 ];
 
 // for website
 export const navbarLinks = [
   {
-    url: '/',
-    label: 'Home',
+    url: "/",
+    label: "Home",
   },
   {
-    url: '/products',
-    label: 'Products',
+    url: "/products",
+    label: "Products",
   },
   {
-    url: '/contact',
-    label: 'Contact-Us',
+    url: "/contact",
+    label: "Contact-Us",
   },
 ];
 
@@ -58,66 +58,66 @@ export const navbarLinks = [
 export const servicesLinks = [
   {
     icon: <Package />,
-    label: 'Free Shipping Method',
+    label: "Free Shipping Method",
     details:
-      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi est quibusdam vitae reprehenderit harum nisi ad sit dolorem quos excepturi.',
+      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi est quibusdam vitae reprehenderit harum nisi ad sit dolorem quos excepturi.",
   },
   {
     icon: <CreditCard />,
-    label: 'Secure Payment System',
+    label: "Secure Payment System",
     details:
-      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi est quibusdam vitae reprehenderit harum nisi ad sit dolorem quos excepturi.',
+      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi est quibusdam vitae reprehenderit harum nisi ad sit dolorem quos excepturi.",
   },
   {
     icon: <HandCoins />,
-    label: 'Cash On Delivery',
+    label: "Cash On Delivery",
     details:
-      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi est quibusdam vitae reprehenderit harum nisi ad sit dolorem quos excepturi.',
+      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi est quibusdam vitae reprehenderit harum nisi ad sit dolorem quos excepturi.",
   },
 ];
 
 // footer links
 export const footerImportantLinks = [
   {
-    url: '/about',
-    label: 'About Us',
+    url: "/about",
+    label: "About Us",
   },
   {
-    url: '/contact',
-    label: 'Contact Us',
+    url: "/contact",
+    label: "Contact Us",
   },
   {
-    url: '/track-order',
-    label: 'Track Your Order',
+    url: "/track-order",
+    label: "Track Your Order",
   },
 ];
 
 export const footerGeneralLinks = [
   {
-    url: '/privacy-policy',
-    label: 'Privacy-Policy',
+    url: "/privacy-policy",
+    label: "Privacy-Policy",
   },
   {
-    url: '/returns',
-    label: 'Returns and Shipping Policy',
+    url: "/returns",
+    label: "Returns and Shipping Policy",
   },
   {
-    url: '/terms-conditions',
-    label: 'Terms & Conditions',
+    url: "/terms-conditions",
+    label: "Terms & Conditions",
   },
 ];
 
 export const footerSocialLinks = [
   {
-    url: '/about',
-    label: 'About Us',
+    url: "/about",
+    label: "About Us",
   },
   {
-    url: '/contact',
-    label: 'Contact Us',
+    url: "/contact",
+    label: "Contact Us",
   },
   {
-    url: '/track-order',
-    label: 'Track Your Order',
+    url: "/track-order",
+    label: "Track Your Order",
   },
 ];

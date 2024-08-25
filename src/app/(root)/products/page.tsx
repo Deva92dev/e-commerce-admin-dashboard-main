@@ -6,6 +6,7 @@ import { Separator } from '@/components/ui/separator';
 import { getProducts } from '@/lib/actions';
 import { Suspense } from 'react';
 
+// do filtering must
 const ProductPage = async () => {
   const products = await getProducts();
 

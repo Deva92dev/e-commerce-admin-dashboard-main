@@ -1,15 +1,13 @@
-"use client"
-import { ProductType } from '@/lib/types'
-import React from 'react'
+"use client";
+import { ProductType } from "@/lib/types";
+import React from "react";
 
 interface FilterProps {
-    products: ProductType[]
+  products: ProductType[];
 }
 
-const Filters = ({products} : FilterProps) => {
-  return (
-    <div>Filters</div>
-  )
-}
+const Filters = ({ products }: FilterProps) => {
+  return <div>Filters Remain</div>;
+};
 
-export default Filters
+export default Filters;

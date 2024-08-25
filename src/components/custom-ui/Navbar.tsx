@@ -13,7 +13,7 @@ const Navbar = () => {
   return (
     <div className="h-20 bg-white px-4 md:px-8 lg:px-16 xl:px-32 relative">
       {/* smaller screens */}
-      <div className="h-full flex items-center justify-between pt-4 md:hidden">
+      <div className="h-full flex items-center justify-between pt-4 lg:hidden">
         <Link href="/">
           <Image
             src="/logo.svg"
@@ -26,7 +26,7 @@ const Navbar = () => {
       </div>
 
       {/* bigger screens */}
-      <div className="max-md:hidden md:flex items-center justify-between h-full">
+      <div className="max-lg:hidden lg:flex items-center justify-between h-full">
         {/* left */}
       <div className="flex items-center gap-10">
         <Link href="/" >
