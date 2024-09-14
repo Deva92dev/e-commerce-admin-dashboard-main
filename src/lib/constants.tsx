@@ -31,11 +31,6 @@ export const navLinks = [
     icon: <ShoppingBag />,
     label: "Order",
   },
-  {
-    url: "/admin/customers",
-    icon: <UserRound />,
-    label: "Customers",
-  },
 ];
 
 // for website

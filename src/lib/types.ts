@@ -35,3 +35,23 @@ export type OrderColumnType = {
   totalAmount: number;
   createdAt: string;
 };
+
+export type OrderItemType = {
+  product: ProductType;
+  color: string;
+  size: string;
+  quantity: number;
+};
+
+export type CustomerType = {
+  clerkId: string;
+  name: string;
+  email: string;
+};
+
+export type ReviewType = {
+  _id: string;
+  customer: string;
+  comment: string;
+  rating: number;
+};

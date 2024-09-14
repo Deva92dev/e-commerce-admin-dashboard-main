@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 // add reviews schema later must
 const ProductSchema = new mongoose.Schema(
@@ -35,15 +35,19 @@ const ProductSchema = new mongoose.Schema(
     collections: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Collection',
+        ref: "Collection",
       },
     ],
+    review: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }],
+    averageRating: { type: Number, default: 0 },
+    totalRating: { type: Number, default: 0 },
+    numberOfReviews: { type: Number, default: 0 },
   },
   // cause we use get "getter function" in price
-  { toJSON: { getters: true } }
+  { toJSON: { getters: true }, timestamps: true }
 );
 
 const Product =
-  mongoose.models.Product || mongoose.model('Product', ProductSchema);
+  mongoose.models.Product || mongoose.model("Product", ProductSchema);
 
 export default Product;

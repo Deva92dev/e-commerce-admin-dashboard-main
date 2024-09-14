@@ -1,21 +1,25 @@
 import mongoose from "mongoose";
 
-const customerSchema = new mongoose.Schema({
-  clerkId: String,
-  name: String,
-  email: String,
-  orders: {
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],
+const customerSchema = new mongoose.Schema(
+  {
+    clerkId: String,
+    name: String,
+    email: String,
+    orders: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],
+    },
+    review: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }],
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+    updatedAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  { timestamps: true }
+);
 
 const Customer =
   mongoose.models.Customer || mongoose.model("Customer", customerSchema);

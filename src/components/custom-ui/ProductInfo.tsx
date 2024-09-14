@@ -29,8 +29,9 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       </div>
       <p className="text-sm font-normal text-gray-500">Category : {category}</p>
       <p className="font-bold mt-2">{formatPrice(price)}</p>
-      <div className="flex flex-col text-gray-500">Description : </div>
-      <p>{description} Review Remain</p>
+      <div className="flex flex-col text-gray-500">
+        Description : {description}
+      </div>
 
       {/* color */}
       {product.color.length > 0 && (

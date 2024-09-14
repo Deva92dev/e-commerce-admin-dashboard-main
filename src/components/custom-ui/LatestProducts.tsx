@@ -7,7 +7,6 @@ import { Separator } from "../ui/separator";
 // so that i don't have to fetch data twice
 const LatestProducts = async () => {
   const latestProducts = await getProducts();
-  console.log(latestProducts);
 
   return (
     <div className="px-4 md:px-8 lg:px-16 xl:px-32 my-8">

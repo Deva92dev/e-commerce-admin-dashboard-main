@@ -1,3 +1,32 @@
+## Necessary Things for starting the project
+
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+
+MONGO_URI=
+
+# Change for Production
+
+NEXT_PUBLIC_BASE_URL=
+
+# Admin user Client(Must), ChANGE FOR ADMIN userId got from clerk
+
+ADMIN_USER_ID=
+
+# Cloudinary
+
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=
+NEXT_PUBLIC_CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=
+
+# Payments with RazorPay
+
+RAZORPAY_WEBHOOK_SECRET=
+RAZORPAY_KEY_ID=
+RAZORPAY_KEY_SECRET=
+NEXT_PUBLIC_RAZORPAY_KEY_ID=
+
 ## Add your todo's for entire project. It will help you for future projects
 
 ## Customize your shadcn components according to your need

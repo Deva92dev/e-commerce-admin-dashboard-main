@@ -1,6 +1,11 @@
 "use server";
 
-import { CollectionType, OrderColumnType, ProductType } from "./types";
+import {
+  CollectionType,
+  OrderColumnType,
+  OrderItemType,
+  ProductType,
+} from "./types";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
@@ -53,6 +58,34 @@ export const getOrders = async () => {
     return orders;
   } catch (error) {
     console.error("Failed to fetch Orders:", error);
+    throw error;
+  }
+};
+
+export const getOrderDetails = async (orderId: string) => {
+  try {
+    const res = await fetch(`${baseUrl}/api/orders/${orderId}`, {
+      method: "GET",
+    });
+    const order: OrderItemType = await res.json();
+    console.log(order);
+    return order;
+  } catch (error) {
+    console.error("Failed to fetch order details:", error);
+    throw error;
+  }
+};
+
+export const getPaidCustomers = async (userId: string, productId: string) => {
+  try {
+    const res = await fetch(`${baseUrl}/api/customers/${userId}/${productId}`, {
+      method: "GET",
+      credentials: "include",
+    });
+    const { totalPaidCustomers, customerOrderData } = await res.json();
+    return totalPaidCustomers;
+  } catch (error) {
+    console.error("Failed to fetch Total Paid Customers:", error);
     throw error;
   }
 };

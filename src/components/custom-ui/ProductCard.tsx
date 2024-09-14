@@ -5,13 +5,17 @@ import { formatPrice } from "../../lib/formatPrice";
 import HeartFavorite from "./HeartFavorite";
 
 interface ProductCardProps {
-  product:ProductType;
-  updateSignedInUser? : (updateUser: UserType) => void;
+  product: ProductType;
+  updateSignedInUser?: (updateUser: UserType) => void;
 }
 
-const ProductCard = ({ product , updateSignedInUser} : ProductCardProps) => {
+const ProductCard = ({ product, updateSignedInUser }: ProductCardProps) => {
   return (
-    <Link href={`/products/${product._id}`} key={product._id} className="bg-border rounded-lg">
+    <Link
+      href={`/products/${product._id}`}
+      key={product._id}
+      className="bg-border rounded-lg"
+    >
       <div className="relative h-72">
         <Image
           src={product.media[0]}
@@ -29,7 +33,10 @@ const ProductCard = ({ product , updateSignedInUser} : ProductCardProps) => {
         </div>
         <div className="flex flex-row justify-between">
           <p>{formatPrice(product.price)}</p>
-          <HeartFavorite product={product} updateSignedInUser={updateSignedInUser} />
+          <HeartFavorite
+            product={product}
+            updateSignedInUser={updateSignedInUser}
+          />
         </div>
       </div>
     </Link>

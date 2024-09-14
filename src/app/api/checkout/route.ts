@@ -5,16 +5,6 @@ export const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!, {
   typescript: true,
 });
 
-// const corsHeaders = {
-//   "Access-Control-Allow-Origin": "*",
-//   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-//   "Access-Control-Allow-Headers": "Content-Type, Authorization",
-// };
-
-// export async function OPTIONS() {
-//   return NextResponse.json({}, { headers: corsHeaders });
-// }
-
 export const POST = async (req: NextRequest) => {
   try {
     const { cartItems, customer } = await req.json();

@@ -13,9 +13,9 @@ interface CartItem {
 interface CartStore {
   cartItems: CartItem[];
   addItem: (item: CartItem) => void;
-  removeItem: (_id: string) => void;
-  increaseQuantity: (_id: string) => void;
-  decreaseQuantity: (_id: string) => void;
+  removeItem: (_id: string, color?: string, sizes?: string) => void;
+  increaseQuantity: (_id: string, color?: string, sizes?: string) => void;
+  decreaseQuantity: (_id: string, color?: string, sizes?: string) => void;
   clearCart: () => void;
 }
 
@@ -27,7 +27,10 @@ const useCart = create(
         const { item, quantity, color, sizes } = data;
         const currentItems = get().cartItems; // items already in cart
         const existingItem = currentItems.find(
-          (cartItem) => cartItem.item._id === item._id
+          (cartItem) =>
+            cartItem.item._id === item._id &&
+            cartItem.color === color &&
+            cartItem.sizes === sizes
         );
         if (existingItem) {
           return toast("Item is already in the cart", { icon: "🛒" });
@@ -37,17 +40,24 @@ const useCart = create(
         toast.success("Items added to the cart", { icon: "🛒" });
       },
       //   remove items from cart
-      removeItem: (_id: String) => {
+      removeItem: (_id: String, color?: string, sizes?: string) => {
         const newCartItems = get().cartItems.filter(
-          (cartItem) => cartItem.item._id !== _id
+          (cartItem) =>
+            !(
+              cartItem.item._id === _id &&
+              cartItem.color === color &&
+              cartItem.sizes === sizes
+            )
         );
         set({ cartItems: newCartItems });
         toast.success("Item removed from the cart");
       },
       // increase quantity
-      increaseQuantity: (_id: String) => {
+      increaseQuantity: (_id: String, color?: string, sizes?: string) => {
         const newCartItems = get().cartItems.map((cartItem) =>
-          cartItem.item._id === _id
+          cartItem.item._id === _id &&
+          cartItem.color === color &&
+          cartItem.sizes === sizes
             ? { ...cartItem, quantity: cartItem.quantity + 1 }
             : cartItem
         );
@@ -55,9 +65,11 @@ const useCart = create(
         toast.success("Item quantity increased");
       },
       // decrease quantity
-      decreaseQuantity: (_id: String) => {
+      decreaseQuantity: (_id: String, color?: string, sizes?: string) => {
         const newCartItems = get().cartItems.map((cartItem) =>
-          cartItem.item._id === _id
+          cartItem.item._id === _id &&
+          cartItem.color === color &&
+          cartItem.sizes === sizes
             ? { ...cartItem, quantity: cartItem.quantity - 1 }
             : cartItem
         );
@@ -73,6 +85,5 @@ const useCart = create(
     }
   )
 );
-
 
 export default useCart;

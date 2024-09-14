@@ -1,27 +1,18 @@
-import { getOrders } from "@/lib/actions";
+import { DataTable } from "@/components/custom-ui/Data-Table";
+import { Separator } from "@/components/ui/separator";
+import { columns } from "../../components/orders/OrderColumn";
 
 const OrdersPage = async () => {
-  try {
-    const orders = await getOrders();
-    console.log("Orders:", orders);
-    return (
-      <div>
-        <h1>Orders</h1>
-        {orders.map((order) => (
-          <div key={order._id}>
-            {order.customer} - {order.totalAmount}
-          </div>
-        ))}
-      </div>
-    );
-  } catch (error) {
-    console.error("Error in OrdersPage:", error);
-    return (
-      <div className="text-7xl font-extrabold">
-        Error loading orders. Please try again later.
-      </div>
-    );
-  }
+  const res = await fetch(`http://localhost:3000/api/orders`);
+  const order = await res.json();
+
+  return (
+    <div className="px-10 py-5">
+      <h2 className="font-bold text-3xl">Orders</h2>
+      <Separator className="bg-gray-600 my-5" />
+      <DataTable columns={columns} data={order} searchKey="_id" />
+    </div>
+  );
 };
 
 export default OrdersPage;

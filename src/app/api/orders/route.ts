@@ -8,23 +8,29 @@ export const GET = async (req: NextRequest) => {
   try {
     await ConnectDB();
 
-    const orders = await Order.find({}).sort({ createdAt: "desc" });
-    const orderDetails = await Promise.all(
-      orders.map(async (order) => {
-        const customer = await Customer.findOne({
-          clerkId: order.customerClerkId,
-        });
-        return {
-          _id: order.id,
-          customer: customer.name,
-          products: order.products.length,
-          totalAmount: order.totalAmount,
-          createdAt: format(order.createdAt, "MMM do, yyyy"),
-        };
-      })
-    );
+    const orders = await Order.find({})
+      .populate("customer", "name email")
+      .populate("cartItems.product", "title price")
+      .sort({ createdAt: "desc" });
 
-    console.log("Orders:", orderDetails);
+    // Format and return order details
+    const orderDetails = orders.map((order) => ({
+      _id: order._id,
+      customer: order.customer.name,
+      email: order.customer.email,
+      products: order.cartItems.length,
+      totalAmount: order.amount,
+      currency: order.currency,
+      createdAt: format(order.createdAt, "MMM do, yyyy"),
+      status: order.status,
+      items: order.cartItems.map((item: any) => ({
+        title: item.product.title,
+        quantity: item.quantity,
+        price: item.product.price,
+        color: item.color,
+        sizes: item.sizes,
+      })),
+    }));
 
     return NextResponse.json(orderDetails, { status: 200 });
   } catch (error: any) {

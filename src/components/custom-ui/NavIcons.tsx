@@ -24,7 +24,7 @@ const NavIcons = () => {
           <Link href="/wishlist">Wishlist</Link>
           <Link href="/orders">Orders</Link>
           <Link href="/cart" className="relative">
-            <ShoppingCart />{" "}
+            <ShoppingCart />
             <span className="absolute -top-3 right-0 text-lg text-[#FF69B4]">
               {cart.cartItems.length}
             </span>
