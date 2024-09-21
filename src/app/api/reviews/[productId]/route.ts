@@ -52,10 +52,6 @@ export const POST = async (
       comment,
     });
 
-    console.log("orderId:", orderId);
-    console.log("productId:", params.productId);
-    console.log("customerId:", customer._id);
-
     // Update Customer and Product models
     customer.review.push(review._id);
     await customer.save();
@@ -132,10 +128,6 @@ export const PATCH = async (
 
     const reqBody = await req.json();
     const { reviewId, comment, rating } = reqBody;
-
-    console.log("Review ID:", reviewId);
-    console.log("Comment:", comment);
-    console.log("Rating:", rating);
 
     const customer = await Customer.findOne({ clerkId: userId });
     if (!customer) {

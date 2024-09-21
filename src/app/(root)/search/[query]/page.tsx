@@ -2,7 +2,7 @@ import ProductCard from "@/components/custom-ui/ProductCard";
 import ProductCardSkeleton from "@/components/custom-ui/ProductCardSkeleton";
 import { ProductType } from "@/lib/types";
 import { Metadata } from "next";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Search - Own Closet",

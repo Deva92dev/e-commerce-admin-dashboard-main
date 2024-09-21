@@ -1,7 +1,7 @@
 "use client";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
 
 // use search params in this with debounce
 const SearchBar = () => {

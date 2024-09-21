@@ -1,7 +1,6 @@
 import { getProducts } from "@/lib/actions";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 import { Separator } from "../ui/separator";
 import { formatPrice } from "@/lib/formatPrice";
 

@@ -99,7 +99,6 @@ const CartPage = () => {
             );
 
             const result = await verifyResponse.json();
-            console.log(result);
 
             if (result.success) {
               cart.clearCart();

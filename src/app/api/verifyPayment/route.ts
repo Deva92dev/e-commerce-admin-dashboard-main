@@ -56,9 +56,6 @@ export const POST = async (req: NextRequest) => {
       .update(body.toString())
       .digest("hex");
 
-    console.log("Expected Signature:", expectedSignature);
-    console.log("Received Signature:", razorpay_signature);
-
     if (expectedSignature !== razorpay_signature) {
       console.error("Payment verification failed: Invalid signature");
       return NextResponse.json(

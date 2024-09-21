@@ -42,7 +42,7 @@ const Reviews = ({
       const res = await fetch(`/api/reviews/${productId}`);
       if (res.ok) {
         const allReviews: ReviewType[] = await res.json();
-        console.log("All Reviews", allReviews);
+
         setReviews(allReviews);
 
         // Check if the user has already submitted a review

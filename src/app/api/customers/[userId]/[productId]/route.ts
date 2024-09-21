@@ -16,8 +16,6 @@ export const GET = async (
       .populate("customer")
       .populate("cartItems.product");
 
-    // console.log("Raw Orders:", customersWithPaidOrders);
-
     if (!customersWithPaidOrders || customersWithPaidOrders.length === 0) {
       return NextResponse.json(
         { error: "No paid orders found for this product" },

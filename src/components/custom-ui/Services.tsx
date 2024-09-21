@@ -1,5 +1,4 @@
 import { servicesLinks } from "@/lib/constants";
-import React from "react";
 
 const Services = () => {
   return (

@@ -55,8 +55,6 @@ const ProductDetails = async ({
       const { totalPaidCustomers, customerOrderData } = await res.json();
 
       if (totalPaidCustomers > 0 && customerOrderData.length > 0) {
-        console.log("Total paid Customers: ", totalPaidCustomers);
-
         const validOrder = customerOrderData.find(
           (order: any) => order.orderId
         );

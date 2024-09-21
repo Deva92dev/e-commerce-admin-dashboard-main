@@ -19,7 +19,6 @@ const Orders = async ({ params }: { params: { customerId: string } }) => {
   const paidOrders = getCustomerAllOrders.filter(
     (order: any) => order.status === "paid"
   );
-  console.log(paidOrders);
 
   return (
     <div className="px-4 md:px-6 lg:px-12 xl:px-24 ">

@@ -8,7 +8,6 @@ interface RelatedProductProps {
 
 const RelatedProducts = async ({ productId }: RelatedProductProps) => {
   const relatedProducts = await getRelatedProducts(productId);
-  console.log("Related Products from Component", relatedProducts);
   return (
     <>
       {relatedProducts.length === 0 ? (
