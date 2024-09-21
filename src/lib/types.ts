@@ -1,3 +1,5 @@
+import { ObjectId } from "mongoose";
+
 export type CollectionType = {
   _id: string;
   title: string;
@@ -6,6 +8,7 @@ export type CollectionType = {
   products: ProductType[];
 };
 
+// update all of it after reviews
 export type ProductType = {
   _id: string;
   title: string;
@@ -16,6 +19,10 @@ export type ProductType = {
   tags: [string];
   sizes: [string];
   color: [string];
+  review: string;
+  numberOfReviews: number;
+  totalRating: number;
+  averageRating: number;
   price: number;
   createdAt: Date;
   updatedAt: Date;
@@ -36,22 +43,65 @@ export type OrderColumnType = {
   createdAt: string;
 };
 
-export type OrderItemType = {
-  product: ProductType;
-  color: string;
-  size: string;
-  quantity: number;
-};
-
 export type CustomerType = {
   clerkId: string;
   name: string;
   email: string;
 };
 
+export type OrderItemType = {
+  _id: string;
+  product: ProductType;
+  color: string;
+  size: string;
+  quantity: number;
+};
+
+export type OrderType = {
+  _id: string;
+  customer: CustomerType;
+  cartItems: OrderItemType[];
+  amount: number;
+  currency: string;
+  createdAt: Date;
+  status: string;
+};
+
 export type ReviewType = {
   _id: string;
-  customer: string;
-  comment: string;
   rating: number;
+  comment: string;
+  customer: CustomerType;
+  product: ProductType;
+  order: OrderType;
+};
+
+export interface CustomersType extends CustomerType {
+  orders: ObjectId[];
+  createdAt: Date;
+  updatedAt: Date;
+  review: ObjectId[];
+}
+
+type PaymentType = {
+  paymentId: string;
+  razorpayOrderId: string;
+  razorpaySignature: string;
+};
+
+export type SingleOrderType = {
+  payment: PaymentType;
+  _id: string;
+  customerClerkId: string;
+  orderId: string;
+  userId: string;
+  customer: string;
+  cartItems: OrderItemType[];
+  amount: number;
+  currency: string;
+  status: "created" | "paid";
+  review: ReviewType[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 };

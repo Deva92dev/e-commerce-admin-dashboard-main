@@ -1,24 +1,32 @@
 "use client";
 import { Star } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface StarRatingProps {
   maxRating?: number;
   initialRating?: number;
-  onRatingChange: (rating: number) => void;
+  readonly?: boolean;
+  onRatingChange?: (rating: number) => void;
 }
 
 const StarRating = ({
   maxRating = 5,
   initialRating = 0,
   onRatingChange,
+  readonly = false,
 }: StarRatingProps) => {
   const [rating, setRating] = useState(initialRating);
   const [hover, setHover] = useState(0);
 
+  useEffect(() => {
+    setRating(initialRating);
+  }, [initialRating]);
+
   const handleRatingChange = (newRating: number) => {
-    setRating(newRating);
-    onRatingChange(newRating);
+    if (!readonly && onRatingChange) {
+      setRating(newRating);
+      onRatingChange(newRating);
+    }
   };
 
   return (
@@ -33,10 +41,10 @@ const StarRating = ({
                 ? "text-yellow-400"
                 : "text-gray-300"
             }`}
-            size={24}
-            onClick={() => handleRatingChange(ratingValue)}
-            onMouseEnter={() => setHover(ratingValue)}
-            onMouseLeave={() => setHover(0)}
+            size={16}
+            onClick={() => !readonly && handleRatingChange(ratingValue)}
+            onMouseEnter={() => !readonly && setHover(ratingValue)}
+            onMouseLeave={() => !readonly && setHover(0)}
             fill={ratingValue <= (hover || rating) ? "currentColor" : "none"}
           />
         );

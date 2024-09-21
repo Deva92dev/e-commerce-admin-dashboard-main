@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   ColumnDef,
@@ -8,7 +8,7 @@ import {
   useReactTable,
   ColumnFiltersState,
   getFilteredRowModel,
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
 
 import {
   Table,
@@ -17,10 +17,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Input } from '../ui/input';
-import { useState } from 'react';
-import { Button } from '../ui/button';
+} from "@/components/ui/table";
+import { Input } from "../ui/input";
+import { useState } from "react";
+import { Button } from "../ui/button";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -49,18 +49,18 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className='py-5'>
-      <div className='mb-4'>
+    <div className="py-5">
+      <div className="mb-4">
         <Input
-          placeholder='Search...'
-          className='w-full md:w-1/2 lg:w-1/3'
-          value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ''}
+          placeholder="Search..."
+          className="w-full md:w-1/2 lg:w-1/3"
+          value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
           onChange={(e) =>
             table.getColumn(searchKey)?.setFilterValue(e.target.value)
           }
         />
       </div>
-      <div className='rounded-md border'>
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -85,7 +85,7 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
+                  data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -101,7 +101,7 @@ export function DataTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className='h-24 text-center'
+                  className="h-24 text-center"
                 >
                   No results.
                 </TableCell>
@@ -110,22 +110,22 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className='flex items-center justify-end space-x-2 py-4'>
+      <div className="flex items-center justify-end space-x-2 py-4">
         <Button
-          variant='outline'
-          size='sm'
+          variant="outline"
+          size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
-          className='cursor-pointer'
+          className="cursor-pointer"
         >
           Previous
         </Button>
         <Button
-          variant='outline'
-          size='sm'
+          variant="outline"
+          size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
-          className='cursor-pointer'
+          className="cursor-pointer"
         >
           Next
         </Button>

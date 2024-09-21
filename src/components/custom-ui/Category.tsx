@@ -4,17 +4,17 @@ import Link from "next/link";
 import React from "react";
 import { Button } from "../ui/button";
 
-// add more designing later later
+// add more designing later
 const Category = async () => {
   const collection = await getCollection();
 
   return (
-    <div className="px-4 md:px-8 lg:px-16 xl:px-32 my-8">
+    <div className=" px-4 md:px-6 lg:px-12 xl:px-24 my-8">
       <h2 className="text-3xl font-bold text-center mb-4">Shop By Category</h2>
       <div className="grid gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
         {collection.map((item) => (
           <Link
-            href="/products"
+            href={`/collections/${item._id}`}
             key={item._id}
             className="relative bg-white rounded-sm hover:shadow-lg"
           >

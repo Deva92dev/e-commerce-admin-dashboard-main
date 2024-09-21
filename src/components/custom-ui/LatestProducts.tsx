@@ -3,13 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { Separator } from "../ui/separator";
+import { formatPrice } from "@/lib/formatPrice";
 
 // so that i don't have to fetch data twice
 const LatestProducts = async () => {
   const latestProducts = await getProducts();
 
   return (
-    <div className="px-4 md:px-8 lg:px-16 xl:px-32 my-8">
+    <div className=" px-4 md:px-6 lg:px-12 xl:px-24 my-8">
       <h2 className="text-3xl font-bold text-center mb-4">Latest Products</h2>
       <Separator />
       <div className="grid gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 mt-4">
@@ -31,7 +32,7 @@ const LatestProducts = async () => {
             </div>
             <div className="my-4 px-2">
               <h3 className="text-base font-bold">{item.title}</h3>
-              <p className="text-sm">{item.price}</p>
+              <p className="text-sm">{formatPrice(item.price)}</p>
             </div>
           </Link>
         ))}

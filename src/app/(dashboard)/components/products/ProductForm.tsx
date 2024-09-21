@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { Separator } from '@/components/ui/separator';
-import { Button } from '@/components/ui/button';
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,33 +12,33 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
-import { CollectionType, ProductType } from '@/lib/types';
-import Delete from '@/components/custom-ui/Delete';
-import MultiText from '@/components/custom-ui/MultiText';
-import MultiSelect from '@/components/custom-ui/MultiSelect';
-import UploadImages from '@/components/custom-ui/UploadImageToCloudinary';
-import Loader from '@/components/custom-ui/Loader';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { CollectionType, ProductType } from "@/lib/types";
+import Delete from "@/components/custom-ui/Delete";
+import MultiText from "@/components/custom-ui/MultiText";
+import MultiSelect from "@/components/custom-ui/MultiSelect";
+import UploadImages from "@/components/custom-ui/UploadImageToCloudinary";
+import Loader from "@/components/custom-ui/Loader";
 
 const formSchema = z.object({
   title: z
     .string()
-    .min(1, { message: 'Title  must not less than 2 character' })
+    .min(1, { message: "Title  must not less than 2 character" })
     .max(20, {
-      message: 'Title  must not  greater than 20 characters',
+      message: "Title  must not  greater than 20 characters",
     }),
   description: z
     .string()
     .min(1, {
-      message: 'Description  must not less than 20 character',
+      message: "Description  must not less than 20 character",
     })
     .max(500, {
-      message: 'Description  must not greater than 500 characters',
+      message: "Description  must not greater than 500 characters",
     }),
   media: z.array(z.string()).default([]),
   category: z.string(),
@@ -62,15 +62,15 @@ const ProductForm = ({ initialData }: ProductFormProps) => {
 
   const getCollections = async () => {
     try {
-      const res = await fetch('/api/collections', {
-        method: 'GET',
+      const res = await fetch("/api/collections", {
+        method: "GET",
       });
       const data = await res.json();
       setCollections(data);
       setIsLoading(false);
     } catch (err) {
-      console.log('[collections_GET]', err);
-      toast.error('Something went wrong! Please try again.');
+      console.log("[collections_GET]", err);
+      toast.error("Something went wrong! Please try again.");
     }
   };
 
@@ -88,15 +88,15 @@ const ProductForm = ({ initialData }: ProductFormProps) => {
           ),
         }
       : {
-          title: '',
-          description: '',
+          title: "",
+          description: "",
           media: [],
           collections: [],
           tags: [],
           sizes: [],
           color: [],
           price: 0,
-          category: '',
+          category: "",
         },
   });
 
@@ -106,38 +106,38 @@ const ProductForm = ({ initialData }: ProductFormProps) => {
       | React.KeyboardEvent<HTMLInputElement>
       | React.KeyboardEvent<HTMLTextAreaElement>
   ) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
     }
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log('Form Values Before Submit:', values);
+    console.log("Form Values Before Submit:", values);
     try {
       const url = initialData
         ? `/api/products/${initialData._id}`
         : `/api/products`;
       const response = await fetch(url, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(values),
       });
       if (response.ok) {
         setIsLoading(false);
-        toast.success(`product is ${initialData ? 'updated' : 'created'}`);
-        window.location.href = '/admin/products';
-        router.push('/admin/products');
+        toast.success(`product is ${initialData ? "updated" : "created"}`);
+        window.location.href = "/admin/products";
+        router.push("/admin/products");
       }
     } catch (error: any) {
-      console.log(['ProductForm_POST_API'], error);
+      console.log(["ProductForm_POST_API"], error);
       toast.error(`${error.message}`);
     }
   };
 
   const handleUploadSuccess = (urls: string[]) => {
-    form.setValue('media', urls);
+    form.setValue("media", urls);
   };
 
   // console.log('initialData', initialData);
@@ -146,28 +146,28 @@ const ProductForm = ({ initialData }: ProductFormProps) => {
   return isLoading ? (
     <Loader />
   ) : (
-    <div className='p-12'>
+    <div className="p-12">
       {initialData ? (
-        <div className='flex itc justify-between'>
-          <h2 className='text-3xl font-semibold'>Edit Product</h2>
-          <Delete item='product' id={initialData._id} />
+        <div className="flex items-center justify-between">
+          <h2 className="text-3xl font-semibold">Edit Product</h2>
+          <Delete item="product" id={initialData._id} />
         </div>
       ) : (
-        <h2 className='text-3xl font-semibold'>Create Product</h2>
+        <h2 className="text-3xl font-semibold">Create Product</h2>
       )}
 
-      <Separator className='bg-gray-600 mt-2 mb-8' />
+      <Separator className="bg-gray-600 mt-2 mb-8" />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name='title'
+            name="title"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Title</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder='title'
+                    placeholder="title"
                     {...field}
                     onKeyDown={handleKeyPress}
                   />
@@ -179,13 +179,13 @@ const ProductForm = ({ initialData }: ProductFormProps) => {
 
           <FormField
             control={form.control}
-            name='description'
+            name="description"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder='description'
+                    placeholder="description"
                     {...field}
                     rows={5}
                     onKeyDown={handleKeyPress}
@@ -198,10 +198,10 @@ const ProductForm = ({ initialData }: ProductFormProps) => {
 
           <FormField
             control={form.control}
-            name='media'
+            name="media"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className=''>Image</FormLabel>
+                <FormLabel className="">Image</FormLabel>
                 <FormControl>
                   <UploadImages
                     multiple={true}
@@ -213,17 +213,17 @@ const ProductForm = ({ initialData }: ProductFormProps) => {
             )}
           />
 
-          <div className='grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+          <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             <FormField
               control={form.control}
-              name='price'
+              name="price"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Price (&#8377;)</FormLabel>
                   <FormControl>
                     <Input
-                      type='number'
-                      placeholder='price'
+                      type="number"
+                      placeholder="price"
                       {...field}
                       onKeyDown={handleKeyPress}
                     />
@@ -235,13 +235,13 @@ const ProductForm = ({ initialData }: ProductFormProps) => {
 
             <FormField
               control={form.control}
-              name='category'
+              name="category"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Category</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder='category'
+                      placeholder="category"
                       {...field}
                       onKeyDown={handleKeyPress}
                     />
@@ -253,13 +253,13 @@ const ProductForm = ({ initialData }: ProductFormProps) => {
 
             <FormField
               control={form.control}
-              name='tags'
+              name="tags"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Tags</FormLabel>
                   <FormControl>
                     <MultiText
-                      placeholder='tags'
+                      placeholder="tags"
                       value={field.value}
                       onChange={(tag) => field.onChange([...field.value, tag])}
                       onRemove={(tagToRemove) =>
@@ -277,14 +277,14 @@ const ProductForm = ({ initialData }: ProductFormProps) => {
             {collections.length > 0 && (
               <FormField
                 control={form.control}
-                name='collections'
+                name="collections"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Collections</FormLabel>
                     <FormControl>
                       <MultiSelect
                         collections={collections}
-                        placeholder='collections'
+                        placeholder="collections"
                         value={field.value}
                         onChange={(_id) =>
                           field.onChange([...field.value, _id])
@@ -306,13 +306,13 @@ const ProductForm = ({ initialData }: ProductFormProps) => {
 
             <FormField
               control={form.control}
-              name='sizes'
+              name="sizes"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Sizes</FormLabel>
                   <FormControl>
                     <MultiText
-                      placeholder='sizes'
+                      placeholder="sizes"
                       value={field.value}
                       onChange={(size) =>
                         field.onChange([...field.value, size])
@@ -333,13 +333,13 @@ const ProductForm = ({ initialData }: ProductFormProps) => {
 
             <FormField
               control={form.control}
-              name='color'
+              name="color"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Color</FormLabel>
                   <FormControl>
                     <MultiText
-                      placeholder='color'
+                      placeholder="color"
                       value={field.value}
                       onChange={(c) => field.onChange([...field.value, c])}
                       onRemove={(colorToRemove) =>
@@ -356,14 +356,14 @@ const ProductForm = ({ initialData }: ProductFormProps) => {
               )}
             />
           </div>
-          <div className='flex flex-row gap-20'>
-            <Button type='submit' className='bg-blue-600'>
+          <div className="flex flex-row gap-20">
+            <Button type="submit" className="bg-blue-600">
               Submit
             </Button>
             <Button
-              type='button'
-              className='bg-blue-600'
-              onClick={() => router.push('/admin/products')}
+              type="button"
+              className="bg-blue-600"
+              onClick={() => router.push("/admin/products")}
             >
               Discard
             </Button>

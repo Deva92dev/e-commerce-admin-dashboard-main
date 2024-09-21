@@ -61,7 +61,7 @@ export const POST = async (
     await customer.save();
 
     await Product.findByIdAndUpdate(params.productId, {
-      $push: { reviews: review._id },
+      $push: { review: review._id },
       $inc: { totalRating: rating, numberOfReviews: 1 },
     });
 
@@ -133,6 +133,10 @@ export const PATCH = async (
     const reqBody = await req.json();
     const { reviewId, comment, rating } = reqBody;
 
+    console.log("Review ID:", reviewId);
+    console.log("Comment:", comment);
+    console.log("Rating:", rating);
+
     const customer = await Customer.findOne({ clerkId: userId });
     if (!customer) {
       return NextResponse.json("Only paid customers update a review", {
@@ -165,7 +169,7 @@ export const PATCH = async (
     }
 
     product.totalRating = product.totalRating - oldRating + rating;
-    product.averageRating = product.averageRating / product.numberOfReviews;
+    product.averageRating = product.totalRating / product.numberOfReviews;
     await product.save();
 
     return NextResponse.json(review, { status: 200 });

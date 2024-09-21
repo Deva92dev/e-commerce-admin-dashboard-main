@@ -21,7 +21,7 @@ const NavIcons = () => {
     <div>
       {user ? (
         <div className="flex items-center justify-center gap-4">
-          <Link href="/wishlist">Wishlist</Link>
+          <Link href={"/wishlist"}>Wishlist</Link>
           <Link href="/orders">Orders</Link>
           <Link href="/cart" className="relative">
             <ShoppingCart />

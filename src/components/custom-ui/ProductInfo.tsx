@@ -3,7 +3,7 @@ import { formatPrice } from "@/lib/formatPrice";
 import { ProductType } from "@/lib/types";
 import React, { useState } from "react";
 import HeartFavorite from "./HeartFavorite";
-import { MinusCircle, PlusCircle } from "lucide-react";
+import { MinusCircle, PlusCircle, Star } from "lucide-react";
 import useCart from "@/lib/hooks/useCart";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { Button } from "../ui/button";
@@ -15,20 +15,38 @@ interface ProductInfoProps {
 const ProductInfo = ({ product }: ProductInfoProps) => {
   const cart = useCart();
   const { user } = useUser();
-  const { category, color, description, price, sizes, title } = product;
+  const {
+    category,
+    color,
+    description,
+    price,
+    sizes,
+    title,
+    review,
+    averageRating,
+    numberOfReviews,
+  } = product;
 
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedColor, setSelectedColor] = useState<string>(color[0]);
   const [selectedSize, setSelectedSize] = useState<string>(sizes[0]);
 
   return (
-    <div className="max-w-[400px] flex flex-col gap-8">
+    <div className="max-w-[400px] flex flex-col gap-4">
       <div className="flex justify-between">
         <h2 className="font-bold text-3xl">{title}</h2>
-        <HeartFavorite product={product} />
+        {user && <HeartFavorite product={product} />}
       </div>
+      {review.length > 0 && (
+        <p className="flex flex-row gap-1 items-center">
+          <Star className="h-4 w-4" />
+          {averageRating.toFixed(1)} <span>({numberOfReviews})</span> reviews
+        </p>
+      )}
       <p className="text-sm font-normal text-gray-500">Category : {category}</p>
-      <p className="font-bold mt-2">{formatPrice(price)}</p>
+      <p className="font-bold border bg-gray-100 w-max p-2 rounded-lg">
+        {formatPrice(price)}
+      </p>
       <div className="flex flex-col text-gray-500">
         Description : {description}
       </div>

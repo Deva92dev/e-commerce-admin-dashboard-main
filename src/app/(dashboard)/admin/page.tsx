@@ -22,7 +22,7 @@ const DashboardPage = async () => {
       <div>
         <h1>Dashboard</h1>
         <p>Total Sales: {formatPrice(totalSales)}</p>
-        <p>Total Customers: {totalPaidCustomers} </p>
+        <p>Total Paid Customers: {totalPaidCustomers} </p>
       </div>
     </div>
   );

@@ -1,10 +1,10 @@
 "use client";
 
 import { ProductType, UserType } from "@/lib/types";
-import { useUser } from "@clerk/nextjs";
+import { SignInButton, useUser } from "@clerk/nextjs";
 import { Heart } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { Button } from "../ui/button";
 
 interface HeartFavoriteProps {
   product: ProductType;
@@ -12,13 +12,12 @@ interface HeartFavoriteProps {
 }
 
 const HeartFavorite = ({ product, updateSignedInUser }: HeartFavoriteProps) => {
-  const router = useRouter();
   const { user } = useUser();
 
   const [isLiked, setIsLiked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const getUser = async () => {
+  const getUser = useCallback(async () => {
     try {
       setIsLoading(true);
       const res = await fetch("/api/users");
@@ -29,14 +28,13 @@ const HeartFavorite = ({ product, updateSignedInUser }: HeartFavoriteProps) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [product._id]);
 
   useEffect(() => {
     if (user) {
       getUser();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [getUser, user]);
 
   const handleLike = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -44,8 +42,15 @@ const HeartFavorite = ({ product, updateSignedInUser }: HeartFavoriteProps) => {
     e.preventDefault();
     try {
       if (!user) {
-        router.push("/sign-in");
-        return;
+        return (
+          <div>
+            <SignInButton mode="modal">
+              <Button className="w-full text-center outline bg-black text-white hover:bg-blue-400 text-base font-bold rounded-lg px-2 py-3">
+                Login
+              </Button>
+            </SignInButton>
+          </div>
+        );
       } else {
         const res = await fetch("/api/users/wishlist", {
           method: "POST",
@@ -64,7 +69,10 @@ const HeartFavorite = ({ product, updateSignedInUser }: HeartFavoriteProps) => {
   };
 
   return (
-    <button onClick={handleLike}>
+    <button
+      onClick={handleLike}
+      className="border bg-gray-100 w-max p-2 rounded-lg"
+    >
       <Heart fill={isLiked ? "red" : "white"} />
     </button>
   );

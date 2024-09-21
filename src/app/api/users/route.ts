@@ -23,9 +23,6 @@ export const GET = async (req: NextRequest) => {
     return NextResponse.json(user, { status: 200 });
   } catch (error: any) {
     console.error("Detailed error in [Users_GET]:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error", details: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json("Error at Wishlist", { status: 500 });
   }
 };

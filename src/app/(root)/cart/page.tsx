@@ -4,9 +4,10 @@ import useCart from "@/lib/hooks/useCart";
 import { MinusCircle, PlusCircle, Trash } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-import { useUser } from "@clerk/nextjs";
+import { SignInButton, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
+import { Button } from "@/components/ui/button";
 
 const CartPage = () => {
   const router = useRouter();
@@ -37,7 +38,15 @@ const CartPage = () => {
     setIsProcessing(true);
     try {
       if (!user) {
-        return router.push("/sign-in"); // change it there is no sign-in page
+        return (
+          <div>
+            <SignInButton mode="modal">
+              <Button className="w-full text-center outline bg-black text-white hover:bg-blue-400 text-base font-bold rounded-lg px-2 py-3">
+                Login
+              </Button>
+            </SignInButton>
+          </div>
+        );
       } else {
         // create order
         const response = await fetch("/api/createOrder", {
@@ -149,7 +158,7 @@ const CartPage = () => {
         src="https://checkout.razorpay.com/v1/checkout.js"
         onLoad={() => setIsRazorpayLoaded(true)}
       />
-      <div className="flex gap-20 px-4 py-16 md:px-8 max-lg:flex-col lg:px-16 xl:px-32">
+      <div className="flex gap-20 px-4 md:px-6 lg:px-12 xl:px-24 py-16  max-lg:flex-col">
         <div className="max-lg:w-full lg:w-2/3">
           <p className="font-bold text-3xl mb-4">Shopping Cart</p>
           <hr />

@@ -1,15 +1,42 @@
 import Gallery from "@/components/custom-ui/Gallery";
 import ProductInfo from "@/components/custom-ui/ProductInfo";
+import RelatedProducts from "@/components/custom-ui/RelatedProducts";
 import Reviews from "@/components/custom-ui/Reviews";
-import { getPaidCustomers, getProductDetails } from "@/lib/actions";
-import { auth } from "@clerk/nextjs/server";
+import { getProductDetails } from "@/lib/actions";
+import { auth, currentUser } from "@clerk/nextjs/server";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { productId: string };
+}): Promise<Metadata> {
+  const productDetails = await getProductDetails(params.productId);
+  return {
+    title: productDetails.title,
+    description: productDetails.description,
+    openGraph: {
+      images: [
+        {
+          url: productDetails.media[0],
+        },
+      ],
+    },
+  };
+}
 
 const ProductDetails = async ({
   params,
 }: {
   params: { productId: string };
 }) => {
-  const userId = auth().userId || undefined;
+  const user = await currentUser();
+  const userId = user?.id;
+  const userProfileImage = user?.imageUrl;
+  const userName = user
+    ? `${user.firstName || ""} ${user.lastName || ""}`.trim()
+    : undefined;
+
   const productDetails = await getProductDetails(params.productId);
 
   let initialCanLeaveReview = false;
@@ -51,25 +78,32 @@ const ProductDetails = async ({
   }
 
   return (
-    <div className="grid gap-12 px-4 md:px-8 lg:px-16 xl:px-32 grid-cols-1 lg:grid-cols-2  ">
-      <div className="lg:col-span-1">
-        <Gallery
-          productMedia={productDetails.media}
-          title={productDetails.title}
-        />
+    <>
+      <div className="grid gap-12 px-4 md:px-6 lg:px-12 xl:px-24 grid-cols-1 lg:grid-cols-2 mt-6 ">
+        <div className="lg:col-span-1">
+          <Gallery
+            productMedia={productDetails.media}
+            title={productDetails.title}
+          />
+        </div>
+        <div className="lg:col-span-1">
+          <ProductInfo product={productDetails} />
+        </div>
+        <div className="lg:col-span-2">
+          <Reviews
+            productId={params.productId}
+            initialCanLeaveReview={initialCanLeaveReview}
+            userId={userId}
+            userProfileImage={userProfileImage}
+            userName={userName}
+            orderId={orderId}
+          />
+          <div className="mt-6">
+            <RelatedProducts productId={params.productId} />
+          </div>
+        </div>
       </div>
-      <div className="lg:col-span-1">
-        <ProductInfo product={productDetails} />
-      </div>
-      <div className="lg:col-span-2">
-        <Reviews
-          productId={params.productId}
-          initialCanLeaveReview={initialCanLeaveReview}
-          userId={userId}
-          orderId={orderId}
-        />
-      </div>
-    </div>
+    </>
   );
 };
 

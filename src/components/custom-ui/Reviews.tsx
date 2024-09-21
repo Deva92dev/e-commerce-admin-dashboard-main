@@ -1,11 +1,16 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import StarRating from "./StarRating";
+import { ReviewType } from "@/lib/types";
+import { Edit, Trash2 } from "lucide-react";
 
 interface ReviewProps {
   productId: string;
   initialCanLeaveReview: boolean;
+  userProfileImage?: string;
+  userName?: string;
   userId?: string;
   orderId?: string;
 }
@@ -15,14 +20,18 @@ const Reviews = ({
   initialCanLeaveReview,
   userId,
   orderId,
+  userName,
+  userProfileImage,
 }: ReviewProps) => {
-  const [reviews, setReviews] = useState<any[]>([]);
-  const [reviewText, setReviewText] = useState("");
-  const [rating, setRating] = useState(0);
+  const [reviews, setReviews] = useState<ReviewType[]>([]);
+  const [reviewTextPost, setReviewTextPost] = useState("");
+  const [ratingPost, setRatingPost] = useState(0);
+  const [reviewTextEdit, setReviewTextEdit] = useState("");
+  const [ratingEdit, setRatingEdit] = useState(0);
   const [editMode, setEditMode] = useState(false);
   const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [canLeaveReview, setCanLeaveReview] = useState(initialCanLeaveReview);
+  const [canLeaveReview, setCanLeaveReview] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const router = useRouter();
@@ -32,15 +41,26 @@ const Reviews = ({
     try {
       const res = await fetch(`/api/reviews/${productId}`);
       if (res.ok) {
-        const allReviews = await res.json();
+        const allReviews: ReviewType[] = await res.json();
         console.log("All Reviews", allReviews);
         setReviews(allReviews);
 
         // Check if the user has already submitted a review
-        const userHasReviewed = allReviews.some(
-          (review: any) => review.customer._id === userId
+        const userReview = allReviews.find(
+          (review: ReviewType) => review.customer.clerkId === userId
         );
-        setCanLeaveReview(initialCanLeaveReview && !userHasReviewed);
+        if (userReview) {
+          setEditingReviewId(userReview._id);
+          setReviewTextEdit(userReview.comment);
+          setRatingEdit(userReview.rating);
+          setCanLeaveReview(false);
+        } else {
+          setEditingReviewId(null);
+          setReviewTextEdit("");
+          setRatingEdit(0);
+          // User can leave a review only if they have an order
+          setCanLeaveReview(!!orderId);
+        }
       } else {
         console.error("Failed to fetch reviews");
       }
@@ -49,32 +69,29 @@ const Reviews = ({
     } finally {
       setIsLoading(false);
     }
-  }, [initialCanLeaveReview, productId, userId]);
+  }, [orderId, productId, userId]);
 
   useEffect(() => {
     fetchAllReviews();
   }, [fetchAllReviews]);
 
-  //  review form submission (for both creating and updating a review)
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const url = editMode
-      ? `/api/reviews/${productId}` // PATCH
-      : `/api/reviews/${productId}`; // POST
+    if (!orderId) {
+      setError("You must have an order to leave a review.");
+      return;
+    }
 
-    const method = editMode ? "PATCH" : "POST";
-    const body = editMode
-      ? JSON.stringify({
-          reviewId: editingReviewId,
-          comment: reviewText,
-          rating,
-          orderId,
-        })
-      : JSON.stringify({ comment: reviewText, rating, userId, orderId });
+    const url = `/api/reviews/${productId}`;
+    const method = "POST";
 
-    console.log("Product ID being used in fetch:", productId);
-    console.log("Order ID used in fetch:", orderId);
+    const body = JSON.stringify({
+      comment: reviewTextPost,
+      rating: ratingPost,
+      userId,
+      orderId,
+    });
 
     try {
       const res = await fetch(url, {
@@ -85,14 +102,10 @@ const Reviews = ({
         },
       });
       if (res.ok) {
-        setReviewText("");
-        setRating(0);
-        setEditMode(false);
-        setEditingReviewId(null);
+        setReviewTextPost("");
+        setRatingPost(0);
         setCanLeaveReview(false);
-
         await fetchAllReviews();
-
         router.refresh();
       } else {
         const errorData = await res.json();
@@ -104,8 +117,56 @@ const Reviews = ({
     }
   };
 
+  const handleUpdateReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!orderId) {
+      setError("You must have an order to update a review.");
+      return;
+    }
+
+    const url = `/api/reviews/${productId}`;
+    const method = "PATCH";
+
+    const body = JSON.stringify({
+      reviewId: editingReviewId,
+      comment: reviewTextEdit,
+      rating: ratingEdit,
+      orderId,
+    });
+
+    try {
+      const res = await fetch(url, {
+        method,
+        body,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.ok) {
+        setReviewTextEdit("");
+        setRatingEdit(0);
+        setEditMode(false);
+        setEditingReviewId(null);
+        await fetchAllReviews();
+        router.refresh();
+      } else {
+        const errorData = await res.json();
+        setError(errorData.message || "Failed to update review");
+      }
+    } catch (error) {
+      console.error("Error updating review:", error);
+      setError("An error occurred, Please try again.");
+    }
+  };
+
   // delete review
   const handleDeleteReview = async (reviewId: string) => {
+    if (!orderId) {
+      setError("You must have an order to delete a review.");
+      return;
+    }
+
     try {
       const res = await fetch(`/api/reviews/${productId}`, {
         method: "DELETE",
@@ -116,8 +177,12 @@ const Reviews = ({
       });
 
       if (res.ok) {
+        setEditMode(false);
+        setEditingReviewId(null);
+        setReviewTextEdit("");
+        setRatingEdit(0);
         await fetchAllReviews();
-        setCanLeaveReview(true); // Allow user to leave a new review after deletion
+        setCanLeaveReview(true);
         router.refresh();
       } else {
         const errorData = await res.json();
@@ -129,21 +194,22 @@ const Reviews = ({
     }
   };
 
-  // Populate form for editing an existing review
-  const handleEditReview = async (
-    reviewId: string,
-    comment: string,
-    rating: number
-  ) => {
-    setEditMode(true);
-    setEditingReviewId(reviewId);
-    setReviewText(comment);
-    setRating(rating);
-    setCanLeaveReview(true);
+  const handleRatingChangePost = (newRating: number) => {
+    setRatingPost(newRating);
   };
 
-  const handleRatingChange = (newRating: number) => {
-    setRating(newRating);
+  const handleRatingChangeEdit = (newRating: number) => {
+    setRatingEdit(newRating);
+  };
+
+  const handleEditClick = (reviewId: string) => {
+    const reviewToEdit = reviews.find((review) => review._id === reviewId);
+    if (reviewToEdit) {
+      setEditMode(true);
+      setEditingReviewId(reviewId);
+      setReviewTextEdit(reviewToEdit.comment);
+      setRatingEdit(reviewToEdit.rating);
+    }
   };
 
   if (isLoading) {
@@ -151,66 +217,112 @@ const Reviews = ({
   }
 
   return (
-    <div id="review-section">
-      {canLeaveReview && (
+    <div>
+      {canLeaveReview && !editMode && (
         <form
           onSubmit={handleReviewSubmit}
-          className=" flex flex-col gap-6 max-w-xl "
+          className=" flex flex-col gap-6 max-w-xl mb-4"
         >
-          <h3 className="">
-            {editMode ? "Edit the Review" : "Post the Review"}
-          </h3>
+          <h3>Post Your Review</h3>
           <textarea
-            value={reviewText}
-            onChange={(e) => setReviewText(e.target.value)}
+            value={reviewTextPost}
+            onChange={(e) => setReviewTextPost(e.target.value)}
             placeholder="Write Your Review Here"
             rows={5}
-            className="max-w-xl rounded-lg border "
+            className="max-w-xl rounded-lg border"
           />
           <StarRating
-            onRatingChange={handleRatingChange}
-            initialRating={rating}
+            onRatingChange={handleRatingChangePost}
+            initialRating={ratingPost}
           />
           <button
             type="submit"
             className="w-full text-center outline bg-black text-white hover:bg-blue-400 text-base font-bold rounded-lg px-2 py-3"
           >
-            {editMode ? "Update Review" : "Submit Your Review"}
+            Post Review
+          </button>
+        </form>
+      )}
+
+      {editMode && editingReviewId && (
+        <form
+          onSubmit={handleUpdateReview}
+          className=" flex flex-col gap-6 max-w-xl mb-4"
+        >
+          <h3>Edit Your Review</h3>
+          <textarea
+            value={reviewTextEdit}
+            onChange={(e) => setReviewTextEdit(e.target.value)}
+            placeholder="Edit Your Review Here"
+            rows={5}
+            className="max-w-xl rounded-lg border"
+          />
+          <StarRating
+            onRatingChange={handleRatingChangeEdit}
+            initialRating={ratingEdit}
+          />
+          <button
+            type="submit"
+            className="w-full text-center outline bg-black text-white hover:bg-blue-400 text-base font-bold rounded-lg px-2 py-3"
+          >
+            Update Review
           </button>
         </form>
       )}
 
       {/* display  reviews here */}
-      <div>
-        <h3>Reviews</h3>
-        {reviews.length > 0 ? (
-          reviews.map((review: any) => (
-            <div key={review._id} className="review-item">
-              <p>{review.customer.name}</p>
-              <p>{review.comment}</p>
-              <p>Rating: {review.rating}</p>
 
-              {/* Only allow review owner to edit or delete their own reviews */}
-              {review.customer._id === userId && (
-                <div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {reviews.length > 0 ? (
+          reviews.map((review: ReviewType) =>
+            review.customer.clerkId !== userId ? (
+              // Show all other users' reviews
+              <div key={review._id} className="border p-4 rounded-xl">
+                <div className="flex flex-row items-center gap-4">
+                  <img
+                    src={userProfileImage}
+                    alt="user icon"
+                    className="w-10 h-10 rounded-full"
+                  />
+                  <div className="flex flex-col gap-1">
+                    <p>{review.customer.name}</p>
+                    <StarRating initialRating={review.rating} readonly={true} />
+                  </div>
+                </div>
+                <p className="mt-4">{review.comment}</p>
+              </div>
+            ) : (
+              // Show the user's own review with edit and delete options
+              <div key={review._id} className="border p-4 rounded-xl">
+                <div className="flex flex-row items-center gap-4">
+                  <img
+                    src={userProfileImage}
+                    alt="user icon"
+                    className="w-10 h-10 rounded-full"
+                  />
+                  <div className="flex flex-col gap-1">
+                    <p>{review.customer.name}</p>
+                    <StarRating initialRating={review.rating} readonly={true} />
+                  </div>
+                </div>
+                <p className="mt-4">{review.comment}</p>
+                <div className="my-2">
                   <button
-                    onClick={() =>
-                      handleEditReview(
-                        review._id,
-                        review.comment,
-                        review.rating
-                      )
-                    }
+                    className="text-blue-600"
+                    onClick={() => handleEditClick(review._id)}
                   >
-                    Edit
+                    <Edit />
                   </button>
-                  <button onClick={() => handleDeleteReview(review._id)}>
-                    Delete
+                  <button
+                    className="text-red-600 ml-4"
+                    onClick={() => handleDeleteReview(review._id)}
+                  >
+                    <Trash2 />
                   </button>
                 </div>
-              )}
-            </div>
-          ))
+              </div>
+            )
+          )
         ) : (
           <p>No reviews yet for this product.</p>
         )}
