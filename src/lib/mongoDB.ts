@@ -27,7 +27,6 @@ export const ConnectDB = async () => {
   }
 
   if (cached.conn) {
-    console.log("Using existing database connection");
     return cached.conn;
   }
 
@@ -36,9 +35,7 @@ export const ConnectDB = async () => {
       bufferCommands: false,
     };
 
-    console.log("Creating new database connection");
     cached.promise = mongoose.connect(MONGO_URI, opts).then((mongoose) => {
-      console.log("MongoDB connected successfully");
       return mongoose;
     });
   }

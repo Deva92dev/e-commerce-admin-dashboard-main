@@ -17,7 +17,6 @@ const OrderDetails = async ({ params }: { params: { orderId: string } }) => {
   }
 
   const orderDetails = await res.json();
-  console.log(orderDetails);
 
   return (
     <div className="flex flex-col gap-5 p-10">

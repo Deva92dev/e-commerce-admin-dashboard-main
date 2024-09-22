@@ -3,14 +3,19 @@ import Order from "@/lib/models/Order";
 import { ConnectDB } from "@/lib/mongoDB";
 import { NextRequest, NextResponse } from "next/server";
 import { format } from "date-fns";
+import Product from "@/lib/models/Product";
 
 export const GET = async (req: NextRequest) => {
   try {
     await ConnectDB();
 
     const orders = await Order.find({})
-      .populate("customer", "name email")
-      .populate("cartItems.product", "title price")
+      .populate({ path: "customer", model: Customer, select: "name email" })
+      .populate({
+        path: "cartItems.product",
+        model: Product,
+        select: "title price _id",
+      })
       .sort({ createdAt: "desc" });
 
     // Format and return order details

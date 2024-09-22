@@ -15,7 +15,6 @@ const DashboardPage = async () => {
   });
 
   const { totalPaidCustomers, customerList } = await response.json();
-  console.log(totalPaidCustomers, customerList);
 
   return (
     <div className="flex flex-col gap-8">

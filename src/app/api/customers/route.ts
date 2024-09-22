@@ -10,8 +10,8 @@ export const GET = async (req: NextRequest) => {
 
     // Find all orders with a 'paid' status
     const ordersWithPaidStatus = await Order.find({ status: "paid" })
-      .populate("customer")
-      .populate("cartItems.product");
+      .populate({ path: "customer", model: Customer })
+      .populate({ path: "cartItems.product", model: Product });
 
     if (!ordersWithPaidStatus || ordersWithPaidStatus.length === 0) {
       return NextResponse.json(

@@ -1,4 +1,6 @@
+import Customer from "@/lib/models/Customer";
 import Order from "@/lib/models/Order";
+import Product from "@/lib/models/Product";
 import { ConnectDB } from "@/lib/mongoDB";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -13,8 +15,8 @@ export const GET = async (
       status: "paid",
       "cartItems.product": params.productId,
     })
-      .populate("customer")
-      .populate("cartItems.product");
+      .populate({ path: "customer", model: Customer })
+      .populate({ path: "cartItems.product", model: Product });
 
     if (!customersWithPaidOrders || customersWithPaidOrders.length === 0) {
       return NextResponse.json(

@@ -15,7 +15,6 @@ export const POST = async (
     params: { productId: string };
   }
 ) => {
-  console.log("Received Product ID:", params.productId);
   const { userId } = auth();
   if (!userId) {
     return NextResponse.json("unauthorized", { status: 401 });
@@ -25,8 +24,6 @@ export const POST = async (
   try {
     const reqBody = await req.json();
     const { orderId, comment, rating } = reqBody;
-
-    console.log("Received orderId:", orderId);
 
     if (!orderId) {
       return NextResponse.json("orderId is missing", { status: 400 });

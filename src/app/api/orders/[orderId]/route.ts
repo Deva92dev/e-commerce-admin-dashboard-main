@@ -1,4 +1,6 @@
+import Customer from "@/lib/models/Customer";
 import Order from "@/lib/models/Order";
+import Product from "@/lib/models/Product";
 import { ConnectDB } from "@/lib/mongoDB";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -11,8 +13,12 @@ export const GET = async (
 
     // Fetch the order by ID and populate related fields
     const orderDetails = await Order.findById(params.orderId)
-      .populate({ path: "customer", select: "name email" })
-      .populate({ path: "cartItems.product", select: "title price _id" });
+      .populate({ path: "customer", model: Customer, select: "name email" })
+      .populate({
+        path: "cartItems.product",
+        model: Product,
+        select: "title price _id",
+      });
 
     if (!orderDetails) {
       return NextResponse.json("Order Details Not Found", { status: 404 });

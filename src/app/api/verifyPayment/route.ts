@@ -5,7 +5,6 @@ import crypto from "crypto";
 import { ConnectDB } from "@/lib/mongoDB";
 import Payment from "@/lib/models/Payment";
 import Order from "@/lib/models/Order";
-import Customer from "@/lib/models/Customer";
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID!,
