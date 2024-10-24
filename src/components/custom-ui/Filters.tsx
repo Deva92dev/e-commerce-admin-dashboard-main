@@ -1,14 +1,16 @@
 "use client";
 
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { ProductType, UserType } from "@/lib/types";
+import { ProductType } from "@/lib/types";
 import ProductCard from "./ProductCard";
 import ProductCardSkeleton from "./ProductCardSkeleton";
 
 interface FilterProps {
   products: ProductType[];
 }
+
+//infinite scrolling for the product, useDebounce for min & max price
 
 const Filters = ({ products }: FilterProps) => {
   const pathname = usePathname();
@@ -17,70 +19,77 @@ const Filters = ({ products }: FilterProps) => {
   const [filteredProducts, setFilteredProducts] = useState(products);
 
   // filtering of products
-  const filterProducts = (params: URLSearchParams) => {
-    let filtered = [...products];
-    // Apply Collection filter
-    const collection = params.get("collection");
-    if (collection) {
-      filtered = filtered.filter((product) =>
-        product.collections.some(
-          (coll) => coll.title.toLowerCase() === collection.toLowerCase()
-        )
-      );
-    }
+  const filterProducts = useCallback(
+    (params: URLSearchParams) => {
+      let filtered = [...products];
+      // Apply Collection filter
+      const collection = params.get("collection");
+      if (collection) {
+        filtered = filtered.filter((product) =>
+          product.collections.some(
+            (coll) => coll.title.toLowerCase() === collection.toLowerCase()
+          )
+        );
+      }
 
-    // Apply min price filter
-    const min = params.get("min");
-    if (min) {
-      filtered = filtered.filter((product) => product.price >= parseFloat(min));
-    }
+      // Apply min price filter
+      const min = params.get("min");
+      if (min) {
+        filtered = filtered.filter(
+          (product) => product.price >= parseFloat(min)
+        );
+      }
 
-    // Apply max price filter
-    const max = params.get("max");
-    if (max) {
-      filtered = filtered.filter((product) => product.price <= parseFloat(max));
-    }
+      // Apply max price filter
+      const max = params.get("max");
+      if (max) {
+        filtered = filtered.filter(
+          (product) => product.price <= parseFloat(max)
+        );
+      }
 
-    // Apply color filter
-    const color = params.get("color");
-    if (color) {
-      filtered = filtered.filter((product) =>
-        product.color.some((c) => c.toLowerCase() === color.toLowerCase())
-      );
-    }
+      // Apply color filter
+      const color = params.get("color");
+      if (color) {
+        filtered = filtered.filter((product) =>
+          product.color.some((c) => c.toLowerCase() === color.toLowerCase())
+        );
+      }
 
-    // Apply Sort filter
-    const sort = params.get("sort");
-    if (sort) {
-      const [direction, field] = sort.split(" ");
-      const sortDirection = direction as "asc" | "desc";
-      const sortField = field as keyof ProductType;
+      // Apply Sort filter
+      const sort = params.get("sort");
+      if (sort) {
+        const [direction, field] = sort.split(" ");
+        const sortDirection = direction as "asc" | "desc";
+        const sortField = field as keyof ProductType;
 
-      filtered.sort((a, b) => {
-        if (sortField === "createdAt") {
-          const dateA = new Date(a.createdAt).getTime();
-          const dateB = new Date(b.createdAt).getTime();
-          return sortDirection === "asc" ? dateA - dateB : dateB - dateA;
-        } else if (sortField === "title") {
-          return sortDirection === "asc"
-            ? a.title.localeCompare(b.title)
-            : b.title.localeCompare(a.title);
-        } else if (
-          typeof a[sortField] === "number" &&
-          typeof b[sortField] === "number"
-        ) {
-          return sortDirection === "asc"
-            ? a[sortField] - b[sortField]
-            : b[sortField] - a[sortField];
-        } else {
-          return 0;
-        }
-      });
-    }
+        filtered.sort((a, b) => {
+          if (sortField === "createdAt") {
+            const dateA = new Date(a.createdAt).getTime();
+            const dateB = new Date(b.createdAt).getTime();
+            return sortDirection === "asc" ? dateA - dateB : dateB - dateA;
+          } else if (sortField === "title") {
+            return sortDirection === "asc"
+              ? a.title.localeCompare(b.title)
+              : b.title.localeCompare(a.title);
+          } else if (
+            typeof a[sortField] === "number" &&
+            typeof b[sortField] === "number"
+          ) {
+            return sortDirection === "asc"
+              ? a[sortField] - b[sortField]
+              : b[sortField] - a[sortField];
+          } else {
+            return 0;
+          }
+        });
+      }
 
-    // Update the filtered products state
-    setFilteredProducts(filtered);
-  };
+      // Update the filtered products state
+      setFilteredProducts(filtered);
+    },
+    [products]
+  );
 
   const handleFilterChange = (
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
@@ -100,8 +109,7 @@ const Filters = ({ products }: FilterProps) => {
 
   useEffect(() => {
     filterProducts(new URLSearchParams(searchParams));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
+  }, [filterProducts, searchParams]);
 
   return (
     <>

@@ -8,7 +8,8 @@ export const metadata: Metadata = {
   title: "Search - Own Closet",
 };
 
-const Search = async ({ params }: { params: { query: string } }) => {
+const SearchPage = async (props: { params: Promise<{ query: string }> }) => {
+  const params = await props.params;
   const res = await fetch(`http://localhost:3000/api/search/${params.query}`);
   const searchedProducts = await res.json();
 
@@ -34,4 +35,4 @@ const Search = async ({ params }: { params: { query: string } }) => {
   );
 };
 
-export default Search;
+export default SearchPage;

@@ -13,22 +13,41 @@ interface HeartFavoriteProps {
 
 const HeartFavorite = ({ product, updateSignedInUser }: HeartFavoriteProps) => {
   const { user } = useUser();
-
   const [isLiked, setIsLiked] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
+
+  const getUserFromCache = useCallback(() => {
+    const cachedUser = localStorage.getItem("cachedUser");
+    if (cachedUser) {
+      return JSON.parse(cachedUser);
+    }
+    return null;
+  }, []);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const cacheUserData = useCallback((data: any) => {
+    localStorage.setItem("cachedUser", JSON.stringify(data));
+  }, []);
 
   const getUser = useCallback(async () => {
     try {
       setIsLoading(true);
+      const cachedUser = getUserFromCache();
+      if (cachedUser) {
+        setIsLiked(cachedUser.wishlist.includes(product._id));
+        return;
+      }
       const res = await fetch("/api/users");
       const data = await res.json();
+      cacheUserData(data);
       setIsLiked(data.wishlist.includes(product._id));
     } catch (error) {
       console.error("Error fetching user data:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [product._id]);
+  }, [product._id, getUserFromCache, cacheUserData]);
 
   useEffect(() => {
     if (user) {
@@ -60,7 +79,9 @@ const HeartFavorite = ({ product, updateSignedInUser }: HeartFavoriteProps) => {
           body: JSON.stringify({ productId: product._id }),
         });
         const updatedUser = await res.json();
+        cacheUserData(updatedUser);
         setIsLiked(updatedUser.wishlist.includes(product._id));
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         updateSignedInUser && updateSignedInUser(updatedUser);
       }
     } catch (error) {

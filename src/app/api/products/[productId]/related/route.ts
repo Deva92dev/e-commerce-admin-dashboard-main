@@ -4,8 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (
   req: NextRequest,
-  { params }: { params: { productId: string } }
+  props: { params: Promise<{ productId: string }> }
 ) => {
+  const params = await props.params;
   try {
     ConnectDB();
 
@@ -26,7 +27,12 @@ export const GET = async (
       return NextResponse.json("No Related Product Found", { status: 404 });
     }
 
-    return NextResponse.json(relatedProducts, { status: 200 });
+    return NextResponse.json(relatedProducts, {
+      status: 200,
+      headers: {
+        "Cache-Control": "public, max-age=1296000 stale-while-revalidate=3600",
+      },
+    });
   } catch (error) {
     console.error("[Related_Products_GET_API]", error);
     return NextResponse.json("Error at fetching related Orders", {

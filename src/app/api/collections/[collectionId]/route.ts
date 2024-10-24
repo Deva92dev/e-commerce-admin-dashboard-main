@@ -1,25 +1,26 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
-
 import { ConnectDB } from "@/lib/mongoDB";
 import Collection from "@/lib/models/Collections";
 import Product from "@/lib/models/Product";
 
 export const GET = async (
   req: NextRequest,
-  {
-    params,
-  }: {
-    params: { collectionId: string };
+  props: {
+    params: Promise<{ collectionId: string }>;
   }
 ) => {
+  const params = await props.params;
   try {
     await ConnectDB();
 
-    const collection = await Collection.findById(params.collectionId).populate({
-      path: "products",
-      model: Product,
-    });
+    const collection = await Collection.findById(params.collectionId)
+      .select("title, description, image")
+      .populate({
+        path: "products",
+        model: Product,
+        select: "media title category price",
+      });
     if (!collection) {
       return new NextResponse(
         JSON.stringify({ message: "Collection not found" }),
@@ -27,7 +28,12 @@ export const GET = async (
       );
     }
 
-    return NextResponse.json(collection, { status: 200 });
+    return NextResponse.json(collection, {
+      status: 200,
+      headers: {
+        "Cache-Control": "public, max-age=1296000, stale-while-revalidate=3600", // 15 days
+      },
+    });
   } catch (error) {
     console.log("CollectionId_GET", error);
     return new NextResponse("Internal server error");
@@ -37,12 +43,11 @@ export const GET = async (
 // for updating
 export const POST = async (
   req: NextRequest,
-  {
-    params,
-  }: {
-    params: { collectionId: string };
+  props: {
+    params: Promise<{ collectionId: string }>;
   }
 ) => {
+  const params = await props.params;
   try {
     const { userId } = auth();
     if (!userId) {
@@ -80,10 +85,11 @@ export const POST = async (
 
 export const DELETE = async (
   req: NextRequest,
-  { params }: { params: { collectionId: string } }
+  props: { params: Promise<{ collectionId: string }> }
 ) => {
+  const params = await props.params;
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
@@ -105,5 +111,3 @@ export const DELETE = async (
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 };
-
-export const dynamic = "force-dynamic";

@@ -36,5 +36,8 @@ const ReviewSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+ReviewSchema.index({ customer: 1 });
+ReviewSchema.index({ product: 1 });
+
 const Review = mongoose.models.Review || mongoose.model("Review", ReviewSchema);
 export default Review;

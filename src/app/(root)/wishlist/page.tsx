@@ -2,12 +2,12 @@
 
 import { ProductType, UserType } from "@/lib/types";
 import { useUser } from "@clerk/nextjs";
-import { useEffect, useState } from "react";
-import { getProductDetails } from "@/lib/actions";
+import { useCallback, useEffect, useState } from "react";
 import ProductCard from "@/components/custom-ui/ProductCard";
 import Loader from "@/components/custom-ui/Loader";
+import { getProductDetails } from "@/lib/actions/productDetails.actions";
 
-const Wishlist = () => {
+const WishlistPage = () => {
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
   const [signedInUser, setSignedInUser] = useState<UserType | null>(null);
@@ -31,7 +31,7 @@ const Wishlist = () => {
     }
   }, [user]);
 
-  const getWishlistProducts = async () => {
+  const getWishlistProducts = useCallback(async () => {
     setLoading(true);
     if (!signedInUser) return;
 
@@ -45,14 +45,13 @@ const Wishlist = () => {
 
     setWishlist(wishlistProducts);
     setLoading(false);
-  };
+  }, [signedInUser]);
 
   useEffect(() => {
     if (signedInUser) {
       getWishlistProducts();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [signedInUser]);
+  }, [getWishlistProducts, signedInUser]);
 
   const updateSignedInUser = (updatedUser: UserType) => {
     setSignedInUser(updatedUser);
@@ -80,4 +79,4 @@ const Wishlist = () => {
   );
 };
 
-export default Wishlist;
+export default WishlistPage;

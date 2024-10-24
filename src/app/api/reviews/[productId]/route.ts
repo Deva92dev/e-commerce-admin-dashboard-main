@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ReviewEligibility from "@/lib/checkReviewEligibility";
 import Customer from "@/lib/models/Customer";
 import Product from "@/lib/models/Product";
@@ -9,12 +10,11 @@ import { NextRequest, NextResponse } from "next/server";
 // for creating review
 export const POST = async (
   req: NextRequest,
-  {
-    params,
-  }: {
-    params: { productId: string };
+  props: {
+    params: Promise<{ productId: string }>;
   }
 ) => {
+  const params = await props.params;
   const { userId } = auth();
   if (!userId) {
     return NextResponse.json("unauthorized", { status: 401 });
@@ -73,16 +73,68 @@ export const POST = async (
 };
 
 // for getting reviews for a product
+// export const GET = async (
+//   req: NextRequest,
+//   {
+//     params,
+//   }: {
+//     params: { productId: string };
+//   }
+// ) => {
+//   try {
+//     await ConnectDB();
+
+//     // Get query parameters for pagination (page and limit)
+//     const { searchParams } = new URL(req.url);
+//     const page = parseInt(searchParams.get("page") || "1", 10); // base 10 2nd arg
+//     const limit = parseInt(searchParams.get("limit") || "10", 10);
+
+//     const skip = (page - 1) * limit;
+
+//     const reviews = await Review.find({ product: params.productId })
+//       .populate({
+//         path: "customer",
+//         model: Customer,
+//       })
+//       .sort({ createdAt: -1 })
+//       .skip(skip)
+//       .limit(limit);
+
+//     const totalReviews = await Review.countDocuments({
+//       product: params.productId,
+//     });
+
+//     if (!reviews || reviews.length === 0) {
+//       return NextResponse.json("No reviews found for associated productId", {
+//         status: 404,
+//       });
+//     }
+
+//     const responseData = {
+//       reviews,
+//       totalReviews,
+//       page, // current page
+//       totalPages: Math.ceil(totalReviews / limit),
+//     };
+
+//     const res = NextResponse.json(responseData, { status: 200 });
+//     return res;
+//   } catch (error) {
+//     console.error("[Review_GET_API]", error);
+//     return NextResponse.json("Error  at getting  Review", {
+//       status: 500,
+//     });
+//   }
+// };
 export const GET = async (
   req: NextRequest,
-  {
-    params,
-  }: {
-    params: { productId: string };
+  props: {
+    params: Promise<{ productId: string }>;
   }
 ) => {
+  const params = await props.params;
   try {
-    ConnectDB();
+    await ConnectDB();
 
     const reviews = await Review.find({ product: params.productId })
       .populate({
@@ -109,12 +161,11 @@ export const GET = async (
 // for updating reviews for a product
 export const PATCH = async (
   req: NextRequest,
-  {
-    params,
-  }: {
-    params: { productId: string };
+  props: {
+    params: Promise<{ productId: string }>;
   }
 ) => {
+  const params = await props.params;
   try {
     const { userId } = auth();
     if (!userId) {
@@ -171,20 +222,23 @@ export const PATCH = async (
 // for deleting reviews for a product
 export const DELETE = async (
   req: NextRequest,
-  {
-    params,
-  }: {
-    params: { productId: string };
+  props: {
+    params: Promise<{ productId: string }>;
   }
 ) => {
+  const params = await props.params;
   try {
     const { userId } = auth();
     if (!userId) {
       return NextResponse.json("Unauthorized", { status: 401 });
     }
 
-    ConnectDB();
+    await ConnectDB();
     const { reviewId } = await req.json();
+
+    if (!reviewId) {
+      return NextResponse.json("Review ID is missing", { status: 400 });
+    }
 
     // find the customer
     const customer = await Customer.findOne({ clerkId: userId });

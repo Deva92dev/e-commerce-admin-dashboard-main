@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import User from "@/lib/models/Users";
 import { ConnectDB } from "@/lib/mongoDB";
 import { auth } from "@clerk/nextjs/server";
@@ -13,12 +15,7 @@ export const GET = async (req: NextRequest) => {
 
     await ConnectDB();
 
-    let user = await User.findOne({ clerkId: userId });
-
-    if (!user) {
-      user = await User.create({ clerkId: userId });
-      await user.save();
-    }
+    const user = await User.findOne({ clerkId: userId });
 
     return NextResponse.json(user, { status: 200 });
   } catch (error: any) {

@@ -3,13 +3,26 @@ import Order from "@/lib/models/Order";
 import Product from "@/lib/models/Product";
 import { ConnectDB } from "@/lib/mongoDB";
 import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
 
 export const GET = async (
   req: NextRequest,
-  { params }: { params: { userId: string; productId: string } }
+  props: { params: Promise<{ userId: string; productId: string }> }
 ) => {
+  const params = await props.params;
   try {
     await ConnectDB();
+
+    const productId = mongoose.Types.ObjectId.isValid(params.productId)
+      ? new mongoose.Types.ObjectId(params.productId)
+      : null;
+
+    if (!productId) {
+      return NextResponse.json(
+        { error: "Invalid product ID format" },
+        { status: 400 }
+      );
+    }
 
     const customersWithPaidOrders = await Order.find({
       status: "paid",
@@ -37,6 +50,7 @@ export const GET = async (
       customer: {
         name: order.customer.name,
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       product: order.cartItems.map((item: any) => ({
         productId: item.product._id,
         productName: item.product.name,
@@ -47,7 +61,12 @@ export const GET = async (
 
     return NextResponse.json(
       { totalPaidCustomers: uniqueCustomerCount, customerOrderData },
-      { status: 200 }
+      {
+        status: 200,
+        headers: {
+          "Cache-Control": "public, max-age=43200 stale-while-revalidate=3600",
+        },
+      }
     );
   } catch (error) {
     console.error("[Customers_PaidCount_API]", error);

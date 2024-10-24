@@ -1,17 +1,19 @@
 import ProductCard from "@/components/custom-ui/ProductCard";
-import { getCollectionDetails } from "@/lib/actions";
+import { getCollectionDetails } from "@/lib/actions/collectionDetails.actions";
 import { CollectionType, ProductType } from "@/lib/types";
 import { Metadata } from "next";
 import Image from "next/image";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { collectionId: string };
-}): Promise<Metadata> {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ collectionId: string }>;
+  }
+): Promise<Metadata> {
+  const params = await props.params;
   const collectionDetails: CollectionType = await getCollectionDetails(
     params.collectionId
   );
+
   return {
     title: collectionDetails.title,
     description: collectionDetails.description,
@@ -25,11 +27,12 @@ export async function generateMetadata({
   };
 }
 
-const CollectionDetailsPage = async ({
-  params,
-}: {
-  params: { collectionId: string };
-}) => {
+const CollectionDetailsPage = async (
+  props: {
+    params: Promise<{ collectionId: string }>;
+  }
+) => {
+  const params = await props.params;
   const collectionDetails: CollectionType = await getCollectionDetails(
     params.collectionId
   );

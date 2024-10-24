@@ -1,10 +1,10 @@
 import { DataTable } from "@/components/custom-ui/Data-Table";
 import { Separator } from "@/components/ui/separator";
 import { columns } from "../../components/orders/OrderColumn";
+import { getOrders } from "@/lib/actions/orders.actions";
 
 const OrdersPage = async () => {
-  const res = await fetch(`http://localhost:3000/api/orders`);
-  const order = await res.json();
+  const order = await getOrders();
 
   return (
     <div className="px-10 py-5">

@@ -11,7 +11,7 @@ import { Button } from "../ui/button";
 interface ProductInfoProps {
   product: ProductType;
 }
-
+// out of stock functionality for every product and don't let choose certain color if out of stock
 const ProductInfo = ({ product }: ProductInfoProps) => {
   const cart = useCart();
   const { user } = useUser();

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_OPTIONS='--inspect' next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -24,11 +24,11 @@
     "date-fns": "^3.6.0",
     "lucide-react": "^0.403.0",
     "mongoose": "^8.5.0",
-    "next": "^14.2.12",
+    "next": "15.0.0",
     "next-cloudinary": "^6.6.2",
     "razorpay": "^2.9.4",
-    "react": "^18",
-    "react-dom": "^18",
+    "react": "19.0.0-rc-65a56d0e-20241020",
+    "react-dom": "19.0.0-rc-65a56d0e-20241020",
     "react-error-boundary": "^4.0.13",
     "react-hook-form": "^7.52.1",
     "react-hot-toast": "^2.4.1",
@@ -41,12 +41,16 @@
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "npm:types-react@19.0.0-rc.1",
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
     "eslint": "^8",
-    "eslint-config-next": "14.2.4",
+    "eslint-config-next": "15.0.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
+  },
+  "overrides": {
+    "@types/react": "npm:types-react@19.0.0-rc.1",
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
   }
 }

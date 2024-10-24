@@ -1,3 +1,4 @@
+/* eslint-disable no-var */
 import mongoose, { Mongoose } from "mongoose";
 
 const MONGO_URI = process.env.MONGO_URI!;
@@ -36,6 +37,10 @@ export const ConnectDB = async () => {
     };
 
     cached.promise = mongoose.connect(MONGO_URI, opts).then((mongoose) => {
+      // Enable Mongoose debugging if in development
+      if (process.env.NODE_ENV !== "production") {
+        mongoose.set("debug", true); // Enable query logging
+      }
       return mongoose;
     });
   }

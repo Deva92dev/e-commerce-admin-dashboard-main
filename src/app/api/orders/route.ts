@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Customer from "@/lib/models/Customer";
 import Order from "@/lib/models/Order";
 import { ConnectDB } from "@/lib/mongoDB";
@@ -37,7 +39,12 @@ export const GET = async (req: NextRequest) => {
       })),
     }));
 
-    return NextResponse.json(orderDetails, { status: 200 });
+    return NextResponse.json(orderDetails, {
+      status: 200,
+      headers: {
+        "Cache-Control": "public, max-age=43200 stale-while-revalidate=3600",
+      },
+    });
   } catch (error: any) {
     console.log("[Orders_API]", error);
     return NextResponse.json(

@@ -1,20 +1,10 @@
+import { getTotalSale } from "@/lib/actions/sales.actions";
+import { getTotalPaiCustomers } from "@/lib/actions/totalpaidCustomers.actions";
 import { formatPrice } from "@/lib/formatPrice";
 
 const DashboardPage = async () => {
-  const res = await fetch(`http://localhost:3000/api/sales`, {
-    method: "GET",
-    cache: "no-cache", // Ensures fresh data
-  });
-
-  const data = await res.json();
-  const totalSales = data.totalSales;
-
-  const response = await fetch(`http://localhost:3000/api/customers`, {
-    method: "GET",
-    cache: "no-cache",
-  });
-
-  const { totalPaidCustomers, customerList } = await response.json();
+  const { totalSales } = await getTotalSale();
+  const { totalPaidCustomers } = await getTotalPaiCustomers();
 
   return (
     <div className="flex flex-col gap-8">

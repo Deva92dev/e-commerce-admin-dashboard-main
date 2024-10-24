@@ -5,7 +5,6 @@ const ProductSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      unique: true,
       required: true,
     },
     description: {
@@ -46,6 +45,11 @@ const ProductSchema = new mongoose.Schema(
   // cause we use get "getter function" in price
   { toJSON: { getters: true }, timestamps: true }
 );
+
+ProductSchema.index({ title: 1 });
+ProductSchema.index({ collections: 1 });
+ProductSchema.index({ category: 1 });
+ProductSchema.index({ review: 1 });
 
 const Product =
   mongoose.models.Product || mongoose.model("Product", ProductSchema);

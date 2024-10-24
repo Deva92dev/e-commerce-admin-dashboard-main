@@ -1,9 +1,10 @@
-'use client';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+"use client";
 
-import { DataTable } from '@/components/custom-ui/Data-Table';
-import { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
-import { columns } from './CollectionColumn';
+import { DataTable } from "@/components/custom-ui/Data-Table";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { columns } from "./CollectionColumn";
 
 const CollectionTable = () => {
   const [loading, setLoading] = useState(true);
@@ -11,15 +12,15 @@ const CollectionTable = () => {
 
   const getCollections = async () => {
     try {
-      const response = await fetch('/api/collections', {
-        method: 'GET',
+      const response = await fetch("/api/collections", {
+        method: "GET",
       });
       const data = await response.json();
       setCollections(data);
       setLoading(false);
     } catch (error) {
-      console.log(['CollectionForm_GET_API'], error);
-      toast.error('Something went wrong, Please try again later');
+      console.log(["CollectionForm_GET_API"], error);
+      toast.error("Something went wrong, Please try again later");
     }
   };
 
@@ -27,11 +28,9 @@ const CollectionTable = () => {
     getCollections();
   }, []);
 
-  // console.log(collections);
-
   return (
     <>
-      <DataTable columns={columns} data={collections} searchKey='title' />
+      <DataTable columns={columns} data={collections} searchKey="title" />
     </>
   );
 };

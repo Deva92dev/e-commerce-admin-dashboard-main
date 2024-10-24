@@ -7,8 +7,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (
   req: NextRequest,
-  { params }: { params: { customerId: string } }
+  props: { params: Promise<{ customerId: string }> }
 ) => {
+  const params = await props.params;
   try {
     await ConnectDB();
 
@@ -16,7 +17,12 @@ export const GET = async (
       customerClerkId: params.customerId,
     }).populate({ path: "cartItems.product", model: Product });
 
-    return NextResponse.json(orders, { status: 200 });
+    return NextResponse.json(orders, {
+      status: 200,
+      headers: {
+        "Cache-Control": "public, max-age=43200 stale-while-revalidate=3600",
+      },
+    });
   } catch (error) {
     console.error("[Customer_All_Order_API]", error);
     return NextResponse.json("Error at fetching Your All Orders", {

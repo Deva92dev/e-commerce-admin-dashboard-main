@@ -4,13 +4,12 @@ import useCart from "@/lib/hooks/useCart";
 import Link from "next/link";
 import { useEffect } from "react";
 
-const SuccessfulPayment = () => {
+const SuccessfulPaymentPage = () => {
   const cart = useCart();
 
   useEffect(() => {
     cart.clearCart();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [cart]);
 
   return (
     <div className="h-screen flex flex-col justify-center items-center gap-5">
@@ -26,4 +25,4 @@ const SuccessfulPayment = () => {
   );
 };
 
-export default SuccessfulPayment;
+export default SuccessfulPaymentPage;

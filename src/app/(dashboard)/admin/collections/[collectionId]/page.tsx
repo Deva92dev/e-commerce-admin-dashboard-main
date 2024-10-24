@@ -1,35 +1,35 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { CollectionType } from '@/lib/types';
-import Loader from '@/components/custom-ui/Loader';
-import CollectionForm from '@/app/(dashboard)/components/collections/CollectionForm';
+"use client";
+import { useCallback, useEffect, useState, use } from "react";
+import { CollectionType } from "@/lib/types";
+import Loader from "@/components/custom-ui/Loader";
+import CollectionForm from "@/app/(dashboard)/components/collections/CollectionForm";
 
-const CollectionDetailsPage = ({
-  params,
-}: {
-  params: { collectionId: string };
-}) => {
+const CollectionDetailsPage = (
+  props: {
+    params: Promise<{ collectionId: string }>;
+  }
+) => {
+  const params = use(props.params);
   const [loading, setLoading] = useState(false);
   const [collectionDetails, setCollectionDetails] =
     useState<CollectionType | null>(null);
 
-  const getCollectionDetails = async () => {
+  const getCollectionDetails = useCallback(async () => {
     try {
       const res = await fetch(`/api/collections/${params.collectionId}`, {
-        method: 'GET',
+        method: "GET",
       });
       const data = await res.json();
       setCollectionDetails(data);
       setLoading(false);
     } catch (error) {
-      console.log('[CollectionId_GET]', error);
+      console.log("[CollectionId_GET]", error);
     }
-  };
+  }, [params.collectionId]);
 
   useEffect(() => {
     getCollectionDetails();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [getCollectionDetails]);
 
   // so that we can update the collection
   return loading ? (

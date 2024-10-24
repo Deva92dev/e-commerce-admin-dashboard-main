@@ -7,7 +7,6 @@ import {
   SignInButton,
   SignOutButton,
   SignUpButton,
-  UserButton,
   useUser,
 } from "@clerk/nextjs";
 import { CircleUserRound, MenuIcon, ShoppingCart } from "lucide-react";

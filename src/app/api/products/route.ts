@@ -1,15 +1,17 @@
-import Collection from '@/lib/models/Collections';
-import Product from '@/lib/models/Product';
-import { ConnectDB } from '@/lib/mongoDB';
-import { auth } from '@clerk/nextjs/server';
-import { NextRequest, NextResponse } from 'next/server';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import Collection from "@/lib/models/Collections";
+import Product from "@/lib/models/Product";
+import { ConnectDB } from "@/lib/mongoDB";
+import { auth } from "@clerk/nextjs/server";
+import { NextRequest, NextResponse } from "next/server";
 
 // for creating the product
 export const POST = async (req: NextRequest) => {
   try {
     const { userId } = auth();
     if (!userId) {
-      return new NextResponse('Unauthorized', { status: 401 });
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
     await ConnectDB();
@@ -38,14 +40,14 @@ export const POST = async (req: NextRequest) => {
       !category
     ) {
       return new NextResponse(
-        'Please provide necessary details about product',
+        "Please provide necessary details about product",
         { status: 400 }
       );
     }
 
     const existingProduct = await Product.findOne({ title });
     if (existingProduct) {
-      return new NextResponse('Product already exists', { status: 401 });
+      return new NextResponse("Product already exists", { status: 401 });
     }
 
     const newProduct = await Product.create({
@@ -76,7 +78,7 @@ export const POST = async (req: NextRequest) => {
 
     return NextResponse.json(newProduct, { status: 200 });
   } catch (error: any) {
-    console.log('[Product_API]', error);
+    console.log("[Product_API]", error);
     return new NextResponse(`Error creating product: ${error.message}`, {
       status: 500,
     });
@@ -89,16 +91,20 @@ export const GET = async (req: NextRequest) => {
     await ConnectDB();
 
     const products = await Product.find({})
+      .select("title category price media")
       .sort({
-        createdAt: 'desc',
+        createdAt: "desc",
       })
-      .populate({ path: 'collections', model: Collection });
+      .populate({ path: "collections", model: Collection });
 
-    return NextResponse.json(products, { status: 200 });
+    return NextResponse.json(products, {
+      status: 200,
+      headers: {
+        "Cache-Control": "public, max-age=1296000 stale-while-revalidate=3600",
+      },
+    });
   } catch (error) {
-    console.log(['Product_GET'], error);
-    return new NextResponse('Internal Server Error', { status: 500 });
+    console.log(["Product_GET"], error);
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 };
-
-export const dynamic = 'force-dynamic';

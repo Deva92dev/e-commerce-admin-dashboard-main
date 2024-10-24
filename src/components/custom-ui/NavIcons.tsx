@@ -8,7 +8,7 @@ import {
   SignUpButton,
   useUser,
 } from "@clerk/nextjs";
-import { LogOut, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { Button } from "../ui/button";

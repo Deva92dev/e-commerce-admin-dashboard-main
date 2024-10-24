@@ -1,8 +1,10 @@
-'use client';
-import { useState } from 'react';
-import { CldUploadWidget } from 'next-cloudinary';
-import Image from 'next/image';
-import Loader from './Loader';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+import { useState } from "react";
+import { CldUploadWidget } from "next-cloudinary";
+import Image from "next/image";
+import Loader from "./Loader";
 
 interface UploadImagesProps {
   multiple?: boolean;
@@ -43,7 +45,7 @@ const UploadImages: React.FC<UploadImagesProps> = ({
   return (
     <div>
       <CldUploadWidget
-        signatureEndpoint='/api/sign-cloudinary-params'
+        signatureEndpoint="/api/sign-cloudinary-params"
         uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
         onSuccess={handleSuccess}
         options={{ multiple }}
@@ -56,11 +58,11 @@ const UploadImages: React.FC<UploadImagesProps> = ({
           }
           return (
             <button
-              type='button'
+              type="button"
               onClick={handleOnClick}
-              className='bg-blue-500 p-2 rounded-lg text-white'
+              className="bg-blue-500 p-2 rounded-lg text-white"
             >
-              {multiple ? 'Upload Images' : 'Upload an Image'}
+              {multiple ? "Upload Images" : "Upload an Image"}
             </button>
           );
         }}
@@ -69,7 +71,7 @@ const UploadImages: React.FC<UploadImagesProps> = ({
       {loading && <Loader />}
 
       {/* add delete button around each image for easy deletion */}
-      <div className='mt-4 flex flex-row '>
+      <div className="mt-4 flex flex-row ">
         {resources.map((resource) => (
           <Image
             key={resource.public_id}
@@ -77,7 +79,7 @@ const UploadImages: React.FC<UploadImagesProps> = ({
             width={300}
             height={300}
             alt={resource.public_id}
-            className='w-32 h-32 object-cover mr-2 mb-2'
+            className="w-32 h-32 object-cover mr-2 mb-2"
           />
         ))}
       </div>

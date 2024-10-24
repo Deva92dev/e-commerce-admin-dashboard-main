@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+
 import "../globals.css";
 import Navbar from "@/components/custom-ui/Navbar";
 import Footer from "@/components/custom-ui/Footer";
 import { ToasterProvider } from "@/lib/ToasterProvider";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Own Closet - Cloth Store for Youth & All",
@@ -20,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         <ToasterProvider />
         <Navbar />
         {children}

@@ -7,7 +7,7 @@ import { columns } from "../../components/customers/CustomerColumn";
 import { CustomersType } from "@/lib/types";
 
 const CustomersPage = async () => {
-  ConnectDB();
+  await ConnectDB();
 
   const customers: CustomersType[] = await Customer.find({}).sort({
     createdAt: "desc",

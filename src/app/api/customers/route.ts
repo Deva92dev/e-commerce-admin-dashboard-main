@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Order from "@/lib/models/Order";
 import Customer from "@/lib/models/Customer";
 import { ConnectDB } from "@/lib/mongoDB";
@@ -53,7 +55,12 @@ export const GET = async (req: NextRequest) => {
 
     return NextResponse.json(
       { totalPaidCustomers: customerList.length, customerList },
-      { status: 200 }
+      {
+        status: 200,
+        headers: {
+          "Cache-Control": "public, max-age=86400 stale-while-revalidate=3600",
+        },
+      }
     );
   } catch (error) {
     console.error("[AllPaidCustomers_API]", error);

@@ -1,6 +1,8 @@
-import { getCustomerOrders } from "@/lib/actions";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { getCustomerOrders } from "@/lib/actions/customerOrders.actions";
 import { formatPrice } from "@/lib/formatPrice";
-import { OrderItemType, OrderType, SingleOrderType } from "@/lib/types";
+import { OrderItemType, SingleOrderType } from "@/lib/types";
 import { auth } from "@clerk/nextjs/server";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -10,7 +12,10 @@ export const metadata: Metadata = {
 };
 
 // orders related to clerk user, that's why userId in as parameter
-const Orders = async ({ params }: { params: { customerId: string } }) => {
+const OrdersPage = async (props: {
+  params: Promise<{ customerId: string }>;
+}) => {
+  const params = await props.params;
   const { userId } = auth();
 
   const getCustomerAllOrders: SingleOrderType[] = await getCustomerOrders(
@@ -58,10 +63,12 @@ const Orders = async ({ params }: { params: { customerId: string } }) => {
                         </span>
                       </p>
                     )}
-                    {orderItem.size && (
+                    {orderItem.sizes && (
                       <p>
-                        Color :
-                        <span className="font-bold pl-2">{orderItem.size}</span>
+                        Sizes :
+                        <span className="font-bold pl-2">
+                          {orderItem.sizes}
+                        </span>
                       </p>
                     )}
 
@@ -88,4 +95,4 @@ const Orders = async ({ params }: { params: { customerId: string } }) => {
   );
 };
 
-export default Orders;
+export default OrdersPage;

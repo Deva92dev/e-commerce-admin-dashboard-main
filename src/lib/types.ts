@@ -14,11 +14,11 @@ export type ProductType = {
   title: string;
   description: string;
   category: string;
-  collections: [CollectionType];
-  media: [string];
-  tags: [string];
-  sizes: [string];
-  color: [string];
+  collections: CollectionType[];
+  media: string[];
+  tags: string[];
+  sizes: string[];
+  color: string[];
   review: string;
   numberOfReviews: number;
   totalRating: number;
@@ -30,15 +30,15 @@ export type ProductType = {
 
 export type UserType = {
   clerkId: string;
-  wishlist: [string];
+  wishlist: string[];
   createdAt: string;
   updatedAt: string;
 };
 
 export type OrderColumnType = {
   _id: string;
-  customer: string;
-  products: number;
+  customer: CustomerType;
+  products: OrderType;
   totalAmount: number;
   createdAt: string;
 };
@@ -51,10 +51,23 @@ export type CustomerType = {
 
 export type OrderItemType = {
   _id: string;
+  title: string;
   product: ProductType;
-  color: string;
-  size: string;
   quantity: number;
+  price: number;
+  color: string;
+  sizes: string;
+};
+
+export type OrderDetailsType = {
+  _id: string;
+  customer: CustomerType;
+  products: number;
+  totalAmount: number;
+  currency: string;
+  createdAt: Date;
+  status: "created" | "paid";
+  items: OrderItemType[];
 };
 
 export type OrderType = {
@@ -95,7 +108,7 @@ export type SingleOrderType = {
   customerClerkId: string;
   orderId: string;
   userId: string;
-  customer: string;
+  customer: CustomerType;
   cartItems: OrderItemType[];
   amount: number;
   currency: string;

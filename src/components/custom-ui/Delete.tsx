@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { Trash } from 'lucide-react';
+import { Trash } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,10 +11,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+} from "@/components/ui/alert-dialog";
 
-import { useState } from 'react';
-import toast from 'react-hot-toast';
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 // this component is used many places that is why item prop
 interface DeleteProps {
@@ -23,15 +23,16 @@ interface DeleteProps {
 }
 
 const Delete = ({ id, item }: DeleteProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(false);
 
   const onDelete = async () => {
     try {
       setLoading(true);
-      const itemType = item === 'product' ? 'products' : 'collections';
+      const itemType = item === "product" ? "products" : "collections";
 
       const res = await fetch(`/api/${itemType}/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       if (res.ok) {
@@ -41,20 +42,20 @@ const Delete = ({ id, item }: DeleteProps) => {
       }
     } catch (error) {
       console.log(error);
-      toast.error('An error ocurred while deleting. Please try again');
+      toast.error("An error ocurred while deleting. Please try again");
     }
   };
 
   return (
     <AlertDialog>
       <AlertDialogTrigger>
-        <div className=''>
-          <Trash className='h-6 w-6 text-red-500' />
+        <div className="">
+          <Trash className="h-6 w-6 text-red-500" />
         </div>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle className='text-red-500'>
+          <AlertDialogTitle className="text-red-500">
             Are you absolutely sure?
           </AlertDialogTitle>
           <AlertDialogDescription>
@@ -66,7 +67,7 @@ const Delete = ({ id, item }: DeleteProps) => {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            className='bg-red-500 text-white'
+            className="bg-red-500 text-white"
             onClick={onDelete}
           >
             Delete

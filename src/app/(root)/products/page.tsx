@@ -1,12 +1,14 @@
 import Filters from "@/components/custom-ui/Filters";
 import { Separator } from "@/components/ui/separator";
-import { getProducts } from "@/lib/actions";
+import { getProducts } from "@/lib/actions/products.actions";
+
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Products - Own Closet",
 };
 
+//pagination chatgpt
 const ProductPage = async () => {
   const products = await getProducts();
 

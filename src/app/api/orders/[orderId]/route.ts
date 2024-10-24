@@ -6,8 +6,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (
   req: NextRequest,
-  { params }: { params: { orderId: string } }
+  props: { params: Promise<{ orderId: string }> }
 ) => {
+  const params = await props.params;
   try {
     await ConnectDB();
 
@@ -36,6 +37,7 @@ export const GET = async (
       currency: orderDetails.currency,
       createdAt: orderDetails.createdAt,
       status: orderDetails.status,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       items: orderDetails.cartItems.map((item: any) => ({
         _id: item.product._id,
         title: item.product.title,
@@ -46,9 +48,12 @@ export const GET = async (
       })),
     };
 
-    console.log("FormattedOrderIdDetails", formattedOrderDetails);
-
-    return NextResponse.json(formattedOrderDetails, { status: 200 });
+    return NextResponse.json(formattedOrderDetails, {
+      status: 200,
+      headers: {
+        "Cache-Control": "public, max-age=43200 stale-while-revalidate=3600",
+      },
+    });
   } catch (error) {
     console.error("[OrderId_GET]", error);
     return NextResponse.json("Error in Fetching OrderId", { status: 500 });

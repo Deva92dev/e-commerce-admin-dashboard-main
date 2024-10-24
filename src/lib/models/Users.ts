@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const UserSchema = new Schema(
   {
-    clerkId: String,
+    clerkId: { type: String, required: true, unique: true },
     wishlist: {
       type: Array,
       default: [],
@@ -18,6 +18,8 @@ const UserSchema = new Schema(
   },
   { timestamps: true }
 );
+
+UserSchema.index({ clerkId: 1 });
 
 const User = mongoose.models.User || mongoose.model("User", UserSchema);
 

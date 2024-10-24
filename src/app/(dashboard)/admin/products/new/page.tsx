@@ -1,5 +1,4 @@
-import ProductForm from '@/app/(dashboard)/components/products/ProductForm';
-import { getCollection } from '@/lib/actions';
+import ProductForm from "@/app/(dashboard)/components/products/ProductForm";
 
 const CreateProductPage = async () => {
   return <ProductForm />;

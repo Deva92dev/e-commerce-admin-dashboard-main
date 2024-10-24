@@ -1,58 +1,57 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Gallery from "@/components/custom-ui/Gallery";
 import ProductInfo from "@/components/custom-ui/ProductInfo";
 import RelatedProducts from "@/components/custom-ui/RelatedProducts";
 import Reviews from "@/components/custom-ui/Reviews";
-import { getProductDetails } from "@/lib/actions";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { getPaidCustomers } from "@/lib/actions/paidCustomers.actions";
+import { getProductDetails } from "@/lib/actions/productDetails.actions";
+import { getRelatedProducts } from "@/lib/actions/relatedProducts.actions";
+import { currentUser } from "@clerk/nextjs/server";
+
 import { Metadata } from "next";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { productId: string };
+export async function generateMetadata(props: {
+  params: Promise<{ productId: string }>;
 }): Promise<Metadata> {
+  const params = await props.params;
   const productDetails = await getProductDetails(params.productId);
   return {
     title: productDetails.title,
     description: productDetails.description,
-    openGraph: {
-      images: [
-        {
-          url: productDetails.media[0],
-        },
-      ],
-    },
   };
 }
 
-const ProductDetails = async ({
-  params,
-}: {
-  params: { productId: string };
+// in stock for each product, gallery and productInfo is not changing frequently, make them not making request each time
+const ProductDetailsPage = async (props: {
+  params: Promise<{ productId: string }>;
 }) => {
+  const params = await props.params;
   const user = await currentUser();
+
   const userId = user?.id;
-  const userProfileImage = user?.imageUrl;
   const userName = user
     ? `${user.firstName || ""} ${user.lastName || ""}`.trim()
-    : undefined;
+    : "";
+  const userProfileImage = user?.imageUrl;
 
-  const productDetails = await getProductDetails(params.productId);
+  console.time("Fetching productDetails and relatedProducts");
+
+  const [productDetails, relatedProducts] = await Promise.all([
+    getProductDetails(params.productId),
+    getRelatedProducts(params.productId),
+  ]);
+
+  console.timeEnd("Fetched productDetails and relatedProducts");
 
   let initialCanLeaveReview = false;
   let orderId = null;
 
   if (userId) {
     try {
-      const res = await fetch(
-        `http://localhost:3000/api/customers/${userId}/${params.productId}`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
+      const { totalPaidCustomers, customerOrderData } = await getPaidCustomers(
+        params.productId,
+        userId
       );
-
-      const { totalPaidCustomers, customerOrderData } = await res.json();
 
       if (totalPaidCustomers > 0 && customerOrderData.length > 0) {
         const validOrder = customerOrderData.find(
@@ -97,7 +96,10 @@ const ProductDetails = async ({
             orderId={orderId}
           />
           <div className="mt-6">
-            <RelatedProducts productId={params.productId} />
+            <RelatedProducts
+              relatedProducts={relatedProducts}
+              productId={params.productId}
+            />
           </div>
         </div>
       </div>
@@ -105,4 +107,4 @@ const ProductDetails = async ({
   );
 };
 
-export default ProductDetails;
+export default ProductDetailsPage;

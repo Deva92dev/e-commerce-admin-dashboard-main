@@ -1,13 +1,16 @@
-import { getRelatedProducts } from "@/lib/actions";
 import { ProductType } from "@/lib/types";
 import ProductCard from "./ProductCard";
 
 interface RelatedProductProps {
   productId: string;
+  relatedProducts: ProductType[];
 }
 
-const RelatedProducts = async ({ productId }: RelatedProductProps) => {
-  const relatedProducts = await getRelatedProducts(productId);
+const RelatedProducts = async ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  productId,
+  relatedProducts,
+}: RelatedProductProps) => {
   return (
     <>
       {relatedProducts.length === 0 ? (
@@ -25,7 +28,5 @@ const RelatedProducts = async ({ productId }: RelatedProductProps) => {
     </>
   );
 };
-
-export const dynamic = "force-dynamic";
 
 export default RelatedProducts;

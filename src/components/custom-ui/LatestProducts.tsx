@@ -1,20 +1,20 @@
-import { getProducts } from "@/lib/actions";
 import Image from "next/image";
 import Link from "next/link";
 import { Separator } from "../ui/separator";
 import { formatPrice } from "@/lib/formatPrice";
+import { ProductType } from "@/lib/types";
 
-// so that i don't have to fetch data twice
-const LatestProducts = async () => {
-  const latestProducts = await getProducts();
+interface LatestProductsProps {
+  latestProducts: ProductType[];
+}
 
+const LatestProducts = async ({ latestProducts }: LatestProductsProps) => {
   return (
     <div className=" px-4 md:px-6 lg:px-12 xl:px-24 my-8">
       <h2 className="text-3xl font-bold text-center mb-4">Latest Products</h2>
       <Separator />
       <div className="grid gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 mt-4">
-        {latestProducts?.slice(0, 3).map((item) => (
-          // change href to dynamic id
+        {latestProducts?.slice(0, 3).map((item: ProductType) => (
           <Link
             href="/products"
             key={item._id}

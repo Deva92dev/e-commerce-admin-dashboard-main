@@ -1,6 +1,4 @@
 import { navbarLinks } from "@/lib/constants";
-import { UserButton, useUser } from "@clerk/nextjs";
-import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Menu from "./Menu";
@@ -19,7 +17,7 @@ const Navbar = () => {
             src="/logo.svg"
             alt="logo of website"
             width={100}
-            height={100}
+            height={70}
           />
         </Link>
         <SearchBar />

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Customer from "@/lib/models/Customer";
 import Product from "@/lib/models/Product";
 import Review from "@/lib/models/Review";
@@ -24,7 +25,12 @@ export const GET = async (req: NextRequest) => {
       })
       .sort({ createdAt: -1 });
 
-    return NextResponse.json(reviews, { status: 200 });
+    return NextResponse.json(reviews, {
+      status: 200,
+      headers: {
+        "Cache-Control": "public, max-age=604800 stale-while-revalidate=3600",
+      },
+    });
   } catch (error) {
     console.error("[Customer_Review_API]", error);
     return NextResponse.json("Error at getting a specific Customer Review", {

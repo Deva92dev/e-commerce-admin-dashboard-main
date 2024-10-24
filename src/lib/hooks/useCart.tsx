@@ -40,7 +40,7 @@ const useCart = create(
         toast.success("Items added to the cart", { icon: "🛒" });
       },
       //   remove items from cart
-      removeItem: (_id: String, color?: string, sizes?: string) => {
+      removeItem: (_id: string, color?: string, sizes?: string) => {
         const newCartItems = get().cartItems.filter(
           (cartItem) =>
             !(
@@ -53,7 +53,7 @@ const useCart = create(
         toast.success("Item removed from the cart");
       },
       // increase quantity
-      increaseQuantity: (_id: String, color?: string, sizes?: string) => {
+      increaseQuantity: (_id: string, color?: string, sizes?: string) => {
         const newCartItems = get().cartItems.map((cartItem) =>
           cartItem.item._id === _id &&
           cartItem.color === color &&
@@ -65,7 +65,7 @@ const useCart = create(
         toast.success("Item quantity increased");
       },
       // decrease quantity
-      decreaseQuantity: (_id: String, color?: string, sizes?: string) => {
+      decreaseQuantity: (_id: string, color?: string, sizes?: string) => {
         const newCartItems = get().cartItems.map((cartItem) =>
           cartItem.item._id === _id &&
           cartItem.color === color &&

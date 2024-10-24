@@ -1,36 +1,40 @@
-import Collection from '@/lib/models/Collections';
-import Product from '@/lib/models/Product';
-import { ConnectDB } from '@/lib/mongoDB';
-import { auth } from '@clerk/nextjs/server';
-import { NextRequest, NextResponse } from 'next/server';
+import Collection from "@/lib/models/Collections";
+import Product from "@/lib/models/Product";
+import { ConnectDB } from "@/lib/mongoDB";
+import { auth } from "@clerk/nextjs/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (
   req: NextRequest,
-  {
-    params,
-  }: {
-    params: { productId: string };
+  props: {
+    params: Promise<{ productId: string }>;
   }
 ) => {
+  const params = await props.params;
   try {
     ConnectDB();
 
     const product = await Product.findById(params.productId).populate({
-      path: 'collections',
+      path: "collections",
       model: Collection,
     });
 
     if (!product) {
       return new NextResponse(
-        JSON.stringify({ message: 'Product not found' }),
+        JSON.stringify({ message: "Product not found" }),
         { status: 404 }
       );
     }
 
-    return NextResponse.json(product, { status: 200 });
+    return NextResponse.json(product, {
+      status: 200,
+      headers: {
+        "Cache-Control": "public, max-age=86400 stale-while-revalidate=3600",
+      },
+    });
   } catch (error) {
     console.log(`Products_GET`, error);
-    return new NextResponse('Something went wrong in dynamic ProductId route', {
+    return new NextResponse("Something went wrong in dynamic ProductId route", {
       status: 500,
     });
   }
@@ -39,12 +43,13 @@ export const GET = async (
 // for updating the product
 export const POST = async (
   req: NextRequest,
-  { params }: { params: { productId: string } }
+  props: { params: Promise<{ productId: string }> }
 ) => {
+  const params = await props.params;
   try {
     const { userId } = auth();
     if (!userId) {
-      return new NextResponse('Unauthorized', { status: 401 });
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
     await ConnectDB();
@@ -52,7 +57,7 @@ export const POST = async (
     const product = await Product.findById(params.productId);
     if (!product) {
       return new NextResponse(
-        JSON.stringify({ message: 'Product not found' }),
+        JSON.stringify({ message: "Product not found" }),
         { status: 404 }
       );
     }
@@ -79,7 +84,7 @@ export const POST = async (
       !category
     ) {
       return new NextResponse(
-        'Please provide all necessary details about product for update',
+        "Please provide all necessary details about product for update",
         { status: 400 }
       );
     }
@@ -125,32 +130,33 @@ export const POST = async (
         tags,
       },
       { new: true }
-    ).populate({ path: 'collections', model: Collection });
+    ).populate({ path: "collections", model: Collection });
 
     await updatedProduct.save();
 
     return NextResponse.json(updatedProduct, { status: 200 });
   } catch (error) {
-    console.log('ProductId_API', error);
-    return new NextResponse('Internal error', { status: 500 });
+    console.log("ProductId_API", error);
+    return new NextResponse("Internal error", { status: 500 });
   }
 };
 
 export const DELETE = async (
   req: NextRequest,
-  { params }: { params: { productId: string } }
+  props: { params: Promise<{ productId: string }> }
 ) => {
+  const params = await props.params;
   try {
     const { userId } = auth();
     if (!userId) {
-      return new NextResponse('Unauthorized', { status: 401 });
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
     await ConnectDB();
     const product = await Product.findByIdAndDelete(params.productId);
     if (!product) {
       return new NextResponse(
-        JSON.stringify({ message: 'Product not found' }),
+        JSON.stringify({ message: "Product not found" }),
         { status: 404 }
       );
     }
@@ -171,9 +177,9 @@ export const DELETE = async (
       )
     );
 
-    return new NextResponse('Product is deleted', { status: 200 });
+    return new NextResponse("Product is deleted", { status: 200 });
   } catch (error) {
-    console.log('ProductId_DELETE', error);
-    return new NextResponse('Internal Server Error', { status: 500 });
+    console.log("ProductId_DELETE", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 };

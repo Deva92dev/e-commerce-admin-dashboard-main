@@ -1,15 +1,13 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import { ToasterProvider } from '@/lib/ToasterProvider';
-import '../../globals.css';
-import Sidebar from '../components/Sidebar';
-import TopNavBar from '../components/TopNavBar';
+import type { Metadata } from "next";
 
-const inter = Inter({ subsets: ['latin'] });
+import { ToasterProvider } from "@/lib/ToasterProvider";
+import "../../globals.css";
+import Sidebar from "../components/Sidebar";
+import TopNavBar from "../components/TopNavBar";
 
 export const metadata: Metadata = {
-  title: 'Admin page',
-  description: 'Data about Website',
+  title: "Admin page",
+  description: "Data about Website",
 };
 
 export default function DashboardLayout({
@@ -18,13 +16,13 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
-      <body className={inter.className}>
+    <html lang="en">
+      <body>
         <ToasterProvider />
-        <div className='flex max-lg:flex-col'>
+        <div className="flex max-lg:flex-col">
           <Sidebar />
           <TopNavBar />
-          <div className='flex-1'>{children}</div>
+          <div className="flex-1">{children}</div>
         </div>
       </body>
     </html>

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { formatPrice } from "@/lib/formatPrice";
 import useCart from "@/lib/hooks/useCart";

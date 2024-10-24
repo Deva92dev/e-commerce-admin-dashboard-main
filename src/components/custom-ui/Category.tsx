@@ -1,12 +1,14 @@
-import { getCollection } from "@/lib/actions";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { CollectionType } from "@/lib/types";
+
+interface CategoryProps {
+  collection: CollectionType[];
+}
 
 // add more designing later
-const Category = async () => {
-  const collection = await getCollection();
-
+const Category = async ({ collection }: CategoryProps) => {
   return (
     <div className=" px-4 md:px-6 lg:px-12 xl:px-24 my-8">
       <h2 className="text-3xl font-bold text-center mb-4">Shop By Category</h2>

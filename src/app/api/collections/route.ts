@@ -1,14 +1,15 @@
-import { auth } from '@clerk/nextjs/server';
-import { NextRequest, NextResponse } from 'next/server';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { auth } from "@clerk/nextjs/server";
+import { NextRequest, NextResponse } from "next/server";
 
-import Collection from '@/lib/models/Collections';
-import { ConnectDB } from '@/lib/mongoDB';
+import Collection from "@/lib/models/Collections";
+import { ConnectDB } from "@/lib/mongoDB";
 
 export const POST = async (request: NextRequest) => {
   try {
     const { userId } = auth();
     if (!userId) {
-      return new NextResponse('Unauthorized', { status: 401 });
+      return new NextResponse("Unauthorized", { status: 401 });
     }
     await ConnectDB();
     const { title, description, image } = await request.json();
@@ -16,11 +17,11 @@ export const POST = async (request: NextRequest) => {
     // because title is unique, defined in schema
     const existingCollection = await Collection.findOne({ title });
     if (existingCollection) {
-      return new NextResponse('Collection already exists', { status: 401 });
+      return new NextResponse("Collection already exists", { status: 401 });
     }
 
     if (!title || !image) {
-      return new NextResponse('Please provide Title and Image', {
+      return new NextResponse("Please provide Title and Image", {
         status: 401,
       });
     }
@@ -37,8 +38,8 @@ export const POST = async (request: NextRequest) => {
     return NextResponse.json(newCollection, { status: 200 });
   } catch (error) {
     // this is how you structure your errors
-    console.log(['Collection_POST'], error);
-    return new NextResponse('Internal Server Error', { status: 500 });
+    console.log(["Collection_POST"], error);
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 };
 
@@ -46,13 +47,18 @@ export const GET = async (request: NextRequest) => {
   try {
     await ConnectDB();
 
-    const collections = await Collection.find({}).sort({ createdAt: 'desc' });
+    const collections = await Collection.find({})
+      .select("title image products")
+      .sort({ createdAt: "desc" });
 
-    return NextResponse.json(collections, { status: 200 });
+    return NextResponse.json(collections, {
+      status: 200,
+      headers: {
+        "Cache-Control": "public, max-age=1296000, stale-while-revalidate=3600", // 15 days
+      },
+    });
   } catch (error) {
-    console.log(['Collection_GET'], error);
-    return new NextResponse('Internal Server Error', { status: 500 });
+    console.log(["Collection_GET"], error);
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 };
-
-export const dynamic = 'force-dynamic';

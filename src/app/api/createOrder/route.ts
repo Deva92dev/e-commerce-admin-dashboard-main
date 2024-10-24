@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Order from "@/lib/models/Order";
 import Payment from "@/lib/models/Payment";
 import { ConnectDB } from "@/lib/mongoDB";

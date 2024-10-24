@@ -1,20 +1,21 @@
-'use client';
+"use client";
 
-import ProductForm from '@/app/(dashboard)/components/products/ProductForm';
-import Loader from '@/components/custom-ui/Loader';
-import { ProductType } from '@/lib/types';
-import { useEffect, useState } from 'react';
+import ProductForm from "@/app/(dashboard)/components/products/ProductForm";
+import Loader from "@/components/custom-ui/Loader";
+import { ProductType } from "@/lib/types";
+import { useCallback, useEffect, useState, use } from "react";
 
-const ProductDetailsPage = ({ params }: { params: { productId: string } }) => {
+const ProductDetailsPage = (props: { params: Promise<{ productId: string }> }) => {
+  const params = use(props.params);
   const [loading, setLoading] = useState(true);
   const [productDetails, setProductDetails] = useState<ProductType | null>(
     null
   );
 
-  const getProductDetails = async () => {
+  const getProductDetails = useCallback(async () => {
     try {
       const res = await fetch(`/api/products/${params.productId}`, {
-        method: 'GET',
+        method: "GET",
       });
       const data = await res.json();
       setProductDetails(data);
@@ -22,12 +23,11 @@ const ProductDetailsPage = ({ params }: { params: { productId: string } }) => {
     } catch (error) {
       console.log(`ProductId_API`, error);
     }
-  };
+  }, [params.productId]);
 
   useEffect(() => {
     getProductDetails();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [getProductDetails]);
 
   return loading ? <Loader /> : <ProductForm initialData={productDetails} />;
 };
