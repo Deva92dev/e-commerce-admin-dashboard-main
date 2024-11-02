@@ -49,6 +49,9 @@ const formSchema = z.object({
   color: z.array(z.string()),
   tags: z.array(z.string()),
   price: z.coerce.number(),
+  stockQuantity: z.coerce
+    .number()
+    .min(0, { message: "Stock quantity must be at least 1" }),
 });
 
 interface ProductFormProps {
@@ -99,6 +102,7 @@ const ProductForm = ({ initialData }: ProductFormProps) => {
           color: [],
           price: 0,
           category: "",
+          stockQuantity: 1,
         },
   });
 
@@ -326,6 +330,26 @@ const ProductForm = ({ initialData }: ProductFormProps) => {
                           ),
                         ])
                       }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* stockQuantity */}
+            <FormField
+              control={form.control}
+              name="stockQuantity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Stock Quantity</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Enter stock quantity"
+                      {...field}
+                      onKeyDown={handleKeyPress}
                     />
                   </FormControl>
                   <FormMessage />

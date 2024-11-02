@@ -41,6 +41,18 @@ export const POST = async (
       return NextResponse.json("Customer Not found", { status: 404 });
     }
 
+    // Check for an existing review by the same customer for the same product
+    const existingReview = await Review.findOne({
+      customer: customer._id,
+      product: params.productId,
+    });
+
+    if (existingReview) {
+      return NextResponse.json("You have already reviewed this product", {
+        status: 409,
+      });
+    }
+
     const review = await Review.create({
       customer: customer._id,
       product: params.productId,
@@ -73,83 +85,51 @@ export const POST = async (
 };
 
 // for getting reviews for a product
-// export const GET = async (
-//   req: NextRequest,
-//   {
-//     params,
-//   }: {
-//     params: { productId: string };
-//   }
-// ) => {
-//   try {
-//     await ConnectDB();
-
-//     // Get query parameters for pagination (page and limit)
-//     const { searchParams } = new URL(req.url);
-//     const page = parseInt(searchParams.get("page") || "1", 10); // base 10 2nd arg
-//     const limit = parseInt(searchParams.get("limit") || "10", 10);
-
-//     const skip = (page - 1) * limit;
-
-//     const reviews = await Review.find({ product: params.productId })
-//       .populate({
-//         path: "customer",
-//         model: Customer,
-//       })
-//       .sort({ createdAt: -1 })
-//       .skip(skip)
-//       .limit(limit);
-
-//     const totalReviews = await Review.countDocuments({
-//       product: params.productId,
-//     });
-
-//     if (!reviews || reviews.length === 0) {
-//       return NextResponse.json("No reviews found for associated productId", {
-//         status: 404,
-//       });
-//     }
-
-//     const responseData = {
-//       reviews,
-//       totalReviews,
-//       page, // current page
-//       totalPages: Math.ceil(totalReviews / limit),
-//     };
-
-//     const res = NextResponse.json(responseData, { status: 200 });
-//     return res;
-//   } catch (error) {
-//     console.error("[Review_GET_API]", error);
-//     return NextResponse.json("Error  at getting  Review", {
-//       status: 500,
-//     });
-//   }
-// };
 export const GET = async (
   req: NextRequest,
   props: {
     params: Promise<{ productId: string }>;
   }
 ) => {
-  const params = await props.params;
+  const { productId } = await props.params;
   try {
     await ConnectDB();
 
-    const reviews = await Review.find({ product: params.productId })
+    // Get query parameters for pagination (page and limit)
+    const { searchParams } = new URL(req.url);
+    const page = parseInt(searchParams.get("page") || "1", 10); // base 10 2nd arg
+    const limit = parseInt(searchParams.get("limit") || "10", 10);
+
+    const skip = (page - 1) * limit;
+
+    const reviews = await Review.find({ product: productId })
       .populate({
         path: "customer",
         model: Customer,
       })
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
 
-    if (!reviews) {
+    const totalReviews = await Review.countDocuments({
+      product: productId,
+    });
+
+    if (!reviews || reviews.length === 0) {
       return NextResponse.json("No reviews found for associated productId", {
         status: 404,
       });
     }
 
-    return NextResponse.json(reviews, { status: 200 });
+    const responseData = {
+      reviews,
+      totalReviews,
+      page, // current page
+      totalPages: Math.ceil(totalReviews / limit),
+    };
+
+    const res = NextResponse.json(responseData, { status: 200 });
+    return res;
   } catch (error) {
     console.error("[Review_GET_API]", error);
     return NextResponse.json("Error  at getting  Review", {

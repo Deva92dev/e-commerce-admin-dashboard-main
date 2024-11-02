@@ -6,7 +6,7 @@ interface GalleryProps {
   title: string;
   productMedia: string[];
 }
-
+// cache images from cloudinary to save bandwidth
 const Gallery = ({ productMedia, title }: GalleryProps) => {
   const [mainImage, setMainImage] = useState(productMedia[0]);
   const [isHovered, setIsHovered] = useState(false);

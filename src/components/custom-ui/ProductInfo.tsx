@@ -10,9 +10,10 @@ import { Button } from "../ui/button";
 
 interface ProductInfoProps {
   product: ProductType;
+  orderId: string | null;
 }
 // out of stock functionality for every product and don't let choose certain color if out of stock
-const ProductInfo = ({ product }: ProductInfoProps) => {
+const ProductInfo = ({ product, orderId }: ProductInfoProps) => {
   const cart = useCart();
   const { user } = useUser();
   const {
@@ -30,6 +31,27 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedColor, setSelectedColor] = useState<string>(color[0]);
   const [selectedSize, setSelectedSize] = useState<string>(sizes[0]);
+  const [stockQuantity, setStockQuantity] = useState<number>(
+    product.stockQuantity
+  );
+
+  const updateOrderStatus = async () => {
+    if (orderId && stockQuantity > 0) {
+      try {
+        const res = await fetch(`/api/orders/${orderId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "paid" }),
+        });
+        if (res.ok) {
+          const updatedStock = stockQuantity - quantity;
+          setStockQuantity(updatedStock > 0 ? updatedStock : 0);
+        }
+      } catch (error) {
+        console.error("Error updating order status/stock quantity", error);
+      }
+    }
+  };
 
   return (
     <div className="max-w-[400px] flex flex-col gap-4">
@@ -46,6 +68,9 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       <p className="text-sm font-normal text-gray-500">Category : {category}</p>
       <p className="font-bold border bg-gray-100 w-max p-2 rounded-lg">
         {formatPrice(price)}
+      </p>
+      <p className="text-gray-500 font-extrabold">
+        {stockQuantity > 0 ? "In Stock" : "Out of Stock"}
       </p>
       <div className="flex flex-col text-gray-500">
         Description : {description}
@@ -118,9 +143,11 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
               color: selectedColor,
               sizes: selectedSize,
             });
+            updateOrderStatus();
           }}
+          disabled={stockQuantity <= 0}
         >
-          Add to Cart
+          {stockQuantity > 0 ? "Add to Cart" : "Out of Stock"}
         </button>
       ) : (
         <SignInButton mode="modal">

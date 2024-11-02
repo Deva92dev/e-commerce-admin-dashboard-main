@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
+import { Provider } from "@/lib/provider";
 
 export const metadata: Metadata = {
   title: "Own Closet - Cloth Store",
@@ -13,10 +13,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <Provider>
       <html lang="en">
         <body>{children}</body>
       </html>
-    </ClerkProvider>
+    </Provider>
   );
 }

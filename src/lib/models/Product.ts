@@ -17,6 +17,11 @@ const ProductSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.Decimal128,
       get: (v: mongoose.Schema.Types.Decimal128) => parseFloat(v.toString()),
     },
+    stockQuantity: {
+      type: Number,
+      required: true,
+      default: 0, // Set initial stock level
+    },
     category: {
       type: String,
       required: true,

@@ -18,12 +18,14 @@ export const GET = async (
       .populate({
         path: "cartItems.product",
         model: Product,
-        select: "title price _id",
+        select: "title price _id stockQuantity",
       });
 
     if (!orderDetails) {
       return NextResponse.json("Order Details Not Found", { status: 404 });
     }
+
+    // Check if the order status is paid, and reduce stock quantity
 
     // Format the order details
     const formattedOrderDetails = {
@@ -45,17 +47,62 @@ export const GET = async (
         price: item.product.price,
         color: item.color,
         sizes: item.sizes,
+        stockQuantity: item.product.stockQuantity,
       })),
     };
 
     return NextResponse.json(formattedOrderDetails, {
       status: 200,
-      headers: {
-        "Cache-Control": "public, max-age=43200 stale-while-revalidate=3600",
-      },
     });
   } catch (error) {
     console.error("[OrderId_GET]", error);
     return NextResponse.json("Error in Fetching OrderId", { status: 500 });
+  }
+};
+
+export const PATCH = async (
+  req: NextRequest,
+  props: { params: Promise<{ orderId: string }> }
+) => {
+  const { orderId } = await props.params;
+  const { status } = await req.json();
+
+  try {
+    await ConnectDB();
+
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return NextResponse.json("Order Not Found", { status: 404 });
+    }
+
+    if (order.status === "paid") {
+      return NextResponse.json("Order is already paid", { status: 400 });
+    }
+
+    if (status === "paid") {
+      // for each product
+      for (const item of order.cartItems) {
+        const product = await Product.findById(item.product);
+        if (product) {
+          product.stockQuantity = Math.max(
+            0,
+            product.stockQuantity - item.quantity
+          );
+          await product.save();
+        }
+      }
+
+      order.status = "paid";
+      await order.save();
+    }
+
+    return NextResponse.json("Order status updated and stock adjusted", {
+      status: 200,
+    });
+  } catch (error) {
+    console.error("[OrderId_PATCH]", error);
+    return NextResponse.json("Error updating order and reducing stock", {
+      status: 500,
+    });
   }
 };

@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Metadata } from "next";
+
 import Gallery from "@/components/custom-ui/Gallery";
 import ProductInfo from "@/components/custom-ui/ProductInfo";
 import RelatedProducts from "@/components/custom-ui/RelatedProducts";
@@ -6,9 +8,8 @@ import Reviews from "@/components/custom-ui/Reviews";
 import { getPaidCustomers } from "@/lib/actions/paidCustomers.actions";
 import { getProductDetails } from "@/lib/actions/productDetails.actions";
 import { getRelatedProducts } from "@/lib/actions/relatedProducts.actions";
-import { currentUser } from "@clerk/nextjs/server";
-
-import { Metadata } from "next";
+import { getUserDetails } from "@/lib/actions/getAuthUser";
+import { updateOrderStatus } from "@/lib/actions/updateOrderStatus";
 
 export async function generateMetadata(props: {
   params: Promise<{ productId: string }>;
@@ -26,22 +27,13 @@ const ProductDetailsPage = async (props: {
   params: Promise<{ productId: string }>;
 }) => {
   const params = await props.params;
-  const user = await currentUser();
 
-  const userId = user?.id;
-  const userName = user
-    ? `${user.firstName || ""} ${user.lastName || ""}`.trim()
-    : "";
-  const userProfileImage = user?.imageUrl;
-
-  console.time("Fetching productDetails and relatedProducts");
+  const { userId, userName, userProfileImage } = await getUserDetails();
 
   const [productDetails, relatedProducts] = await Promise.all([
     getProductDetails(params.productId),
     getRelatedProducts(params.productId),
   ]);
-
-  console.timeEnd("Fetched productDetails and relatedProducts");
 
   let initialCanLeaveReview = false;
   let orderId = null;
@@ -61,6 +53,8 @@ const ProductDetailsPage = async (props: {
         if (validOrder) {
           orderId = validOrder.orderId;
           initialCanLeaveReview = true;
+
+          updateOrderStatus(orderId, "paid");
         } else {
           console.error("No valid orderId found for this user.");
         }
@@ -84,7 +78,7 @@ const ProductDetailsPage = async (props: {
           />
         </div>
         <div className="lg:col-span-1">
-          <ProductInfo product={productDetails} />
+          <ProductInfo product={productDetails} orderId={orderId} />
         </div>
         <div className="lg:col-span-2">
           <Reviews

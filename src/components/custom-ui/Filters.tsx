@@ -5,18 +5,30 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ProductType } from "@/lib/types";
 import ProductCard from "./ProductCard";
 import ProductCardSkeleton from "./ProductCardSkeleton";
+import { useDebounce } from "@/lib/hooks/useDebounce";
 
 interface FilterProps {
   products: ProductType[];
 }
 
-//infinite scrolling for the product, useDebounce for min & max price
+//pagination for the product, useDebounce for min & max price
 
 const Filters = ({ products }: FilterProps) => {
+  const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
-  const searchParams = useSearchParams();
+
+  const [min, setMin] = useState(searchParams.get("min") || "");
+  const [max, setMax] = useState(searchParams.get("max") || "");
   const [filteredProducts, setFilteredProducts] = useState(products);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const productsPerPage = 6; // change in production
+  const start = (currentPage - 1) * productsPerPage;
+  const end = start + productsPerPage;
+
+  const debouncedMin = useDebounce(min, 500);
+  const debouncedMax = useDebounce(max, 500);
 
   // filtering of products
   const filterProducts = useCallback(
@@ -33,18 +45,18 @@ const Filters = ({ products }: FilterProps) => {
       }
 
       // Apply min price filter
-      const min = params.get("min");
-      if (min) {
+
+      if (debouncedMin) {
         filtered = filtered.filter(
-          (product) => product.price >= parseFloat(min)
+          (product) => product.price >= parseFloat(debouncedMin)
         );
       }
 
       // Apply max price filter
-      const max = params.get("max");
-      if (max) {
+
+      if (debouncedMax) {
         filtered = filtered.filter(
-          (product) => product.price <= parseFloat(max)
+          (product) => product.price <= parseFloat(debouncedMax)
         );
       }
 
@@ -87,8 +99,9 @@ const Filters = ({ products }: FilterProps) => {
 
       // Update the filtered products state
       setFilteredProducts(filtered);
+      setCurrentPage(1);
     },
-    [products]
+    [debouncedMax, debouncedMin, products]
   );
 
   const handleFilterChange = (
@@ -96,6 +109,13 @@ const Filters = ({ products }: FilterProps) => {
   ) => {
     const { name, value } = e.target;
     const params = new URLSearchParams(searchParams);
+
+    if (name === "min") {
+      setMin(value);
+    } else if (name === "max") {
+      setMax(value);
+    }
+
     params.set(name, value);
     console.log(`Updated Params: ${params.toString()}`);
     replace(`${pathname}?${params.toString()}`);
@@ -105,11 +125,16 @@ const Filters = ({ products }: FilterProps) => {
   const handleResetFilters = () => {
     replace(pathname);
     setFilteredProducts(products);
+    setCurrentPage(1);
   };
 
   useEffect(() => {
     filterProducts(new URLSearchParams(searchParams));
-  }, [filterProducts, searchParams]);
+  }, [filterProducts, searchParams, debouncedMin, debouncedMax]);
+
+  // Paginate filtered products
+  const paginatedProducts = filteredProducts.slice(start, end);
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
   return (
     <>
@@ -134,7 +159,7 @@ const Filters = ({ products }: FilterProps) => {
           type="text"
           name="min"
           placeholder="min price"
-          className="text-xs rounded-2xl pl-2 w-36 h-8 ring-1 ring-gray-400"
+          className="text-xs rounded-2xl pl-2  h-8 ring-1 ring-gray-400"
           onChange={handleFilterChange}
           defaultValue={searchParams.get("name")?.toString()}
         />
@@ -142,7 +167,7 @@ const Filters = ({ products }: FilterProps) => {
           type="text"
           name="max"
           placeholder="max price"
-          className="text-xs rounded-2xl pl-2 w-36 h-8 ring-1 ring-gray-400"
+          className="text-xs rounded-2xl h-8 pl-2 ring-1 ring-gray-400"
           onChange={handleFilterChange}
           defaultValue={searchParams.get("name")?.toString()}
         />
@@ -192,8 +217,8 @@ const Filters = ({ products }: FilterProps) => {
 
       {/* display filtered products here */}
       <div className="grid gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 mt-20">
-        {filterProducts.length > 0 ? (
-          filteredProducts.map((product) => (
+        {paginatedProducts.length > 0 ? (
+          paginatedProducts.map((product) => (
             <Suspense key={product._id} fallback={<ProductCardSkeleton />}>
               <ProductCard product={product} />
             </Suspense>
@@ -201,6 +226,35 @@ const Filters = ({ products }: FilterProps) => {
         ) : (
           <p>No products found matching the selected filters.</p>
         )}
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="flex justify-center mt-10">
+        <button
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          className={`px-4 py-2 rounded-lg ${
+            currentPage === 1 ? "bg-gray-300" : "bg-blue-500 text-white"
+          }`}
+        >
+          Previous
+        </button>
+        <span className="px-4 py-2 mx-2 bg-gray-100 rounded-lg">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          disabled={currentPage === totalPages}
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          className={`px-4 py-2 rounded-lg ${
+            currentPage === totalPages
+              ? "bg-gray-300"
+              : "bg-blue-500 text-white"
+          }`}
+        >
+          Next
+        </button>
       </div>
     </>
   );

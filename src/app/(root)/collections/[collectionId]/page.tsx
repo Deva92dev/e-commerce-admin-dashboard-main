@@ -4,11 +4,9 @@ import { CollectionType, ProductType } from "@/lib/types";
 import { Metadata } from "next";
 import Image from "next/image";
 
-export async function generateMetadata(
-  props: {
-    params: Promise<{ collectionId: string }>;
-  }
-): Promise<Metadata> {
+export async function generateMetadata(props: {
+  params: Promise<{ collectionId: string }>;
+}): Promise<Metadata> {
   const params = await props.params;
   const collectionDetails: CollectionType = await getCollectionDetails(
     params.collectionId
@@ -27,11 +25,9 @@ export async function generateMetadata(
   };
 }
 
-const CollectionDetailsPage = async (
-  props: {
-    params: Promise<{ collectionId: string }>;
-  }
-) => {
+const CollectionDetailsPage = async (props: {
+  params: Promise<{ collectionId: string }>;
+}) => {
   const params = await props.params;
   const collectionDetails: CollectionType = await getCollectionDetails(
     params.collectionId
@@ -43,7 +39,7 @@ const CollectionDetailsPage = async (
       <div className="rounded-lg flex flex-col items-center gap-8 shadow-md">
         <Image
           src={collectionDetails.image}
-          alt={collectionDetails.title}
+          alt={collectionDetails.title || "Photo of Image"}
           width={1500}
           height={1000}
           className="w-full h-[400px] object-cover rounded-t-xl"

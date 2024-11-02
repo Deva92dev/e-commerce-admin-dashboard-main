@@ -6,6 +6,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import Razorpay from "razorpay";
 import Customer from "@/lib/models/Customer";
+import Product from "@/lib/models/Product";
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID!,
@@ -70,6 +71,25 @@ export const POST = async (req: NextRequest) => {
     });
 
     await newOrder.save();
+
+    // Deduct stock quantity for each product
+    for (const item of newOrder.cartItems) {
+      const product = await Product.findById(item.product);
+
+      if (!product) {
+        return NextResponse.json(
+          { error: `Product not found for ID: ${item.product}` },
+          { status: 404 }
+        );
+      }
+
+      if (product.stockQuantity < item.quantity) {
+        throw new Error(`Insufficient stock for product ${product.title}`);
+      }
+
+      product.stockQuantity -= item.quantity;
+      await product.save();
+    }
 
     // Add the new order ID to the customer's orders array
     existingCustomer.orders.push(newOrder._id);

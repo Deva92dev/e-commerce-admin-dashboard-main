@@ -63,9 +63,6 @@ export const GET = async (
       { totalPaidCustomers: uniqueCustomerCount, customerOrderData },
       {
         status: 200,
-        headers: {
-          "Cache-Control": "public, max-age=43200 stale-while-revalidate=3600",
-        },
       }
     );
   } catch (error) {

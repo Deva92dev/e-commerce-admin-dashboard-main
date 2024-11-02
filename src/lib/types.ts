@@ -20,6 +20,7 @@ export type ProductType = {
   sizes: string[];
   color: string[];
   review: string;
+  stockQuantity: number;
   numberOfReviews: number;
   totalRating: number;
   averageRating: number;

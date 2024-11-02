@@ -8,6 +8,7 @@ const isPublicRoute = createRouteMatcher([
   "/api/collections(.*)",
   "/api/products(.*)",
   "/api/orders(.*)",
+  "/api/reviews(.*)",
 ]);
 
 const isAdminRoute = createRouteMatcher(["/admin(.*)"]);

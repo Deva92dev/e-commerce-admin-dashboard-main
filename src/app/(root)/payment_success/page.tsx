@@ -5,11 +5,11 @@ import Link from "next/link";
 import { useEffect } from "react";
 
 const SuccessfulPaymentPage = () => {
-  const cart = useCart();
+  const clearCart = useCart((state) => state.clearCart);
 
   useEffect(() => {
-    cart.clearCart();
-  }, [cart]);
+    clearCart();
+  }, [clearCart]);
 
   return (
     <div className="h-screen flex flex-col justify-center items-center gap-5">

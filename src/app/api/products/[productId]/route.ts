@@ -28,9 +28,9 @@ export const GET = async (
 
     return NextResponse.json(product, {
       status: 200,
-      headers: {
-        "Cache-Control": "public, max-age=86400 stale-while-revalidate=3600",
-      },
+      // headers: {
+      //   "Cache-Control": "public, max-age=86400 stale-while-revalidate=3600",
+      // },
     });
   } catch (error) {
     console.log(`Products_GET`, error);
@@ -71,6 +71,7 @@ export const POST = async (
       category,
       price,
       sizes,
+      stockQuantity,
       color,
     } = await req.json();
 
@@ -81,6 +82,7 @@ export const POST = async (
       !sizes ||
       !color ||
       !price ||
+      !stockQuantity ||
       !category
     ) {
       return new NextResponse(
@@ -127,6 +129,7 @@ export const POST = async (
         price,
         sizes,
         color,
+        stockQuantity,
         tags,
       },
       { new: true }
