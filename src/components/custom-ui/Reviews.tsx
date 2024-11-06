@@ -58,54 +58,65 @@ const Reviews = ({
   useEffect(() => {
     setPage(1);
     reviewsRef.current = [];
+    setHasMore(true); // Reset `hasMore` whenever the product change
   }, [productId]);
 
   const fetchReviews = useCallback(
     async (pageNum: number) => {
-      if (!hasMore || isFetching) return; // Prevent overlapping requests
+      if (!hasMore || isFetching) return;
       setIsFetching(true);
       setIsLoading(true);
       try {
         const res = await fetch(
           `/api/reviews/${productId}?page=${pageNum}&limit=10`
         );
+        if (res.status === 404) {
+          // If no reviews exist for the product, stop further calls
+          console.warn("No reviews found for this product.");
+          setHasMore(false);
+          setIsLoading(false);
+          setIsFetching(false);
+          return;
+        }
+
         if (res.ok) {
           const { reviews: newReviews = [], totalReviews } = await res.json();
 
-          // Update reviews by adding new ones while avoiding duplicates
-          const updatedReviews = [
-            ...reviewsRef.current,
-            ...newReviews.filter(
-              (newReview: ReviewType) =>
-                !reviewsRef.current.some(
-                  (review) => review._id === newReview._id
-                )
-            ),
-          ];
-
-          reviewsRef.current = updatedReviews;
-          setReviews(updatedReviews);
-
-          setHasMore(
-            newReviews.length > 0 && updatedReviews.length < totalReviews
-          );
-          setPage(pageNum);
-
-          // Check if the user has already submitted a review
-          const userHasReviewed = updatedReviews.find(
-            (review: ReviewType) => review.customer.clerkId === userId
-          );
-          if (userHasReviewed) {
-            setEditingReviewId(userHasReviewed._id);
-            setReviewTextEdit(userHasReviewed.comment);
-            setRatingEdit(userHasReviewed.rating);
-            setCanLeaveReview(false);
+          // If no new reviews were found, set `hasMore` to false
+          if (totalReviews === 0) {
+            setHasMore(false);
           } else {
-            setEditingReviewId(null);
-            setReviewTextEdit("");
-            setRatingEdit(0);
-            // User can leave a review only if they have an order
-            setCanLeaveReview(Boolean(orderId) && !userHasReviewed);
+            const updatedReviews = [
+              ...reviewsRef.current,
+              ...newReviews.filter(
+                (newReview: ReviewType) =>
+                  !reviewsRef.current.some(
+                    (review) => review._id === newReview._id
+                  )
+              ),
+            ];
+            reviewsRef.current = updatedReviews;
+            setReviews(updatedReviews);
+
+            setHasMore(
+              newReviews.length > 0 && updatedReviews.length < totalReviews
+            );
+            setPage(pageNum);
+
+            const userHasReviewed = updatedReviews.find(
+              (review: ReviewType) => review.customer.clerkId === userId
+            );
+            if (userHasReviewed) {
+              setEditingReviewId(userHasReviewed._id);
+              setReviewTextEdit(userHasReviewed.comment);
+              setRatingEdit(userHasReviewed.rating);
+              setCanLeaveReview(false);
+            } else {
+              setEditingReviewId(null);
+              setReviewTextEdit("");
+              setRatingEdit(0);
+              setCanLeaveReview(Boolean(orderId) && !userHasReviewed);
+            }
           }
         } else {
           console.error("Failed to fetch reviews");

@@ -9,7 +9,6 @@ import { getPaidCustomers } from "@/lib/actions/paidCustomers.actions";
 import { getProductDetails } from "@/lib/actions/productDetails.actions";
 import { getRelatedProducts } from "@/lib/actions/relatedProducts.actions";
 import { getUserDetails } from "@/lib/actions/getAuthUser";
-import { updateOrderStatus } from "@/lib/actions/updateOrderStatus";
 
 export async function generateMetadata(props: {
   params: Promise<{ productId: string }>;
@@ -53,13 +52,11 @@ const ProductDetailsPage = async (props: {
         if (validOrder) {
           orderId = validOrder.orderId;
           initialCanLeaveReview = true;
-
-          updateOrderStatus(orderId, "paid");
         } else {
           console.error("No valid orderId found for this user.");
         }
       } else {
-        console.error("No paid customers found.");
+        console.warn("No paid customers found for this product.");
       }
     } catch (error) {
       console.error("Error fetching customer details:", error);

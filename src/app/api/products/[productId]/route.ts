@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Collection from "@/lib/models/Collections";
 import Product from "@/lib/models/Product";
 import { ConnectDB } from "@/lib/mongoDB";
@@ -26,11 +27,21 @@ export const GET = async (
       );
     }
 
+    console.log("Original product.media:", product.media);
+
+    // Transform secure URLs for caching
+    if (product.media && Array.isArray(product.media)) {
+      product.media = product.media.map((url: string) => {
+        const transformedUrl = `/api/cloudinary-cached-image?secure_url=${encodeURIComponent(
+          url
+        )}`;
+        console.log("Transformed Urls:", transformedUrl);
+        return transformedUrl;
+      });
+    }
+
     return NextResponse.json(product, {
       status: 200,
-      // headers: {
-      //   "Cache-Control": "public, max-age=86400 stale-while-revalidate=3600",
-      // },
     });
   } catch (error) {
     console.log(`Products_GET`, error);

@@ -6,9 +6,14 @@ interface GalleryProps {
   title: string;
   productMedia: string[];
 }
-// cache images from cloudinary to save bandwidth
+
 const Gallery = ({ productMedia, title }: GalleryProps) => {
-  const [mainImage, setMainImage] = useState(productMedia[0]);
+  const mainImageUrl = `/api/cloudinary-cached-image?secure_url=$${encodeURIComponent(
+    productMedia[0]
+  )}`;
+  console.log("Main Image Url:", mainImageUrl);
+
+  const [mainImage, setMainImage] = useState(mainImageUrl);
   const [isHovered, setIsHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
 
@@ -54,20 +59,30 @@ const Gallery = ({ productMedia, title }: GalleryProps) => {
       </div>
 
       <div className="flex flex-row gap-2">
-        {productMedia.map((image, index) => (
-          <div key={index}>
-            <Image
-              src={image}
-              alt="image"
-              width={200}
-              height={200}
-              className={`rounded-lg cursor-pointer ${
-                mainImage === image ? "border border-black" : ""
-              }`}
-              onClick={() => setMainImage(image)}
-            />
-          </div>
-        ))}
+        {productMedia.map((image, index) => {
+          const cachedThumbnailUrl = `/api/cloudinary-cached-image?secure_url=${encodeURIComponent(
+            image
+          )}`;
+          console.log(
+            `Thumbnail cachedImage URL [${index}]:`,
+            cachedThumbnailUrl
+          );
+
+          return (
+            <div key={index}>
+              <Image
+                src={cachedThumbnailUrl}
+                alt="image"
+                width={200}
+                height={200}
+                className={`rounded-lg cursor-pointer ${
+                  mainImage === cachedThumbnailUrl ? "border border-black" : ""
+                }`}
+                onClick={() => setMainImage(cachedThumbnailUrl)}
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ interface ProductInfoProps {
   product: ProductType;
   orderId: string | null;
 }
-// out of stock functionality for every product and don't let choose certain color if out of stock
+
 const ProductInfo = ({ product, orderId }: ProductInfoProps) => {
   const cart = useCart();
   const { user } = useUser();
