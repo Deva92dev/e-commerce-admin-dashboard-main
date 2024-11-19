@@ -5,13 +5,12 @@
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { throttle } from "lodash";
+import { CircleUser, Edit, Trash2 } from "lucide-react";
 import StarRating from "./StarRating";
 import { ReviewType } from "@/lib/types";
-import { CircleUser, Edit, Trash2 } from "lucide-react";
 import { useDebounce } from "@/lib/hooks/useDebounce";
-import { throttle } from "lodash";
 
-// infinite scroll for reviews
 interface ReviewProps {
   productId: string;
   initialCanLeaveReview: boolean;
@@ -28,6 +27,8 @@ const Reviews = ({
   userName,
   userProfileImage,
 }: ReviewProps) => {
+  const router = useRouter();
+
   const [reviews, setReviews] = useState<ReviewType[]>([]);
   const [reviewTextPost, setReviewTextPost] = useState("");
   const [ratingPost, setRatingPost] = useState(0);
@@ -43,8 +44,6 @@ const Reviews = ({
   const [isFetching, setIsFetching] = useState(false); // Track fetching status
   const observer = useRef<IntersectionObserver | null>(null); // for infinite scroll
   const reviewsRef = useRef<ReviewType[]>([]); // Ref to hold the fetched reviews
-
-  const router = useRouter();
 
   const debouncedReviewTextPost = useDebounce(reviewTextPost, 500);
   const debouncedReviewTextEdit = useDebounce(reviewTextEdit, 500);
@@ -335,7 +334,7 @@ const Reviews = ({
           onSubmit={handleReviewSubmit}
           className=" flex flex-col gap-6 max-w-xl mb-4"
         >
-          <h3>Post Your Review</h3>
+          <h2>Post Your Review</h2>
           <textarea
             value={reviewTextPost}
             onChange={(e) => setReviewTextPost(e.target.value)}
@@ -350,6 +349,7 @@ const Reviews = ({
           <button
             type="submit"
             className="w-full text-center outline bg-black text-white hover:bg-blue-400 text-base font-bold rounded-lg px-2 py-3"
+            aria-label="Post review"
           >
             Post Review
           </button>
@@ -360,7 +360,7 @@ const Reviews = ({
           onSubmit={handleUpdateReview}
           className=" flex flex-col gap-6 max-w-xl mb-4"
         >
-          <h3>Edit Your Review</h3>
+          <h2>Edit Your Review</h2>
           <textarea
             value={reviewTextEdit}
             onChange={(e) => setReviewTextEdit(e.target.value)}
@@ -375,6 +375,7 @@ const Reviews = ({
           <button
             type="submit"
             className="w-full text-center outline bg-black text-white hover:bg-blue-400 text-base font-bold rounded-lg px-2 py-3"
+            aria-label="Update review"
           >
             Update Review
           </button>
@@ -400,7 +401,7 @@ const Reviews = ({
                     loading="lazy"
                   />
                   <div className="flex flex-col gap-1">
-                    <h4>{review.customer.name || userName}</h4>
+                    <h3>{review.customer.name || userName}</h3>
                     <StarRating initialRating={review.rating} readonly={true} />
                   </div>
                 </div>
@@ -422,7 +423,7 @@ const Reviews = ({
                     loading="lazy"
                   />
                   <div className="flex flex-col gap-1">
-                    <p>{review.customer.name}</p>
+                    <h3>{review.customer.name}</h3>
                     <StarRating initialRating={review.rating} readonly={true} />
                   </div>
                 </div>
@@ -431,12 +432,14 @@ const Reviews = ({
                   <button
                     className="text-blue-600"
                     onClick={() => handleEditClick(review._id)}
+                    aria-label="Edit review"
                   >
                     <Edit />
                   </button>
                   <button
                     className="text-red-600 ml-4"
                     onClick={() => handleDeleteReview(review._id)}
+                    aria-label="Delete review"
                   >
                     <Trash2 />
                   </button>

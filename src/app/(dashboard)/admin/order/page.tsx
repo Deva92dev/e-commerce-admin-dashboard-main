@@ -1,10 +1,14 @@
 import { DataTable } from "@/components/custom-ui/Data-Table";
 import { Separator } from "@/components/ui/separator";
 import { columns } from "../../components/orders/OrderColumn";
-import { getOrders } from "@/lib/actions/orders.actions";
+import { getOrders } from "@/lib/actions";
+import { notFound } from "next/navigation";
 
 const OrdersPage = async () => {
   const order = await getOrders();
+  if (!order) {
+    notFound();
+  }
 
   return (
     <div className="px-10 py-5">

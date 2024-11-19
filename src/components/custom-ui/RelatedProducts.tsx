@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ProductType } from "@/lib/types";
 import ProductCard from "./ProductCard";
 
@@ -7,17 +8,16 @@ interface RelatedProductProps {
 }
 
 const RelatedProducts = async ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   productId,
   relatedProducts,
 }: RelatedProductProps) => {
   return (
     <>
       {relatedProducts.length === 0 ? (
-        <p>There is no related Products</p>
+        <h2>There is no related Products</h2>
       ) : (
         <div>
-          <h3 className="font-bold text-2xl mb-4">Related Products</h3>
+          <h2 className="font-bold text-2xl mb-4">Related Products</h2>
           <div className="grid max-[500px]:grid-cols-1 max-md:grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-4">
             {relatedProducts.map((product: ProductType) => (
               <ProductCard product={product} key={product._id} />

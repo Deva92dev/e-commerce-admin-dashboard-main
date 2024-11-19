@@ -6,9 +6,14 @@ import Footer from "@/components/custom-ui/Footer";
 import { ToasterProvider } from "@/lib/ToasterProvider";
 
 export const metadata: Metadata = {
-  title: "Own Closet - Cloth Store for Youth & All",
-  description:
-    "Fashion Meets Standard through in vogue styles & Seasons wonders.",
+  title: {
+    default: "Own Closet",
+    template: "%s - Own Closet",
+  },
+  description: "Fashion Meets Standard through in vogue styles.",
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({

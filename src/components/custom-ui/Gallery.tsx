@@ -11,7 +11,6 @@ const Gallery = ({ productMedia, title }: GalleryProps) => {
   const mainImageUrl = `/api/cloudinary-cached-image?secure_url=$${encodeURIComponent(
     productMedia[0]
   )}`;
-  console.log("Main Image Url:", mainImageUrl);
 
   const [mainImage, setMainImage] = useState(mainImageUrl);
   const [isHovered, setIsHovered] = useState(false);
@@ -46,6 +45,7 @@ const Gallery = ({ productMedia, title }: GalleryProps) => {
           src={mainImage}
           alt={title}
           fill
+          priority
           sizes="(max-width:768px) 100vw (max-width:1200px) 70vw"
           className={`object-cover overflow-hidden rounded-lg transition-transform duration-300 ease-in-out ${
             isHovered ? "scale-150" : "scale-100"
@@ -63,10 +63,6 @@ const Gallery = ({ productMedia, title }: GalleryProps) => {
           const cachedThumbnailUrl = `/api/cloudinary-cached-image?secure_url=${encodeURIComponent(
             image
           )}`;
-          console.log(
-            `Thumbnail cachedImage URL [${index}]:`,
-            cachedThumbnailUrl
-          );
 
           return (
             <div key={index}>

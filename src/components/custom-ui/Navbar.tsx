@@ -18,6 +18,7 @@ const Navbar = () => {
             alt="logo of website"
             width={100}
             height={70}
+            priority
           />
         </Link>
         <SearchBar />

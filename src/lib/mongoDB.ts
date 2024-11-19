@@ -4,6 +4,7 @@ import mongoose, { Mongoose } from "mongoose";
 const MONGO_URI = process.env.MONGO_URI!;
 
 if (!MONGO_URI) {
+  console.error("MONGO_URI is missing in the environment.");
   throw new Error("Please define the MONGO_URI environment variable");
 }
 
@@ -30,6 +31,11 @@ export const ConnectDB = async () => {
   if (cached.conn) {
     return cached.conn;
   }
+
+  cached.promise = mongoose.connect(MONGO_URI, {
+    bufferCommands: false,
+    maxPoolSize: 10,
+  });
 
   if (!cached.promise) {
     const opts = {

@@ -48,7 +48,7 @@ export const GET = async (request: NextRequest) => {
     await ConnectDB();
 
     const collections = await Collection.find({})
-      .select("title image products")
+      .select("title image products ")
       .sort({ createdAt: "desc" });
 
     return NextResponse.json(collections, {

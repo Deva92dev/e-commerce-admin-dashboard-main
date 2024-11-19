@@ -21,6 +21,7 @@ const ProductCard = ({ product, updateSignedInUser }: ProductCardProps) => {
           src={product.media[0]}
           alt={product.title}
           fill
+          priority
           sizes="(max-width:768px) 100vw (max-width:1200px) 50vw"
           className="object-cover overflow-hidden rounded-t-lg"
         />

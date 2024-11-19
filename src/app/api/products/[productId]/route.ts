@@ -27,16 +27,18 @@ export const GET = async (
       );
     }
 
-    console.log("Original product.media:", product.media);
-
     // Transform secure URLs for caching
     if (product.media && Array.isArray(product.media)) {
       product.media = product.media.map((url: string) => {
-        const transformedUrl = `/api/cloudinary-cached-image?secure_url=${encodeURIComponent(
-          url
-        )}`;
-        console.log("Transformed Urls:", transformedUrl);
-        return transformedUrl;
+        if (!url.startsWith("/api/cloudinary-cached-image")) {
+          const transformedUrl = `/api/cloudinary-cached-image?secure_url=${encodeURIComponent(
+            url
+          )}`;
+
+          return transformedUrl;
+        }
+
+        return url;
       });
     }
 

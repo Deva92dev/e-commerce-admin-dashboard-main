@@ -1,10 +1,16 @@
-import { getOrderDetails } from "@/lib/actions/orderDetails.actions";
+import { getOrderDetails } from "@/lib/actions";
 import { formatPrice } from "@/lib/formatPrice";
 import { OrderItemType } from "@/lib/types";
+import { notFound } from "next/navigation";
 
-const OrderDetails = async (props: { params: Promise<{ orderId: string }> }) => {
+const OrderDetails = async (props: {
+  params: Promise<{ orderId: string }>;
+}) => {
   const params = await props.params;
   const orderDetails = await getOrderDetails(params.orderId);
+  if (!orderDetails) {
+    notFound();
+  }
 
   return (
     <div className="flex flex-col gap-5 p-10">

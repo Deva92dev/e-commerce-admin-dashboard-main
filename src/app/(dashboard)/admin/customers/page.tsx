@@ -1,23 +1,27 @@
-import Customer from "@/lib/models/Customer";
-import { ConnectDB } from "@/lib/mongoDB";
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Separator } from "@/components/ui/separator";
-import { DataTable } from "@/components/custom-ui/Data-Table";
-import { columns } from "../../components/customers/CustomerColumn";
-import { CustomersType } from "@/lib/types";
+import { getTotalPaidCustomers } from "@/lib/actions";
+import { notFound } from "next/navigation";
 
 const CustomersPage = async () => {
-  await ConnectDB();
-
-  const customers: CustomersType[] = await Customer.find({}).sort({
-    createdAt: "desc",
-  });
+  const { customerList } = await getTotalPaidCustomers();
+  if (!customerList) {
+    notFound();
+  }
 
   return (
     <div className="px-10 py-5">
       <h2 className="font-bold text-3xl">Customers</h2>
       <Separator />
-      <DataTable columns={columns} data={customers} searchKey="name" />
+      {customerList.map((user: any) => (
+        <div
+          key={user._id}
+          className="font-bold flex flex-row justify-between mb-4"
+        >
+          <p>{user.name}</p>
+          <p>{user.email}</p>
+        </div>
+      ))}
     </div>
   );
 };

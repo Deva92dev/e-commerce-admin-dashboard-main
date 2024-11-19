@@ -19,16 +19,16 @@ const Category = async ({ collection }: CategoryProps) => {
             key={item._id}
             className="relative bg-white rounded-sm hover:shadow-lg"
           >
-            <div className="relative h-72">
+            <div className="relative h-0" style={{ paddingBottom: "66.67%" }}>
               <Image
                 src={item.image}
-                alt={item.title}
+                alt={`Image representing the ${item.title} category`}
                 fill
                 sizes="(max-width:768px) 100vw (max-width:1200px) 50vw"
-                className="mb-4 rounded-t-lg"
+                className="mb-4 rounded-lg"
               />
             </div>
-            <Button className="absolute top-36 right-12 bg-blue-500 text-white">
+            <Button className="absolute top-36 right-12 bg-black hover:bg-green-800 text-white">
               {item.title}
             </Button>
           </Link>

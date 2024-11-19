@@ -1,38 +1,55 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Metadata } from "next";
+import { Suspense } from "react";
+import { notFound } from "next/navigation";
 
 import Gallery from "@/components/custom-ui/Gallery";
+import GallerySkeleton from "@/components/custom-ui/GallerySkeleton";
+import ProductInfoSkeleton from "@/components/custom-ui/ProductInfoSkeleton";
+
+import {
+  getPaidCustomers,
+  getProductDetails,
+  getRelatedProducts,
+  getUserDetails,
+} from "@/lib/actions";
+
+import Reviews from "@/components/custom-ui/Reviews";
+import ReviewSkeleton from "@/components/custom-ui/ReviewSkeleton";
 import ProductInfo from "@/components/custom-ui/ProductInfo";
 import RelatedProducts from "@/components/custom-ui/RelatedProducts";
-import Reviews from "@/components/custom-ui/Reviews";
-import { getPaidCustomers } from "@/lib/actions/paidCustomers.actions";
-import { getProductDetails } from "@/lib/actions/productDetails.actions";
-import { getRelatedProducts } from "@/lib/actions/relatedProducts.actions";
-import { getUserDetails } from "@/lib/actions/getAuthUser";
+
+export async function generateStaticParams() {
+  return [];
+}
 
 export async function generateMetadata(props: {
   params: Promise<{ productId: string }>;
 }): Promise<Metadata> {
-  const params = await props.params;
-  const productDetails = await getProductDetails(params.productId);
+  const { productId } = await props.params;
+  const productDetails = await getProductDetails(productId);
+
+  if (!productDetails) {
+    notFound();
+  }
+
   return {
     title: productDetails.title,
     description: productDetails.description,
   };
 }
 
-// in stock for each product, gallery and productInfo is not changing frequently, make them not making request each time
 const ProductDetailsPage = async (props: {
   params: Promise<{ productId: string }>;
 }) => {
-  const params = await props.params;
-
-  const { userId, userName, userProfileImage } = await getUserDetails();
-
-  const [productDetails, relatedProducts] = await Promise.all([
-    getProductDetails(params.productId),
-    getRelatedProducts(params.productId),
+  const { productId } = await props.params;
+  const [userDetails, productDetails, relatedProducts] = await Promise.all([
+    getUserDetails(),
+    getProductDetails(productId),
+    getRelatedProducts(productId),
   ]);
+
+  const { userId, userName, userProfileImage } = userDetails;
 
   let initialCanLeaveReview = false;
   let orderId = null;
@@ -40,7 +57,7 @@ const ProductDetailsPage = async (props: {
   if (userId) {
     try {
       const { totalPaidCustomers, customerOrderData } = await getPaidCustomers(
-        params.productId,
+        productId,
         userId
       );
 
@@ -62,34 +79,48 @@ const ProductDetailsPage = async (props: {
       console.error("Error fetching customer details:", error);
     }
   } else {
-    console.error("Customer is not logged in");
+    console.warn("Customer is not logged in");
+  }
+
+  if (!productDetails) {
+    notFound();
   }
 
   return (
     <>
       <div className="grid gap-12 px-4 md:px-6 lg:px-12 xl:px-24 grid-cols-1 lg:grid-cols-2 mt-6 ">
         <div className="lg:col-span-1">
-          <Gallery
-            productMedia={productDetails.media}
-            title={productDetails.title}
-          />
+          {/* Static Data */}
+          <Suspense fallback={<GallerySkeleton />}>
+            <Gallery
+              productMedia={productDetails.media}
+              title={productDetails.title}
+            />
+          </Suspense>
         </div>
         <div className="lg:col-span-1">
-          <ProductInfo product={productDetails} orderId={orderId} />
+          {/* Dynamic Data */}
+          <Suspense fallback={<ProductInfoSkeleton />}>
+            <ProductInfo product={productDetails} orderId={orderId} />
+          </Suspense>
         </div>
         <div className="lg:col-span-2">
-          <Reviews
-            productId={params.productId}
-            initialCanLeaveReview={initialCanLeaveReview}
-            userId={userId}
-            userProfileImage={userProfileImage}
-            userName={userName}
-            orderId={orderId}
-          />
+          {/* Dynamic Data */}
+          <Suspense fallback={<ReviewSkeleton />}>
+            <Reviews
+              productId={productId}
+              initialCanLeaveReview={initialCanLeaveReview}
+              userId={userId}
+              userProfileImage={userProfileImage}
+              userName={userName}
+              orderId={orderId}
+            />
+          </Suspense>
           <div className="mt-6">
+            {/* Static Data */}
             <RelatedProducts
               relatedProducts={relatedProducts}
-              productId={params.productId}
+              productId={productId}
             />
           </div>
         </div>

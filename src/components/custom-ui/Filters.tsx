@@ -138,78 +138,117 @@ const Filters = ({ products }: FilterProps) => {
 
   return (
     <>
-      <form className="bg-sky-200 rounded-md px-8 py-4 grid gap-x-4 gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center">
+      <form className="bg-sky-200 rounded-md px-8 py-4 grid gap-x-4 gap-y-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-center">
         {/* Season Type */}
-        <select
-          name="collection"
-          id="collection"
-          className="py-2 px-4 rounded-2xl text-xs font-medium bg-[#EBEDED]"
-          onChange={handleFilterChange}
-          defaultValue={searchParams.get("name")?.toString()}
-        >
-          <option value="">Collection</option>
-          <option value="summer">Summer</option>
-          <option value="winter">Winter</option>
-          <option value="casual">Casual</option>
-          <option value="party">Party</option>
-        </select>
+        <div className="flex flex-col">
+          <label
+            htmlFor="collection"
+            className="block text-sm font-medium text-gray-700 pl-2 mb-1"
+          >
+            Collection
+          </label>
+          <select
+            name="collection"
+            id="collection"
+            className="py-2 px-4 rounded-2xl text-xs font-medium bg-[#EBEDED] w-full sm:w-9/12 md:w-3/5 lg:w-48"
+            onChange={handleFilterChange}
+            defaultValue={searchParams.get("name")?.toString()}
+          >
+            <option value="">Collection</option>
+            <option value="summer">Summer</option>
+            <option value="winter">Winter</option>
+            <option value="casual">Casual</option>
+            <option value="party">Party</option>
+          </select>
+        </div>
 
         {/* prices */}
-        <input
-          type="text"
-          name="min"
-          placeholder="min price"
-          className="text-xs rounded-2xl pl-2  h-8 ring-1 ring-gray-400"
-          onChange={handleFilterChange}
-          defaultValue={searchParams.get("name")?.toString()}
-        />
-        <input
-          type="text"
-          name="max"
-          placeholder="max price"
-          className="text-xs rounded-2xl h-8 pl-2 ring-1 ring-gray-400"
-          onChange={handleFilterChange}
-          defaultValue={searchParams.get("name")?.toString()}
-        />
+        <div className="flex flex-col">
+          <label
+            htmlFor="min"
+            className="block text-sm font-medium text-gray-700 pl-2 mb-1"
+          >
+            Min Price
+          </label>
+          <input
+            type="text"
+            name="min"
+            placeholder="min price"
+            className="text-xs rounded-2xl pl-2  h-8 ring-1 ring-gray-400 w-full sm:w-9/12 md:w-3/5 lg:w-48"
+            onChange={handleFilterChange}
+            defaultValue={searchParams.get("name")?.toString()}
+          />
+        </div>
+        <div className="flex flex-col">
+          <label
+            htmlFor="max"
+            className="block text-sm font-medium text-gray-700 pl-2 mb-1"
+          >
+            Max Price
+          </label>
+          <input
+            type="text"
+            name="max"
+            placeholder="max price"
+            className="text-xs rounded-2xl h-8 pl-2 ring-1 ring-gray-400 w-full sm:w-9/12 md:w-3/5 lg:w-48"
+            onChange={handleFilterChange}
+            defaultValue={searchParams.get("name")?.toString()}
+          />
+        </div>
 
         {/* Colors */}
-        <select
-          name="color"
-          id="color"
-          className=" py-2 px-4 rounded-2xl text-xs font-medium bg-[#EBEDED]"
-          onChange={handleFilterChange}
-          defaultValue={searchParams.get("name")?.toString()}
-        >
-          <option value="">Color</option>
-          <option value="blue">Blue</option>
-          <option value="green">Green</option>
-          <option value="white">White</option>
-          <option value="black">Black</option>
-          <option value="yellow">Yellow</option>
-          <option value="indigo">Indigo</option>
-        </select>
-
-        <select
-          name="sort"
-          id="sort"
-          className=" py-2 px-4 rounded-2xl text-xs font-medium bg-[#EBEDED]"
-          onChange={handleFilterChange}
-          defaultValue={searchParams.get("name")?.toString()}
-        >
-          <option value="">Sort By</option>
-          <option value="asc price">Price(Low to High)</option>
-          <option value="desc price">Price(High to Low)</option>
-          <option value="desc createdAt">Newest</option>
-          <option value="asc createdAt">Oldest</option>
-          <option value="asc title">Sort(a - z)</option>
-          <option value="desc title">Sort(z - a)</option>
-        </select>
+        <div className="flex flex-col">
+          <label
+            htmlFor="color"
+            className="block text-sm font-medium text-gray-700 pl-2 mb-1"
+          >
+            Color
+          </label>
+          <select
+            name="color"
+            id="color"
+            className="py-2 px-4 rounded-2xl text-xs font-medium bg-[#EBEDED] w-full sm:w-9/12 md:w-3/5 lg:w-48"
+            onChange={handleFilterChange}
+            defaultValue={searchParams.get("name")?.toString()}
+          >
+            <option value="">Color</option>
+            <option value="blue">Blue</option>
+            <option value="green">Green</option>
+            <option value="white">White</option>
+            <option value="black">Black</option>
+            <option value="yellow">Yellow</option>
+            <option value="indigo">Indigo</option>
+          </select>
+        </div>
+        <div className="flex flex-col">
+          <label
+            htmlFor="sort"
+            className="block text-sm font-medium text-gray-700 pl-2 mb-1"
+          >
+            Sort By
+          </label>
+          <select
+            name="sort"
+            id="sort"
+            className="py-2 px-4 rounded-2xl text-xs font-medium bg-[#EBEDED] w-full sm:w-9/12 md:w-3/5 lg:w-48"
+            onChange={handleFilterChange}
+            defaultValue={searchParams.get("name")?.toString()}
+          >
+            <option value="">Sort By</option>
+            <option value="asc price">Price(Low to High)</option>
+            <option value="desc price">Price(High to Low)</option>
+            <option value="desc createdAt">Newest</option>
+            <option value="asc createdAt">Oldest</option>
+            <option value="asc title">Sort(a - z)</option>
+            <option value="desc title">Sort(z - a)</option>
+          </select>
+        </div>
 
         {/* reset all filters */}
         <button
           type="button"
           onClick={handleResetFilters}
-          className="w-32 h-12  px-3 py-4 bg-black text-white hover:bg-blue-500 hover:text-black rounded-lg"
+          className="h-12 px-3 py-2 bg-black text-white hover:bg-blue-500 hover:text-black rounded-lg w-full sm:w-9/12 md:w-3/5 lg:w-48"
         >
           Reset Filters
         </button>
@@ -234,7 +273,9 @@ const Filters = ({ products }: FilterProps) => {
           disabled={currentPage === 1}
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           className={`px-4 py-2 rounded-lg ${
-            currentPage === 1 ? "bg-gray-300" : "bg-blue-500 text-white"
+            currentPage === 1
+              ? "bg-gray-300"
+              : "bg-black hover:bg-green-800 text-white"
           }`}
         >
           Previous
@@ -250,7 +291,7 @@ const Filters = ({ products }: FilterProps) => {
           className={`px-4 py-2 rounded-lg ${
             currentPage === totalPages
               ? "bg-gray-300"
-              : "bg-blue-500 text-white"
+              : "bg-black hover:bg-green-800 text-white"
           }`}
         >
           Next

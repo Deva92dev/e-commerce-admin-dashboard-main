@@ -32,7 +32,9 @@ const UploadImages: React.FC<UploadImagesProps> = ({
         const updatedResources = multiple
           ? [...prevResources, newResource]
           : [newResource];
-        const urls = updatedResources.map((resource) => resource.secure_url);
+        const urls = updatedResources.map(
+          (resource) => `${resource.secure_url}/f_auto,q_auto`
+        );
         if (onUploadSuccess) {
           onUploadSuccess(urls);
         }
@@ -75,7 +77,7 @@ const UploadImages: React.FC<UploadImagesProps> = ({
         {resources.map((resource) => (
           <Image
             key={resource.public_id}
-            src={resource.secure_url}
+            src={`${resource.secure_url}/f_auto,q_auto`}
             width={300}
             height={300}
             alt={resource.public_id}

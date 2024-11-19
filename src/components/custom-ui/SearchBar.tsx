@@ -19,6 +19,7 @@ const SearchBar = () => {
       <button
         disabled={query === ""}
         onClick={() => router.push(`/search/${query}`)}
+        aria-label="Search"
       >
         <Search className="cursor-pointer h-4 w-4" />
       </button>

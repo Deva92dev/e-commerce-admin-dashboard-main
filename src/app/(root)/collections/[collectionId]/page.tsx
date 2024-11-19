@@ -1,37 +1,44 @@
-import ProductCard from "@/components/custom-ui/ProductCard";
-import { getCollectionDetails } from "@/lib/actions/collectionDetails.actions";
-import { CollectionType, ProductType } from "@/lib/types";
-import { Metadata } from "next";
 import Image from "next/image";
+import { Metadata } from "next";
+import ProductCard from "@/components/custom-ui/ProductCard";
+import { CollectionType, ProductType } from "@/lib/types";
+import { notFound } from "next/navigation";
+import { getCollectionDetails } from "@/lib/actions";
+
+// To statically render all paths the first time they're visited, return an empty array (no paths will be rendered at build time)
+export async function generateStaticParams() {
+  return [];
+}
 
 export async function generateMetadata(props: {
   params: Promise<{ collectionId: string }>;
 }): Promise<Metadata> {
-  const params = await props.params;
-  const collectionDetails: CollectionType = await getCollectionDetails(
-    params.collectionId
+  const { collectionId } = await props.params;
+  const collectionDetails: CollectionType | null = await getCollectionDetails(
+    collectionId
   );
+
+  if (!collectionDetails) {
+    notFound();
+  }
 
   return {
     title: collectionDetails.title,
     description: collectionDetails.description,
-    openGraph: {
-      images: [
-        {
-          url: collectionDetails.image,
-        },
-      ],
-    },
   };
 }
 
 const CollectionDetailsPage = async (props: {
   params: Promise<{ collectionId: string }>;
 }) => {
-  const params = await props.params;
-  const collectionDetails: CollectionType = await getCollectionDetails(
-    params.collectionId
+  const { collectionId } = await props.params;
+  const collectionDetails: CollectionType | null = await getCollectionDetails(
+    collectionId
   );
+
+  if (!collectionDetails) {
+    notFound();
+  }
 
   return (
     <div className=" px-4 md:px-6 lg:px-12 xl:px-24 my-8">
@@ -42,6 +49,8 @@ const CollectionDetailsPage = async (props: {
           alt={collectionDetails.title || "Photo of Image"}
           width={1500}
           height={1000}
+          sizes="(max-width:768px) 100vw (max-width:1200px) 50vw"
+          priority
           className="w-full h-[400px] object-cover rounded-t-xl"
         />
         <p className="font-bold text-xl px-2 mb-2">{collectionDetails.title}</p>

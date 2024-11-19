@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { getCustomerOrders } from "@/lib/actions/customerOrders.actions";
-import { formatPrice } from "@/lib/formatPrice";
-import { OrderItemType, SingleOrderType } from "@/lib/types";
 import { auth } from "@clerk/nextjs/server";
 import { Metadata } from "next";
 import Image from "next/image";
+
+import { formatPrice } from "@/lib/formatPrice";
+import { OrderItemType, SingleOrderType } from "@/lib/types";
+import { getCustomerOrders } from "@/lib/actions";
 
 export const metadata: Metadata = {
   title: "Orders - Own Closet",

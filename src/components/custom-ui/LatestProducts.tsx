@@ -20,10 +20,10 @@ const LatestProducts = async ({ latestProducts }: LatestProductsProps) => {
             key={item._id}
             className="rounded-sm hover:shadow-lg"
           >
-            <div className="relative h-72">
+            <div className="relative h-0" style={{ paddingBottom: "66.67%" }}>
               <Image
                 src={item.media[0]}
-                alt={item.title}
+                alt={`Image representing the ${item.title} product`}
                 fill
                 sizes="(max-width:768px) 100vw (max-width:1200px) 50vw"
                 className="object-cover overflow-hidden rounded-t-lg"

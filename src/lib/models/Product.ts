@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-// add reviews schema later must
 const ProductSchema = new mongoose.Schema(
   {
     title: {

@@ -15,12 +15,13 @@ export const GET = async (
     await ConnectDB();
 
     const collection = await Collection.findById(params.collectionId)
-      .select("title, description, image")
+      .select("title description image")
       .populate({
         path: "products",
         model: Product,
         select: "media title category price",
       });
+
     if (!collection) {
       return new NextResponse(
         JSON.stringify({ message: "Collection not found" }),
@@ -30,9 +31,6 @@ export const GET = async (
 
     return NextResponse.json(collection, {
       status: 200,
-      headers: {
-        "Cache-Control": "public, max-age=1296000, stale-while-revalidate=3600", // 15 days
-      },
     });
   } catch (error) {
     console.log("CollectionId_GET", error);

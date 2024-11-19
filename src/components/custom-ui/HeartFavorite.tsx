@@ -93,8 +93,14 @@ const HeartFavorite = ({ product, updateSignedInUser }: HeartFavoriteProps) => {
     <button
       onClick={handleLike}
       className="border bg-gray-100 w-max p-2 rounded-lg"
+      aria-label={
+        isLiked
+          ? `Remove ${product.title} from your favorites`
+          : `Add ${product.title} to your favorites`
+      }
+      title={isLiked ? "Remove from favorites" : "Add to favorites"}
     >
-      <Heart fill={isLiked ? "red" : "white"} />
+      <Heart fill={isLiked ? "red" : "white"} aria-hidden="true" />
     </button>
   );
 };

@@ -167,6 +167,7 @@ const ProductForm = ({ initialData }: ProductFormProps) => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
+            defaultValue="title"
             name="title"
             render={({ field }) => (
               <FormItem>
@@ -185,6 +186,7 @@ const ProductForm = ({ initialData }: ProductFormProps) => {
 
           <FormField
             control={form.control}
+            defaultValue="description"
             name="description"
             render={({ field }) => (
               <FormItem>
@@ -241,6 +243,7 @@ const ProductForm = ({ initialData }: ProductFormProps) => {
 
             <FormField
               control={form.control}
+              defaultValue="category"
               name="category"
               render={({ field }) => (
                 <FormItem>
