@@ -2,8 +2,12 @@ import Product from "@/lib/models/Product";
 import { ConnectDB } from "@/lib/mongoDB";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (req: NextRequest, props: { params: Promise<{ query: string }> }) => {
-  const params = await props.params;
+export const dynamic = "force-dynamic";
+
+export const GET = async (
+  req: NextRequest,
+  { params }: { params: { query: string } }
+) => {
   try {
     await ConnectDB();
 

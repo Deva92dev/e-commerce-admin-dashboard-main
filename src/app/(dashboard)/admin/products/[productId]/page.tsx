@@ -3,10 +3,9 @@
 import ProductForm from "@/app/(dashboard)/components/products/ProductForm";
 import Loader from "@/components/custom-ui/Loader";
 import { ProductType } from "@/lib/types";
-import { useCallback, useEffect, useState, use } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-const ProductDetailsPage = (props: { params: Promise<{ productId: string }> }) => {
-  const params = use(props.params);
+const ProductDetailsPage = ({ params }: { params: { productId: string } }) => {
   const [loading, setLoading] = useState(true);
   const [productDetails, setProductDetails] = useState<ProductType | null>(
     null

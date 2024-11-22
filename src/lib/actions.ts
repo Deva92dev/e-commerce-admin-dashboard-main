@@ -1,4 +1,5 @@
 "use server";
+import "whatwg-fetch";
 
 import { currentUser } from "@clerk/nextjs/server";
 import {
@@ -42,6 +43,9 @@ export const getCollectionDetails = async (collectionId: string) => {
   try {
     const res = await fetch(`${baseUrl}/api/collections/${collectionId}`, {
       method: "GET",
+      next: {
+        revalidate: 604800, // 7 day
+      },
     });
     if (!res.ok) {
       return null;
@@ -113,6 +117,9 @@ export const getProductDetails = async (productId: string) => {
   try {
     const res = await fetch(`${baseUrl}/api/products/${productId}`, {
       method: "GET",
+      next: {
+        revalidate: 60, // 1 minute
+      },
     });
     if (!res.ok) {
       return null;
@@ -197,30 +204,3 @@ export async function updateOrderStatus(orderId: string, status: string) {
     return null;
   }
 }
-
-// sitemap related functions
-// export const generateProductSitemapEntries =
-//   async (): Promise<MetadataRoute.Sitemap> => {
-//     try {
-//       const products = await getProducts();
-//       return products.map((product) => ({
-//         url: `${baseUrl}/products/${product._id}`,
-//       }));
-//     } catch (error) {
-//       console.error("Failed to generate product sitemap entries:", error);
-//       return [];
-//     }
-//   };
-
-// export const generateCollectionSitemapEntries =
-//   async (): Promise<MetadataRoute.Sitemap> => {
-//     try {
-//       const collections = await getCollection();
-//       return collections.map((collection) => ({
-//         url: `${baseUrl}/collections/${collection._id}`,
-//       }));
-//     } catch (error) {
-//       console.error("Failed to generate collection sitemap entries:", error);
-//       return [];
-//     }
-//   };

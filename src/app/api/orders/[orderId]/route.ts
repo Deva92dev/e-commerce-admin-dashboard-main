@@ -4,11 +4,16 @@ import Product from "@/lib/models/Product";
 import { ConnectDB } from "@/lib/mongoDB";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export const GET = async (
   req: NextRequest,
-  props: { params: Promise<{ orderId: string }> }
+  {
+    params,
+  }: {
+    params: { orderId: string };
+  }
 ) => {
-  const params = await props.params;
   try {
     await ConnectDB();
 
@@ -62,15 +67,18 @@ export const GET = async (
 
 export const PATCH = async (
   req: NextRequest,
-  props: { params: Promise<{ orderId: string }> }
+  {
+    params,
+  }: {
+    params: { orderId: string };
+  }
 ) => {
-  const { orderId } = await props.params;
   const { status } = await req.json();
 
   try {
     await ConnectDB();
 
-    const order = await Order.findById(orderId);
+    const order = await Order.findById(params.orderId);
     if (!order) {
       return NextResponse.json("Order Not Found", { status: 404 });
     }

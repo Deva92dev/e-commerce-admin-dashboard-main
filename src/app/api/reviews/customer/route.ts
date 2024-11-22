@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 // getting reviews for a specific customer
 export const GET = async (req: NextRequest) => {
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
     if (!userId) {
       return NextResponse.json("Unauthorized", { status: 401 });
     }
@@ -27,9 +27,6 @@ export const GET = async (req: NextRequest) => {
 
     return NextResponse.json(reviews, {
       status: 200,
-      headers: {
-        "Cache-Control": "public, max-age=604800 stale-while-revalidate=3600",
-      },
     });
   } catch (error) {
     console.error("[Customer_Review_API]", error);

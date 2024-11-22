@@ -7,24 +7,25 @@ import Image from "next/image";
 import { formatPrice } from "@/lib/formatPrice";
 import { OrderItemType, SingleOrderType } from "@/lib/types";
 import { getCustomerOrders } from "@/lib/actions";
+import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Orders - Own Closet",
 };
 
 // orders related to clerk user, that's why userId in as parameter
-const OrdersPage = async (props: {
-  params: Promise<{ customerId: string }>;
-}) => {
-  const params = await props.params;
-  const { userId } = auth();
-
+const OrdersPage = async ({ params }: { params: { customerId: string } }) => {
+  const { userId } = await auth();
   const getCustomerAllOrders: SingleOrderType[] = await getCustomerOrders(
     userId as string
   );
   const paidOrders = getCustomerAllOrders.filter(
     (order: any) => order.status === "paid"
   );
+
+  if (!getCustomerAllOrders) {
+    notFound();
+  }
 
   return (
     <div className="px-4 md:px-6 lg:px-12 xl:px-24 ">

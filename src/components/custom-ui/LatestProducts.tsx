@@ -25,8 +25,10 @@ const LatestProducts = async ({ latestProducts }: LatestProductsProps) => {
                 src={item.media[0]}
                 alt={`Image representing the ${item.title} product`}
                 fill
-                sizes="(max-width:768px) 100vw (max-width:1200px) 50vw"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover overflow-hidden rounded-t-lg"
+                loading="lazy"
+                quality={75}
               />
             </div>
             <div className="my-4 px-2">

@@ -3,10 +3,7 @@ import { formatPrice } from "@/lib/formatPrice";
 import { OrderItemType } from "@/lib/types";
 import { notFound } from "next/navigation";
 
-const OrderDetails = async (props: {
-  params: Promise<{ orderId: string }>;
-}) => {
-  const params = await props.params;
+const OrderDetails = async ({ params }: { params: { orderId: string } }) => {
   const orderDetails = await getOrderDetails(params.orderId);
   if (!orderDetails) {
     notFound();

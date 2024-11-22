@@ -8,7 +8,7 @@ interface GalleryProps {
 }
 
 const Gallery = ({ productMedia, title }: GalleryProps) => {
-  const mainImageUrl = `/api/cloudinary-cached-image?secure_url=$${encodeURIComponent(
+  const mainImageUrl = `/api/cloudinary-cached-image?secure_url=${encodeURIComponent(
     productMedia[0]
   )}`;
 
@@ -46,7 +46,7 @@ const Gallery = ({ productMedia, title }: GalleryProps) => {
           alt={title}
           fill
           priority
-          sizes="(max-width:768px) 100vw (max-width:1200px) 70vw"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className={`object-cover overflow-hidden rounded-lg transition-transform duration-300 ease-in-out ${
             isHovered ? "scale-150" : "scale-100"
           }`}
@@ -55,6 +55,7 @@ const Gallery = ({ productMedia, title }: GalleryProps) => {
               isHovered ? mousePosition.y : 50
             }%`,
           }}
+          onError={(e) => console.error("Error loading image:", e)}
         />
       </div>
 
@@ -71,6 +72,7 @@ const Gallery = ({ productMedia, title }: GalleryProps) => {
                 alt="image"
                 width={200}
                 height={200}
+                loading="lazy"
                 className={`rounded-lg cursor-pointer ${
                   mainImage === cachedThumbnailUrl ? "border border-black" : ""
                 }`}

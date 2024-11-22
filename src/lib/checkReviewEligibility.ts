@@ -4,7 +4,7 @@ import Customer from "./models/Customer";
 import Order from "./models/Order";
 
 const ReviewEligibility = async (productId: string) => {
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) {
     throw new Error("User is not authenticated");
   }

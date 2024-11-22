@@ -4,9 +4,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (
   req: NextRequest,
-  props: { params: Promise<{ productId: string }> }
+  {
+    params,
+  }: {
+    params: { productId: string };
+  }
 ) => {
-  const params = await props.params;
   try {
     ConnectDB();
 
@@ -30,7 +33,7 @@ export const GET = async (
     return NextResponse.json(relatedProducts, {
       status: 200,
       headers: {
-        "Cache-Control": "public, max-age=1296000 stale-while-revalidate=3600",
+        "Cache-Control": "public, max-age=1296000, stale-while-revalidate=3600", // 15 days
       },
     });
   } catch (error) {

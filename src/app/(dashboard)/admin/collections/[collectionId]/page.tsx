@@ -1,15 +1,14 @@
 "use client";
-import { useCallback, useEffect, useState, use } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CollectionType } from "@/lib/types";
 import Loader from "@/components/custom-ui/Loader";
 import CollectionForm from "@/app/(dashboard)/components/collections/CollectionForm";
 
-const CollectionDetailsPage = (
-  props: {
-    params: Promise<{ collectionId: string }>;
-  }
-) => {
-  const params = use(props.params);
+const CollectionDetailsPage = ({
+  params,
+}: {
+  params: { collectionId: string };
+}) => {
   const [loading, setLoading] = useState(false);
   const [collectionDetails, setCollectionDetails] =
     useState<CollectionType | null>(null);

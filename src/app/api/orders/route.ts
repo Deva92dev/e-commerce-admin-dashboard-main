@@ -41,9 +41,6 @@ export const GET = async (req: NextRequest) => {
 
     return NextResponse.json(orderDetails, {
       status: 200,
-      headers: {
-        "Cache-Control": "public, max-age=43200 stale-while-revalidate=3600",
-      },
     });
   } catch (error: any) {
     console.log("[Orders_API]", error);

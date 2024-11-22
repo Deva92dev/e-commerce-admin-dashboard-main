@@ -7,11 +7,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (
   req: NextRequest,
-  props: {
-    params: Promise<{ productId: string }>;
+  {
+    params,
+  }: {
+    params: { productId: string };
   }
 ) => {
-  const params = await props.params;
   try {
     ConnectDB();
 
@@ -56,11 +57,14 @@ export const GET = async (
 // for updating the product
 export const POST = async (
   req: NextRequest,
-  props: { params: Promise<{ productId: string }> }
+  {
+    params,
+  }: {
+    params: { productId: string };
+  }
 ) => {
-  const params = await props.params;
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
@@ -159,11 +163,14 @@ export const POST = async (
 
 export const DELETE = async (
   req: NextRequest,
-  props: { params: Promise<{ productId: string }> }
+  {
+    params,
+  }: {
+    params: { productId: string };
+  }
 ) => {
-  const params = await props.params;
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }

@@ -8,8 +8,7 @@ export const metadata: Metadata = {
   title: "Search - Own Closet",
 };
 
-const SearchPage = async (props: { params: Promise<{ query: string }> }) => {
-  const params = await props.params;
+const SearchPage = async ({ params }: { params: { query: string } }) => {
   const res = await fetch(`http://localhost:3000/api/search/${params.query}`);
   const searchedProducts = await res.json();
 
@@ -36,3 +35,5 @@ const SearchPage = async (props: { params: Promise<{ query: string }> }) => {
 };
 
 export default SearchPage;
+
+export const dynamic = "force-dynamic";;

@@ -7,15 +7,18 @@ import { ConnectDB } from "@/lib/mongoDB";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 // for creating review
 export const POST = async (
   req: NextRequest,
-  props: {
-    params: Promise<{ productId: string }>;
+  {
+    params,
+  }: {
+    params: { productId: string };
   }
 ) => {
-  const params = await props.params;
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) {
     return NextResponse.json("unauthorized", { status: 401 });
   }
@@ -87,11 +90,12 @@ export const POST = async (
 // for getting reviews for a product
 export const GET = async (
   req: NextRequest,
-  props: {
-    params: Promise<{ productId: string }>;
+  {
+    params,
+  }: {
+    params: { productId: string };
   }
 ) => {
-  const { productId } = await props.params;
   try {
     await ConnectDB();
 
@@ -102,7 +106,7 @@ export const GET = async (
 
     const skip = (page - 1) * limit;
 
-    const reviews = await Review.find({ product: productId })
+    const reviews = await Review.find({ product: params.productId })
       .populate({
         path: "customer",
         model: Customer,
@@ -112,7 +116,7 @@ export const GET = async (
       .limit(limit);
 
     const totalReviews = await Review.countDocuments({
-      product: productId,
+      product: params.productId,
     });
 
     if (!reviews || reviews.length === 0) {
@@ -141,13 +145,14 @@ export const GET = async (
 // for updating reviews for a product
 export const PATCH = async (
   req: NextRequest,
-  props: {
-    params: Promise<{ productId: string }>;
+  {
+    params,
+  }: {
+    params: { productId: string };
   }
 ) => {
-  const params = await props.params;
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
     if (!userId) {
       return NextResponse.json("unauthorized", { status: 401 });
     }
@@ -202,13 +207,14 @@ export const PATCH = async (
 // for deleting reviews for a product
 export const DELETE = async (
   req: NextRequest,
-  props: {
-    params: Promise<{ productId: string }>;
+  {
+    params,
+  }: {
+    params: { productId: string };
   }
 ) => {
-  const params = await props.params;
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
     if (!userId) {
       return NextResponse.json("Unauthorized", { status: 401 });
     }

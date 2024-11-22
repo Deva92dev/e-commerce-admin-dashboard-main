@@ -4,7 +4,6 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 
 import Gallery from "@/components/custom-ui/Gallery";
-import GallerySkeleton from "@/components/custom-ui/GallerySkeleton";
 import ProductInfoSkeleton from "@/components/custom-ui/ProductInfoSkeleton";
 
 import {
@@ -23,13 +22,15 @@ export async function generateStaticParams() {
   return [];
 }
 
-export async function generateMetadata(props: {
-  params: Promise<{ productId: string }>;
+export async function generateMetadata({
+  params,
+}: {
+  params: { productId: string };
 }): Promise<Metadata> {
-  const { productId } = await props.params;
-  const productDetails = await getProductDetails(productId);
+  const productDetails = await getProductDetails(params.productId);
 
   if (!productDetails) {
+    console.error("Product details not found for ID:", params.productId);
     notFound();
   }
 
@@ -39,14 +40,15 @@ export async function generateMetadata(props: {
   };
 }
 
-const ProductDetailsPage = async (props: {
-  params: Promise<{ productId: string }>;
+const ProductDetailsPage = async ({
+  params,
+}: {
+  params: { productId: string };
 }) => {
-  const { productId } = await props.params;
   const [userDetails, productDetails, relatedProducts] = await Promise.all([
     getUserDetails(),
-    getProductDetails(productId),
-    getRelatedProducts(productId),
+    getProductDetails(params.productId),
+    getRelatedProducts(params.productId),
   ]);
 
   const { userId, userName, userProfileImage } = userDetails;
@@ -57,7 +59,7 @@ const ProductDetailsPage = async (props: {
   if (userId) {
     try {
       const { totalPaidCustomers, customerOrderData } = await getPaidCustomers(
-        productId,
+        params.productId,
         userId
       );
 
@@ -91,12 +93,11 @@ const ProductDetailsPage = async (props: {
       <div className="grid gap-12 px-4 md:px-6 lg:px-12 xl:px-24 grid-cols-1 lg:grid-cols-2 mt-6 ">
         <div className="lg:col-span-1">
           {/* Static Data */}
-          <Suspense fallback={<GallerySkeleton />}>
-            <Gallery
-              productMedia={productDetails.media}
-              title={productDetails.title}
-            />
-          </Suspense>
+
+          <Gallery
+            productMedia={productDetails.media}
+            title={productDetails.title}
+          />
         </div>
         <div className="lg:col-span-1">
           {/* Dynamic Data */}
@@ -108,7 +109,7 @@ const ProductDetailsPage = async (props: {
           {/* Dynamic Data */}
           <Suspense fallback={<ReviewSkeleton />}>
             <Reviews
-              productId={productId}
+              productId={params.productId}
               initialCanLeaveReview={initialCanLeaveReview}
               userId={userId}
               userProfileImage={userProfileImage}
@@ -120,7 +121,7 @@ const ProductDetailsPage = async (props: {
             {/* Static Data */}
             <RelatedProducts
               relatedProducts={relatedProducts}
-              productId={productId}
+              productId={params.productId}
             />
           </div>
         </div>

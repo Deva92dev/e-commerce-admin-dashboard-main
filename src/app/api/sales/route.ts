@@ -31,9 +31,6 @@ export const GET = async (req: NextRequest) => {
       { totalSales },
       {
         status: 200,
-        headers: {
-          "Cache-Control": "public, max-age=86400 stale-while-revalidate=3600",
-        },
       }
     );
   } catch (error) {

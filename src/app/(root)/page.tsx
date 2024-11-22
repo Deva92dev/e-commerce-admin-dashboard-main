@@ -16,11 +16,11 @@ export default async function Home() {
   }
 
   return (
-    <main>
+    <div>
       <Hero />
       <Category collection={collection} />
       <LatestProducts latestProducts={latestProducts} />
       <Services />
-    </main>
+    </div>
   );
 }

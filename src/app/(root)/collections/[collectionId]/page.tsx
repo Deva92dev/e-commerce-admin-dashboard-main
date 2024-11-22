@@ -5,17 +5,17 @@ import { CollectionType, ProductType } from "@/lib/types";
 import { notFound } from "next/navigation";
 import { getCollectionDetails } from "@/lib/actions";
 
-// To statically render all paths the first time they're visited, return an empty array (no paths will be rendered at build time)
 export async function generateStaticParams() {
   return [];
 }
 
-export async function generateMetadata(props: {
-  params: Promise<{ collectionId: string }>;
+export async function generateMetadata({
+  params,
+}: {
+  params: { collectionId: string };
 }): Promise<Metadata> {
-  const { collectionId } = await props.params;
   const collectionDetails: CollectionType | null = await getCollectionDetails(
-    collectionId
+    params.collectionId
   );
 
   if (!collectionDetails) {
@@ -28,12 +28,13 @@ export async function generateMetadata(props: {
   };
 }
 
-const CollectionDetailsPage = async (props: {
-  params: Promise<{ collectionId: string }>;
+const CollectionDetailsPage = async ({
+  params,
+}: {
+  params: { collectionId: string };
 }) => {
-  const { collectionId } = await props.params;
   const collectionDetails: CollectionType | null = await getCollectionDetails(
-    collectionId
+    params.collectionId
   );
 
   if (!collectionDetails) {
@@ -46,11 +47,13 @@ const CollectionDetailsPage = async (props: {
       <div className="rounded-lg flex flex-col items-center gap-8 shadow-md">
         <Image
           src={collectionDetails.image}
-          alt={collectionDetails.title || "Photo of Image"}
-          width={1500}
-          height={1000}
-          sizes="(max-width:768px) 100vw (max-width:1200px) 50vw"
+          alt={`Image of ${collectionDetails.title} collection`}
+          width={600} // for mobile devices
+          height={400} // for mobile devices
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           priority
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,[BASE64_STRING]"
           className="w-full h-[400px] object-cover rounded-t-xl"
         />
         <p className="font-bold text-xl px-2 mb-2">{collectionDetails.title}</p>

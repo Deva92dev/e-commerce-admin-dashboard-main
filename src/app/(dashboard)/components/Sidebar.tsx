@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-// make your link highlighted when clicking without using hooks
+// make your link highlighted when clicking  using cn of utils
 const Sidebar = () => {
   return (
     <div className=" h-screen left-0 top-0 sticky w-48 flex flex-col justify-center items-center shadow-xl font-medium bg-[#8fabca] max-lg:hidden">

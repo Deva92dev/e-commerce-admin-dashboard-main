@@ -21,8 +21,10 @@ const ProductCard = ({ product, updateSignedInUser }: ProductCardProps) => {
           src={product.media[0]}
           alt={product.title}
           fill
-          priority
-          sizes="(max-width:768px) 100vw (max-width:1200px) 50vw"
+          loading="lazy"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,[BASE64_STRING]"
           className="object-cover overflow-hidden rounded-t-lg"
         />
       </div>

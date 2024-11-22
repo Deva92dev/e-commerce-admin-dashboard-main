@@ -24,8 +24,10 @@ const Category = async ({ collection }: CategoryProps) => {
                 src={item.image}
                 alt={`Image representing the ${item.title} category`}
                 fill
-                sizes="(max-width:768px) 100vw (max-width:1200px) 50vw"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="mb-4 rounded-lg"
+                loading="lazy"
+                quality={75}
               />
             </div>
             <Button className="absolute top-36 right-12 bg-black hover:bg-green-800 text-white">

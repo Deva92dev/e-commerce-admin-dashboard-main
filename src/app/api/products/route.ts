@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from "next/server";
 // for creating the product
 export const POST = async (req: NextRequest) => {
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
@@ -100,7 +100,7 @@ export const GET = async (req: NextRequest) => {
     return NextResponse.json(products, {
       status: 200,
       headers: {
-        "Cache-Control": "public, max-age=1296000 stale-while-revalidate=3600",
+        "Cache-Control": "public, max-age=1296000, stale-while-revalidate=3600", // 15 days
       },
     });
   } catch (error) {
