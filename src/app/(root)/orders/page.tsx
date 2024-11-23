@@ -97,4 +97,6 @@ const OrdersPage = async ({ params }: { params: { customerId: string } }) => {
   );
 };
 
+export const dynamic = "force-dynamic";
+
 export default OrdersPage;

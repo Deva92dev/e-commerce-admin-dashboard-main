@@ -88,3 +88,5 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json("Payment_Verification failed", { status: 500 });
   }
 };
+
+export const dynamic = "force-dynamic";
