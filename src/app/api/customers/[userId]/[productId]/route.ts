@@ -7,9 +7,9 @@ import mongoose from "mongoose";
 
 export const GET = async (
   req: NextRequest,
-  { params }: { params: { userId: string; productId: string } }
+  { params }: { params: { productId: string; userId: string } }
 ) => {
-  console.log("Received params:", params);
+  // console.log("Received params:", params);
   try {
     await ConnectDB();
 

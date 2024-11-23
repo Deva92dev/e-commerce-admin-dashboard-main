@@ -48,14 +48,12 @@ export const GET = async (request: NextRequest) => {
     await ConnectDB();
 
     const collections = await Collection.find({})
-      .select("title image products ")
+      .select("title image products")
       .sort({ createdAt: "desc" });
+    // console.log(collections);
 
     return NextResponse.json(collections, {
       status: 200,
-      headers: {
-        "Cache-Control": "public, max-age=1296000, stale-while-revalidate=3600", // 15 days
-      },
     });
   } catch (error) {
     console.log(["Collection_GET"], error);

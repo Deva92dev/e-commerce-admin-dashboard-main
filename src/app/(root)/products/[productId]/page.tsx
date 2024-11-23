@@ -62,6 +62,7 @@ const ProductDetailsPage = async ({
         params.productId,
         userId
       );
+      // console.log(totalPaidCustomers, customerOrderData);
 
       if (totalPaidCustomers > 0 && customerOrderData.length > 0) {
         const validOrder = customerOrderData.find(

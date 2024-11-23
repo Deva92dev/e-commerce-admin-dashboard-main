@@ -38,11 +38,6 @@ export default clerkMiddleware(async (auth, req) => {
     }
   }
 
-  // For all other routes, ensure authentication
-  if (!userId) {
-    return NextResponse.redirect(new URL("/", req.url));
-  }
-
   return NextResponse.next();
 });
 

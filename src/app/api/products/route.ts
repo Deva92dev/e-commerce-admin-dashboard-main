@@ -91,7 +91,7 @@ export const GET = async (req: NextRequest) => {
     await ConnectDB();
 
     const products = await Product.find({})
-      .select("title category price media")
+      .select("title category price media tags createdAt color sizes")
       .sort({
         createdAt: "desc",
       })
@@ -99,9 +99,6 @@ export const GET = async (req: NextRequest) => {
 
     return NextResponse.json(products, {
       status: 200,
-      headers: {
-        "Cache-Control": "public, max-age=1296000, stale-while-revalidate=3600", // 15 days
-      },
     });
   } catch (error) {
     console.log(["Product_GET"], error);

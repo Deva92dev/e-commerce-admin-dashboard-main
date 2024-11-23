@@ -5,6 +5,8 @@ import { CollectionType, ProductType } from "@/lib/types";
 import { notFound } from "next/navigation";
 import { getCollectionDetails } from "@/lib/actions";
 
+export const revalidate = 15 * 24 * 60 * 60; // Revalidate every 15 days
+
 export async function generateStaticParams() {
   return [];
 }

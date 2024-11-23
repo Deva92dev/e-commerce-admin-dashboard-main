@@ -32,9 +32,6 @@ export const GET = async (
 
     return NextResponse.json(relatedProducts, {
       status: 200,
-      headers: {
-        "Cache-Control": "public, max-age=1296000, stale-while-revalidate=3600", // 15 days
-      },
     });
   } catch (error) {
     console.error("[Related_Products_GET_API]", error);

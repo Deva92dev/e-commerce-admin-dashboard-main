@@ -10,7 +10,7 @@ import {
 } from "./types";
 
 // change for production
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://127.0.0.1:3000";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
 
 export const getUserDetails = async () => {
   const user = await currentUser();
@@ -30,6 +30,9 @@ export const getCollection = async () => {
   try {
     const res = await fetch(`${baseUrl}/api/collections`, {
       method: "GET",
+      next: {
+        revalidate: 15 * 24 * 60 * 60, // 15 days
+      },
     });
     const collections: CollectionType[] = await res.json();
     return collections;
@@ -43,9 +46,6 @@ export const getCollectionDetails = async (collectionId: string) => {
   try {
     const res = await fetch(`${baseUrl}/api/collections/${collectionId}`, {
       method: "GET",
-      next: {
-        revalidate: 604800, // 7 day
-      },
     });
     if (!res.ok) {
       return null;
@@ -136,6 +136,9 @@ export const getProducts = async () => {
   try {
     const res = await fetch(`${baseUrl}/api/products`, {
       method: "GET",
+      next: {
+        revalidate: 15 * 24 * 60 * 60, // 15 days
+      },
     });
     const products: ProductType[] = await res.json();
     return products;
@@ -149,6 +152,9 @@ export const getRelatedProducts = async (productId: string) => {
   try {
     const res = await fetch(`${baseUrl}/api/products/${productId}/related`, {
       method: "GET",
+      next: {
+        revalidate: 15 * 24 * 60 * 60, // 15 days
+      },
     });
     const relatedProducts = await res.json();
     return relatedProducts;
@@ -176,8 +182,8 @@ export const getTotalPaidCustomers = async () => {
     const res = await fetch(`${baseUrl}/api/customers`, {
       method: "GET",
     });
-    const { totalCustomers, customerList } = await res.json();
-    return { totalCustomers, customerList };
+    const totalPaidCustomers = await res.json();
+    return totalPaidCustomers;
   } catch (error) {
     console.error("Failed to fetch order details:", error);
     throw error;

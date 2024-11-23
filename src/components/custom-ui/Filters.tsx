@@ -11,8 +11,6 @@ interface FilterProps {
   products: ProductType[];
 }
 
-//pagination for the product, useDebounce for min & max price
-
 const Filters = ({ products }: FilterProps) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -63,9 +61,21 @@ const Filters = ({ products }: FilterProps) => {
       // Apply color filter
       const color = params.get("color");
       if (color) {
-        filtered = filtered.filter((product) =>
-          product.color.some((c) => c.toLowerCase() === color.toLowerCase())
-        );
+        filtered = filtered.filter((product) => {
+          if (!Array.isArray(product.color)) {
+            // console.log(
+            //   `Skipping product ${product.title}: invalid color format.`
+            // );
+            return false;
+          }
+          const matches = product.color.some(
+            (c) => c.toLowerCase() === color.toLowerCase()
+          );
+          // console.log(
+          //   `Product: ${product.title}, Matches: ${matches}, Colors: ${product.color}`
+          // );
+          return matches;
+        });
       }
 
       // Apply Sort filter

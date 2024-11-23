@@ -86,10 +86,6 @@ export const footerImportantLinks = [
     url: "/contact",
     label: "Contact Us",
   },
-  {
-    url: "/track-order",
-    label: "Track Your Order",
-  },
 ];
 
 export const footerGeneralLinks = [
@@ -101,10 +97,6 @@ export const footerGeneralLinks = [
     url: "/returns",
     label: "Returns and Shipping Policy",
   },
-  {
-    url: "/terms-conditions",
-    label: "Terms & Conditions",
-  },
 ];
 
 export const footerSocialLinks = [
@@ -115,9 +107,5 @@ export const footerSocialLinks = [
   {
     url: "/contact",
     label: "Contact Us",
-  },
-  {
-    url: "/track-order",
-    label: "Track Your Order",
   },
 ];
