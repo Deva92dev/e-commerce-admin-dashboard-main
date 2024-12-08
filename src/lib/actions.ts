@@ -8,6 +8,7 @@ import {
   OrderDetailsType,
   ProductType,
 } from "./types";
+import { cookies } from "next/headers";
 
 // change for production
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
@@ -31,7 +32,7 @@ export const getCollection = async () => {
     const res = await fetch(`${baseUrl}/api/collections`, {
       method: "GET",
       next: {
-        revalidate: 15 * 24 * 60 * 60, // 15 days
+        revalidate: 1296000, // 15 days
       },
     });
     const collections: CollectionType[] = await res.json();
@@ -117,9 +118,6 @@ export const getProductDetails = async (productId: string) => {
   try {
     const res = await fetch(`${baseUrl}/api/products/${productId}`, {
       method: "GET",
-      next: {
-        revalidate: 60, // 1 minute
-      },
     });
     if (!res.ok) {
       return null;
@@ -137,7 +135,7 @@ export const getProducts = async () => {
     const res = await fetch(`${baseUrl}/api/products`, {
       method: "GET",
       next: {
-        revalidate: 15 * 24 * 60 * 60, // 15 days
+        revalidate: 1296000, // 15 days
       },
     });
     const products: ProductType[] = await res.json();
@@ -152,9 +150,6 @@ export const getRelatedProducts = async (productId: string) => {
   try {
     const res = await fetch(`${baseUrl}/api/products/${productId}/related`, {
       method: "GET",
-      next: {
-        revalidate: 15 * 24 * 60 * 60, // 15 days
-      },
     });
     const relatedProducts = await res.json();
     return relatedProducts;
@@ -210,3 +205,22 @@ export async function updateOrderStatus(orderId: string, status: string) {
     return null;
   }
 }
+
+export const getWishlistProducts = async () => {
+  const cookieHeader = await cookies().toString();
+  try {
+    const res = await fetch(`${baseUrl}/api/users/wishlist`, {
+      method: "GET",
+      cache: "no-cache",
+      credentials: "include",
+      headers: {
+        Cookie: cookieHeader,
+      },
+    });
+    const wishlistProduct: ProductType[] = await res.json();
+    return wishlistProduct;
+  } catch (error) {
+    console.error("Failed to fetch wishlist products:", error);
+    throw error;
+  }
+};

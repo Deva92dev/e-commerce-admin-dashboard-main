@@ -34,9 +34,9 @@ const Gallery = ({ productMedia, title }: GalleryProps) => {
   };
 
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <div className="grid grid-cols-1 gap-6 aspect-[4/3]">
       <div
-        className="relative h-[600px] overflow-hidden"
+        className="relative h-[600px] overflow-hidden rounded-lg border-4 border-productDetails-secondary/30 shadow-lg"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onMouseMove={handleMouseMove}
@@ -48,14 +48,13 @@ const Gallery = ({ productMedia, title }: GalleryProps) => {
           priority
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className={`object-cover overflow-hidden rounded-lg transition-transform duration-300 ease-in-out ${
-            isHovered ? "scale-150" : "scale-100"
+            isHovered ? "scale-125" : "scale-100"
           }`}
           style={{
             transformOrigin: `${isHovered ? mousePosition.x : 50}% ${
               isHovered ? mousePosition.y : 50
             }%`,
           }}
-          onError={(e) => console.error("Error loading image:", e)}
         />
       </div>
 
@@ -73,8 +72,10 @@ const Gallery = ({ productMedia, title }: GalleryProps) => {
                 width={200}
                 height={200}
                 loading="lazy"
-                className={`rounded-lg cursor-pointer ${
-                  mainImage === cachedThumbnailUrl ? "border border-black" : ""
+                className={`rounded-lg border-2 overflow-hidden cursor-pointer transition-transform duration-300 ease-in-out ${
+                  mainImage === cachedThumbnailUrl
+                    ? "border-productDetails-secondary/50 scale-105 shadow-md"
+                    : "border-gray-300 hover:scale-110"
                 }`}
                 onClick={() => setMainImage(cachedThumbnailUrl)}
               />

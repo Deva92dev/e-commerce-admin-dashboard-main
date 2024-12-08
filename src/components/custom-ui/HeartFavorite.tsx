@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 "use client";
 
 import { ProductType, UserType } from "@/lib/types";
@@ -14,7 +17,6 @@ interface HeartFavoriteProps {
 const HeartFavorite = ({ product, updateSignedInUser }: HeartFavoriteProps) => {
   const { user } = useUser();
   const [isLiked, setIsLiked] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
 
   const getUserFromCache = useCallback(() => {
@@ -25,7 +27,6 @@ const HeartFavorite = ({ product, updateSignedInUser }: HeartFavoriteProps) => {
     return null;
   }, []);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cacheUserData = useCallback((data: any) => {
     localStorage.setItem("cachedUser", JSON.stringify(data));
   }, []);
@@ -81,7 +82,6 @@ const HeartFavorite = ({ product, updateSignedInUser }: HeartFavoriteProps) => {
         const updatedUser = await res.json();
         cacheUserData(updatedUser);
         setIsLiked(updatedUser.wishlist.includes(product._id));
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         updateSignedInUser && updateSignedInUser(updatedUser);
       }
     } catch (error) {
@@ -92,7 +92,7 @@ const HeartFavorite = ({ product, updateSignedInUser }: HeartFavoriteProps) => {
   return (
     <button
       onClick={handleLike}
-      className="border bg-gray-100 w-max p-2 rounded-lg"
+      className="border bg-productPage-accent hover:bg-yellow-400 w-max p-2 rounded-lg"
       aria-label={
         isLiked
           ? `Remove ${product.title} from your favorites`

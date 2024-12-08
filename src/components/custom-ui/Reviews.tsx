@@ -332,7 +332,7 @@ const Reviews = ({
       {canLeaveReview && !editMode && (
         <form
           onSubmit={handleReviewSubmit}
-          className=" flex flex-col gap-6 max-w-xl mb-4"
+          className=" flex flex-col gap-6 max-w-xl mb-4 bg-productDetails-reviews"
         >
           <h2>Post Your Review</h2>
           <textarea
@@ -348,7 +348,7 @@ const Reviews = ({
           />
           <button
             type="submit"
-            className="w-full text-center outline bg-black text-white hover:bg-blue-400 text-base font-bold rounded-lg px-2 py-3"
+            className="w-full text-center outline bg-productDetails-accent text-gray-700 hover:bg-productDetails-accent/60 text-base font-bold rounded-lg px-2 py-3"
             aria-label="Post review"
           >
             Post Review
@@ -374,7 +374,7 @@ const Reviews = ({
           />
           <button
             type="submit"
-            className="w-full text-center outline bg-black text-white hover:bg-blue-400 text-base font-bold rounded-lg px-2 py-3"
+            className="w-full text-center outline bg-productDetails-accent text-gray-700 hover:bg-productDetails-accent/60 text-base font-bold rounded-lg px-2 py-3"
             aria-label="Update review"
           >
             Update Review
@@ -401,7 +401,9 @@ const Reviews = ({
                     loading="lazy"
                   />
                   <div className="flex flex-col gap-1">
-                    <h3>{review.customer.name || userName}</h3>
+                    <h3 className="text-productDetails-accent font-bold">
+                      {review.customer.name || userName}
+                    </h3>
                     <StarRating initialRating={review.rating} readonly={true} />
                   </div>
                 </div>
@@ -423,7 +425,9 @@ const Reviews = ({
                     loading="lazy"
                   />
                   <div className="flex flex-col gap-1">
-                    <h3>{review.customer.name}</h3>
+                    <h3 className="text-productDetails-accent font-bold">
+                      {review.customer.name}
+                    </h3>
                     <StarRating initialRating={review.rating} readonly={true} />
                   </div>
                 </div>

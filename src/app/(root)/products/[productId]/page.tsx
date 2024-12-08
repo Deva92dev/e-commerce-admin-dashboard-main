@@ -2,25 +2,18 @@
 import { Metadata } from "next";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-
 import Gallery from "@/components/custom-ui/Gallery";
 import ProductInfoSkeleton from "@/components/custom-ui/ProductInfoSkeleton";
-
 import {
   getPaidCustomers,
   getProductDetails,
   getRelatedProducts,
   getUserDetails,
 } from "@/lib/actions";
-
 import Reviews from "@/components/custom-ui/Reviews";
 import ReviewSkeleton from "@/components/custom-ui/ReviewSkeleton";
 import ProductInfo from "@/components/custom-ui/ProductInfo";
 import RelatedProducts from "@/components/custom-ui/RelatedProducts";
-
-export async function generateStaticParams() {
-  return [];
-}
 
 export async function generateMetadata({
   params,
@@ -30,7 +23,6 @@ export async function generateMetadata({
   const productDetails = await getProductDetails(params.productId);
 
   if (!productDetails) {
-    console.error("Product details not found for ID:", params.productId);
     notFound();
   }
 
@@ -52,7 +44,6 @@ const ProductDetailsPage = async ({
   ]);
 
   const { userId, userName, userProfileImage } = userDetails;
-
   let initialCanLeaveReview = false;
   let orderId = null;
 
@@ -62,27 +53,32 @@ const ProductDetailsPage = async ({
         params.productId,
         userId
       );
-      // console.log(totalPaidCustomers, customerOrderData);
-
       if (totalPaidCustomers > 0 && customerOrderData.length > 0) {
         const validOrder = customerOrderData.find(
           (order: any) => order.orderId
         );
-
         if (validOrder) {
           orderId = validOrder.orderId;
           initialCanLeaveReview = true;
         } else {
-          console.error("No valid orderId found for this user.");
+          if (process.env.NODE_ENV === "development") {
+            console.error("No valid orderId found for this user.");
+          }
         }
       } else {
-        console.warn("No paid customers found for this product.");
+        if (process.env.NODE_ENV === "development") {
+          console.error("No paid customers found for this product.");
+        }
       }
     } catch (error) {
-      console.error("Error fetching customer details:", error);
+      if (process.env.NODE_ENV === "development") {
+        console.error("Error fetching customer details:", error);
+      }
     }
   } else {
-    console.warn("Customer is not logged in");
+    if (process.env.NODE_ENV === "development") {
+      console.error("Customer is not logged in");
+    }
   }
 
   if (!productDetails) {
@@ -90,24 +86,20 @@ const ProductDetailsPage = async ({
   }
 
   return (
-    <>
-      <div className="grid gap-12 px-4 md:px-6 lg:px-12 xl:px-24 grid-cols-1 lg:grid-cols-2 mt-6 ">
-        <div className="lg:col-span-1">
-          {/* Static Data */}
-
+    <main>
+      <section className="grid gap-20 px-4 md:px-6 lg:px-12 xl:px-24 grid-cols-1 lg:grid-cols-2 py-6">
+        <article className="lg:col-span-1">
           <Gallery
             productMedia={productDetails.media}
             title={productDetails.title}
           />
-        </div>
-        <div className="lg:col-span-1">
-          {/* Dynamic Data */}
+        </article>
+        <article className="lg:col-span-1">
           <Suspense fallback={<ProductInfoSkeleton />}>
             <ProductInfo product={productDetails} orderId={orderId} />
           </Suspense>
-        </div>
-        <div className="lg:col-span-2">
-          {/* Dynamic Data */}
+        </article>
+        <article className="lg:col-span-2">
           <Suspense fallback={<ReviewSkeleton />}>
             <Reviews
               productId={params.productId}
@@ -118,17 +110,18 @@ const ProductDetailsPage = async ({
               orderId={orderId}
             />
           </Suspense>
-          <div className="mt-6">
-            {/* Static Data */}
+          <article className="mt-6">
             <RelatedProducts
               relatedProducts={relatedProducts}
               productId={params.productId}
             />
-          </div>
-        </div>
-      </div>
-    </>
+          </article>
+        </article>
+      </section>
+    </main>
   );
 };
 
 export default ProductDetailsPage;
+
+export const dynamic = "force-dynamic";

@@ -159,80 +159,87 @@ const CartPage = () => {
         src="https://checkout.razorpay.com/v1/checkout.js"
         onLoad={() => setIsRazorpayLoaded(true)}
       />
-      <div className="flex gap-20 px-4 md:px-6 lg:px-12 xl:px-24 py-16  max-lg:flex-col">
-        <div className="max-lg:w-full lg:w-2/3">
-          <p className="font-bold text-3xl mb-4">Shopping Cart</p>
+      <section className="flex gap-20 px-4 md:px-6 lg:px-12 xl:px-24 py-16  max-lg:flex-col bg-cartPage-primary">
+        <article className="max-lg:w-full lg:w-2/3">
+          <h1 className="font-bold text-3xl mb-4">Shopping Cart</h1>
           <hr />
           {cart.cartItems.length === 0 ? (
             <p className="font-bold">No items is in the cart</p>
           ) : (
-            <div>
+            <div className="space-y-6">
               {cart.cartItems.map((cartItem) => (
                 <div
                   key={`${cartItem.item._id}-${cartItem.color}-${cartItem.sizes}`}
-                  className="w-full flex hover:bg-gray-50 px-4 py-3 justify-between items-center max-sm:flex-col max-sm:gap-4 max-sm:items-start"
+                  className="grid grid-cols-[auto,1fr,auto] gap-4 items-center bg-cream hover:bg-sand-light p-4 rounded-lg transition-colors duration-200"
                 >
-                  <div className="flex items-center">
-                    <Image
-                      src={cartItem.item.media[0]}
-                      alt={cartItem.item.title}
-                      width={100}
-                      height={100}
-                      className="rounded-lg w-32 h-32 object-cover"
-                    />
-                    <div className="flex flex-col gap-2 ml-4">
-                      <p className="font-medium">{cartItem.item.title} </p>
-                      <p className="font-medium">
-                        {formatPrice(cartItem.item.price)}
-                      </p>
-                      {cartItem.color && (
-                        <p className="text-sm">{cartItem.color}</p>
-                      )}
-                      {cartItem.sizes && (
-                        <p className="text-sm">{cartItem.sizes}</p>
-                      )}
+                  <Image
+                    src={cartItem.item.media[0]}
+                    alt={cartItem.item.title}
+                    width={100}
+                    height={100}
+                    className="rounded-lg w-24 h-24 object-cover"
+                  />
+                  <div className="flex flex-col gap-1">
+                    <h2 className="font-bold text-lg text-olive-dark">
+                      {cartItem.item.title}
+                    </h2>
+                    <p className="font-medium text-bronze">
+                      {formatPrice(cartItem.item.price)}
+                    </p>
+                    <div className="flex gap-2 text-sm text-olive">
+                      {cartItem.color && <span>{cartItem.color}</span>}
+                      {cartItem.sizes && <span>| Size: {cartItem.sizes}</span>}
                     </div>
                   </div>
-                  {/* quantity etc */}
-                  <div className="flex items-center gap-4">
-                    <MinusCircle
-                      className="cursor-pointer"
+                  <div className="flex flex-col items-end gap-2">
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() =>
+                          cart.decreaseQuantity(
+                            cartItem.item._id,
+                            cartItem.color,
+                            cartItem.sizes
+                          )
+                        }
+                        className="text-olive hover:text-olive-dark transition-colors"
+                      >
+                        <MinusCircle size={20} />
+                      </button>
+                      <span className="font-medium text-olive-dark w-8 text-center">
+                        {cartItem.quantity}
+                      </span>
+                      <button
+                        onClick={() =>
+                          cart.increaseQuantity(
+                            cartItem.item._id,
+                            cartItem.color,
+                            cartItem.sizes
+                          )
+                        }
+                        className="text-olive hover:text-olive-dark transition-colors"
+                      >
+                        <PlusCircle size={20} />
+                      </button>
+                    </div>
+                    <button
                       onClick={() =>
-                        cart.decreaseQuantity(
+                        cart.removeItem(
                           cartItem.item._id,
                           cartItem.color,
                           cartItem.sizes
                         )
                       }
-                    />
-                    <p className="font-medium">{cartItem.quantity}</p>
-                    <PlusCircle
-                      className="cursor-pointer"
-                      onClick={() =>
-                        cart.increaseQuantity(
-                          cartItem.item._id,
-                          cartItem.color,
-                          cartItem.sizes
-                        )
-                      }
-                    />
+                      className="text-coral hover:text-red-600 transition-colors"
+                    >
+                      <Trash size={20} />
+                    </button>
                   </div>
-                  <Trash
-                    className="text-red-500 cursor-pointer"
-                    onClick={() =>
-                      cart.removeItem(
-                        cartItem.item._id,
-                        cartItem.color,
-                        cartItem.sizes
-                      )
-                    }
-                  />
                 </div>
               ))}
             </div>
           )}
-        </div>
-        <div className="flex flex-col gap-16 px-4 py-5 bg-gray-400 rounded-lg lg:w-1/3 max-lg:w-full">
+        </article>
+        <article className="flex flex-col gap-16 px-4 py-5 bg-gray-400 rounded-lg lg:w-1/3 max-lg:w-full max-h-72">
           <p className="font-bold text-xl">
             Summary
             <span>
@@ -248,15 +255,15 @@ const CartPage = () => {
           {/* checkout */}
           <div className="flex flex-col gap-4">
             <button
-              className=" border rounded-lg text-lg bg-white py-3 hover:bg-black hover:text-white"
+              className="border rounded-lg text-lg bg-cartPage-accent py-3 hover:bg-cartPage-accent/70 text-gray-900"
               onClick={handlePaymentWithRazorPay}
               disabled={isProcessing}
             >
               {isProcessing ? "Processing..." : "Pay Here"}
             </button>
           </div>
-        </div>
-      </div>
+        </article>
+      </section>
     </>
   );
 };

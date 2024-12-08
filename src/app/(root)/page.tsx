@@ -16,11 +16,11 @@ export default async function Home() {
   }
 
   return (
-    <div>
+    <main className="bg-landingPage-background">
       <Hero />
       <Category collection={collection} />
       <LatestProducts latestProducts={latestProducts} />
       <Services />
-    </div>
+    </main>
   );
 }

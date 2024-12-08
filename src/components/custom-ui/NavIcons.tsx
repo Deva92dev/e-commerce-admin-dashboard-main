@@ -1,57 +1,79 @@
 "use client";
+
 import useCart from "@/lib/hooks/useCart";
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignOutButton,
-  SignUpButton,
-  useUser,
-} from "@clerk/nextjs";
+import { SignedIn, SignedOut, useClerk, useUser } from "@clerk/nextjs";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { Button } from "../ui/button";
+import { usePathname } from "next/navigation";
 
 const NavIcons = () => {
   const { user } = useUser();
   const cart = useCart();
+  const pathname = usePathname();
+  const { signOut, redirectToSignIn, redirectToSignUp } = useClerk();
+
+  const handleLogout = async () => {
+    await signOut();
+    window.location.href = pathname;
+  };
+
+  const handleLogin = () => {
+    redirectToSignIn({ redirectUrl: pathname });
+  };
+
+  const handleRegister = () => {
+    redirectToSignUp({ redirectUrl: pathname });
+  };
 
   return (
-    <div>
+    <div className="p-4 rounded-lg">
       {user ? (
-        <div className="flex items-center justify-center gap-4">
-          <Link href={"/wishlist"}>Wishlist</Link>
-          <Link href="/orders">Orders</Link>
-          <Link href="/cart" className="relative">
+        <div className="flex items-center justify-center gap-4 min-h-12">
+          <Link
+            href={"/wishlist"}
+            className="text-white hover:text-gray-300 hover:underline"
+          >
+            Wishlist
+          </Link>
+          <Link
+            href="/orders"
+            className="text-white hover:text-gray-300 hover:underline"
+          >
+            Orders
+          </Link>
+          <Link href="/cart" className="relative text-white">
             <ShoppingCart />
-            <span className="absolute -top-3 right-0 text-lg text-[#FF69B4]">
+            <span className="absolute -top-3 right-0 text-lg text-gray-300">
               {cart.cartItems.length}
             </span>
           </Link>
           <SignedIn>
-            <SignOutButton>
-              <Link href="/" className="w-full text-left">
-                <Button className="w-full text-center hover:bg-blue-400">
-                  Logout
-                </Button>
-              </Link>
-            </SignOutButton>
+            <Button
+              className="w-full text-center bg-gray-900 text-white hover:bg-gray-700"
+              onClick={handleLogout}
+            >
+              Logout
+            </Button>
           </SignedIn>
         </div>
       ) : (
         <div className="flex flex-row gap-4">
           <SignedOut>
-            <SignInButton mode="modal">
-              <Button className="w-full text-center hover:bg-blue-400">
-                Login
-              </Button>
-            </SignInButton>
-            <SignUpButton mode="modal">
-              <Button className="w-full text-center hover:bg-blue-400">
-                Register
-              </Button>
-            </SignUpButton>
+            <Button
+              className="w-full text-center bg-gray-900 text-white hover:bg-gray-700"
+              onClick={handleLogin}
+            >
+              Login
+            </Button>
+
+            <Button
+              className="w-full text-center bg-gray-900 text-white hover:bg-gray-700"
+              onClick={handleRegister}
+            >
+              Register
+            </Button>
           </SignedOut>
         </div>
       )}

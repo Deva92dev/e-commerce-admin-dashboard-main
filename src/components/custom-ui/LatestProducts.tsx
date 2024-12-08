@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Separator } from "../ui/separator";
 import { formatPrice } from "@/lib/formatPrice";
 import { ProductType } from "@/lib/types";
 
@@ -10,35 +9,40 @@ interface LatestProductsProps {
 
 const LatestProducts = async ({ latestProducts }: LatestProductsProps) => {
   return (
-    <div className=" px-4 md:px-6 lg:px-12 xl:px-24 my-8">
-      <h2 className="text-3xl font-bold text-center mb-4">Latest Products</h2>
-      <Separator />
-      <div className="grid gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 mt-4">
-        {latestProducts?.slice(0, 3).map((item: ProductType) => (
+    <section className="px-4 py-8 md:px-6 lg:px-12 xl:px-24 bg-sand-light rounded-lg">
+      <h2 className="text-3xl font-bold text-olive-dark text-center mb-8 tracking-tight">
+        Latest Products
+      </h2>
+      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-4">
+        {latestProducts?.slice(0, 4).map((item: ProductType) => (
           <Link
-            href="/products"
+            href={`/products/${item._id}`}
             key={item._id}
-            className="rounded-sm hover:shadow-lg"
+            className="rounded-lg bg-white hover:bg-sand-light hover:shadow-2xl transition-all duration-300 transform hover:scale-105 overflow-hidden"
           >
-            <div className="relative h-0" style={{ paddingBottom: "66.67%" }}>
+            <div className="relative aspect-[4/3]">
               <Image
                 src={item.media[0]}
                 alt={`Image representing the ${item.title} product`}
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-cover overflow-hidden rounded-t-lg"
+                className="object-cover rounded-t-lg"
                 loading="lazy"
                 quality={75}
               />
             </div>
-            <div className="my-4 px-2">
-              <h3 className="text-base font-bold">{item.title}</h3>
-              <p className="text-sm">{formatPrice(item.price)}</p>
+            <div className="my-4 px-4 py-2 flex justify-between items-center bg-olive-dark rounded-b-lg">
+              <h3 className="text-base font-semibold font-serif text-sand-light">
+                {item.title}
+              </h3>
+              <p className="text-sm font-medium text-sand-light">
+                {formatPrice(item.price)}
+              </p>
             </div>
           </Link>
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 

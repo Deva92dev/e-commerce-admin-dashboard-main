@@ -21,12 +21,6 @@ export const POST = async (req: NextRequest) => {
     }
     await ConnectDB();
     const { amount, currency, cartItems, customer } = await req.json();
-    console.log("Received request payload:", {
-      amount,
-      currency,
-      cartItems,
-      customer,
-    });
     // Ensure the amount is provided and is a positive number
     if (!amount || typeof amount !== "number" || amount <= 0) {
       return NextResponse.json(
@@ -75,26 +69,21 @@ export const POST = async (req: NextRequest) => {
     // Deduct stock quantity for each product
     for (const item of newOrder.cartItems) {
       const product = await Product.findById(item.product);
-
       if (!product) {
         return NextResponse.json(
           { error: `Product not found for ID: ${item.product}` },
           { status: 404 }
         );
       }
-
       if (product.stockQuantity < item.quantity) {
         throw new Error(`Insufficient stock for product ${product.title}`);
       }
-
       product.stockQuantity -= item.quantity;
       await product.save();
     }
-
     // Add the new order ID to the customer's orders array
     existingCustomer.orders.push(newOrder._id);
     await existingCustomer.save();
-
     const payment = new Payment({
       orderId: order.id,
       amount,
@@ -102,9 +91,7 @@ export const POST = async (req: NextRequest) => {
       status: order.status,
       userId: customer.clerkId,
     });
-
     await payment.save();
-
     // Update the order with the Razorpay order ID
     newOrder.orderId = order.id;
     newOrder.payment = {

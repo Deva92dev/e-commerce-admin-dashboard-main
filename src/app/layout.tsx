@@ -12,7 +12,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
+  const isTestEnv = process.env.NODE_ENV === "test";
+
+  return isTestEnv ? (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  ) : (
     <Provider>
       <html lang="en">
         <body>{children}</body>

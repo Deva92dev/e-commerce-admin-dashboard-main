@@ -1,3 +1,22 @@
+## Write a real test
+
+A solid test generally covers 3 phases:
+
+## Set up the application state.
+
+## Take an action.
+
+## Make an assertion about the resulting application state.
+
+You might also see this phrased as "Given, When, Then", or "Arrange, Act, Assert". But the idea is: First you put the application into a specific state, then you take some action in the application that causes it to change, and finally you check the resulting application state.
+
+Today, we'll take a narrow view of these steps and map them cleanly to Cypress commands:
+
+Visit a web page.
+Query for an element.
+Interact with that element.
+Assert about the content on the page.
+
 ## Necessary Things for starting the project
 
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
@@ -9,7 +28,7 @@ MONGO_URI=
 
 NEXT_PUBLIC_BASE_URL=
 
-# Admin user Client(Must), ChANGE FOR ADMIN userId got from clerk
+# Admin user Client(Must), Change FOR ADMIN userId got from clerk
 
 ADMIN_USER_ID=
 

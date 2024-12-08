@@ -2,5 +2,6 @@
   "prisma-smart-formatter.prisma.defaultFormatter": "Prisma.prisma",
   "prisma-smart-formatter.typescriptreact.defaultFormatter": "esbenp.prettier-vscode",
   "prisma-smart-formatter.typescript.defaultFormatter": "esbenp.prettier-vscode",
-  "cSpell.words": ["Cloudinary"]
+  "cSpell.words": ["Cloudinary"],
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }

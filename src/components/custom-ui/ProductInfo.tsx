@@ -56,29 +56,32 @@ const ProductInfo = ({ product, orderId }: ProductInfoProps) => {
   return (
     <div className="max-w-[400px] flex flex-col gap-4">
       <div className="flex justify-between">
-        <h2 className="font-bold text-3xl">{title}</h2>
+        <h1 className="font-bold text-4xl">{title}</h1>
         {user && <HeartFavorite product={product} />}
       </div>
       {review.length > 0 && (
-        <p className="flex flex-row gap-1 items-center">
+        <p className="flex flex-row gap-1 items-center font-semibold">
           <Star className="h-4 w-4" />
           {averageRating.toFixed(1)} <span>({numberOfReviews})</span> reviews
         </p>
       )}
       <p className="text-sm font-normal text-gray-500">Category : {category}</p>
-      <p className="font-bold border bg-gray-100 w-max p-2 rounded-lg">
+      <p className="font-bold border text-lg bg-gray-100 w-max p-2 rounded-lg">
         {formatPrice(price)}
       </p>
-      <p className="text-gray-500 font-extrabold">
+      <p className="text-privacyPolicy-secondary font-black">
         {stockQuantity > 0 ? "In Stock" : "Out of Stock"}
       </p>
       <div className="flex flex-col text-gray-500">
-        Description : {description}
+        <span className="text-privacyPolicy-secondary font-semibold">
+          Description :
+        </span>
+        {description}
       </div>
 
       {/* color */}
       {product.color.length > 0 && (
-        <div className="flex flex-col text-gray-500">
+        <div className="flex flex-col font-bold text-productDetails-secondary">
           Color:
           <div className="flex flex-row gap-4">
             {color.map((item, index) => (
@@ -98,7 +101,7 @@ const ProductInfo = ({ product, orderId }: ProductInfoProps) => {
 
       {/* sizes */}
       {product.sizes.length > 0 && (
-        <div className="flex flex-col text-gray-500">
+        <div className="flex flex-col font-bold text-productDetails-secondary">
           Sizes:
           <div className="flex flex-row gap-4">
             {sizes.map((item, index) => (
@@ -135,7 +138,7 @@ const ProductInfo = ({ product, orderId }: ProductInfoProps) => {
 
       {user ? (
         <button
-          className="outline bg-black text-white hover:bg-blue-400 text-base font-bold rounded-lg px-2 py-3"
+          className="bg-productDetails-accent text-gray-700  hover:bg-productDetails-accent/60 text-base font-bold rounded-lg px-2 py-3"
           onClick={() => {
             cart.addItem({
               item: product,
@@ -151,7 +154,7 @@ const ProductInfo = ({ product, orderId }: ProductInfoProps) => {
         </button>
       ) : (
         <SignInButton mode="modal">
-          <Button className="w-full text-center outline bg-black text-white hover:bg-blue-400 text-base font-bold rounded-lg px-2 py-3">
+          <Button className="w-full text-center outline bg-navbar-hover hover:bg-navbar-hover/60 text-gray-700 text-base font-bold rounded-lg px-2 py-3">
             Login
           </Button>
         </SignInButton>

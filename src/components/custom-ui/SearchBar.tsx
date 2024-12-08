@@ -11,7 +11,7 @@ const SearchBar = () => {
   return (
     <div className="flex border gap-3 border-gray-200 bg-gray-100 py-3 px-2 items-center rounded-lg">
       <input
-        className="outline-none max-sm:max-w-[120px]"
+        className="outline-none max-sm:max-w-[120px] text-gray-700 bg-gray-300"
         placeholder="search..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
@@ -21,7 +21,7 @@ const SearchBar = () => {
         onClick={() => router.push(`/search/${query}`)}
         aria-label="Search"
       >
-        <Search className="cursor-pointer h-4 w-4" />
+        <Search className="cursor-pointer h-4 w-4 bg-productDetails-secondary" />
       </button>
     </div>
   );

@@ -7,13 +7,11 @@ import Image from "next/image";
 import { formatPrice } from "@/lib/formatPrice";
 import { OrderItemType, SingleOrderType } from "@/lib/types";
 import { getCustomerOrders } from "@/lib/actions";
-import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Orders - Own Closet",
 };
 
-// orders related to clerk user, that's why userId in as parameter
 const OrdersPage = async ({ params }: { params: { customerId: string } }) => {
   const { userId } = await auth();
   const getCustomerAllOrders: SingleOrderType[] = await getCustomerOrders(
@@ -24,30 +22,31 @@ const OrdersPage = async ({ params }: { params: { customerId: string } }) => {
   );
 
   if (!getCustomerAllOrders) {
-    notFound();
+    return <p>There is no order from you.</p>;
   }
 
   return (
-    <div className="px-4 md:px-6 lg:px-12 xl:px-24 ">
-      <h2 className="my-5 font-bold text-3xl">Your Orders </h2>
+    <div className="p-4 md:px-6 lg:px-12 xl:px-24 bg-ordersPage-primary">
+      <h1 className="py-5 font-bold text-4xl">Your Orders </h1>
       {paidOrders.length === 0 && <p className="py-5">You have no order yet</p>}
       <div className="grid gap-4">
         {paidOrders.map((order) => (
-          <div key={order._id} className="hover:bg-gray-100 rounded-lg py-4">
+          <div key={order._id} className="hover:bg-gray-100 rounded-lg p-4">
             <div className="flex gap-8 pb-2 max-md:flex-col max-md:gap-2">
               <p className="font-normal">Order Id: {order._id}</p>
-              <p className="font-normal">
+              <p className="font-semibold text-ordersPage-secondary">
                 Total Amount: {formatPrice(order.amount)}
               </p>
             </div>
-            <div className="">
+            <div className="flex flex-col gap-8 md:flex md:flex-row">
               {order.cartItems.map((orderItem: OrderItemType) => (
-                <div key={orderItem._id} className="flex flex-row gap-2">
+                <div key={orderItem._id} className="flex flex-row gap-4">
                   <Image
                     src={orderItem.product.media[0]}
                     alt={orderItem.product.title}
                     width={100}
                     height={100}
+                    loading="lazy"
                     className="h-32 w-32 object-cover rounded-lg"
                   />
                   <div className="flex flex-col justify-between">

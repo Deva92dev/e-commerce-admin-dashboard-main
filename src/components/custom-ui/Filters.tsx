@@ -21,7 +21,7 @@ const Filters = ({ products }: FilterProps) => {
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const productsPerPage = 6; // change in production
+  const productsPerPage = 4; // change in production
   const start = (currentPage - 1) * productsPerPage;
   const end = start + productsPerPage;
 
@@ -43,7 +43,6 @@ const Filters = ({ products }: FilterProps) => {
       }
 
       // Apply min price filter
-
       if (debouncedMin) {
         filtered = filtered.filter(
           (product) => product.price >= parseFloat(debouncedMin)
@@ -51,7 +50,6 @@ const Filters = ({ products }: FilterProps) => {
       }
 
       // Apply max price filter
-
       if (debouncedMax) {
         filtered = filtered.filter(
           (product) => product.price <= parseFloat(debouncedMax)
@@ -63,17 +61,11 @@ const Filters = ({ products }: FilterProps) => {
       if (color) {
         filtered = filtered.filter((product) => {
           if (!Array.isArray(product.color)) {
-            // console.log(
-            //   `Skipping product ${product.title}: invalid color format.`
-            // );
             return false;
           }
           const matches = product.color.some(
             (c) => c.toLowerCase() === color.toLowerCase()
           );
-          // console.log(
-          //   `Product: ${product.title}, Matches: ${matches}, Colors: ${product.color}`
-          // );
           return matches;
         });
       }
@@ -127,7 +119,6 @@ const Filters = ({ products }: FilterProps) => {
     }
 
     params.set(name, value);
-    console.log(`Updated Params: ${params.toString()}`);
     replace(`${pathname}?${params.toString()}`);
     filterProducts(params);
   };
@@ -147,13 +138,13 @@ const Filters = ({ products }: FilterProps) => {
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
   return (
-    <>
-      <form className="bg-sky-200 rounded-md px-8 py-4 grid gap-x-4 gap-y-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-center">
+    <section>
+      <form className="bg-sky-200 rounded-md px-8 py-4 grid gap-x-4 gap-y-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-center border border-gray-200">
         {/* Season Type */}
         <div className="flex flex-col">
           <label
             htmlFor="collection"
-            className="block text-sm font-medium text-gray-700 pl-2 mb-1"
+            className="block text-sm font-medium text-productPage-secondary pl-2 mb-1"
           >
             Collection
           </label>
@@ -176,7 +167,7 @@ const Filters = ({ products }: FilterProps) => {
         <div className="flex flex-col">
           <label
             htmlFor="min"
-            className="block text-sm font-medium text-gray-700 pl-2 mb-1"
+            className="block text-sm font-medium text-productPage-secondary pl-2 mb-1"
           >
             Min Price
           </label>
@@ -184,7 +175,7 @@ const Filters = ({ products }: FilterProps) => {
             type="text"
             name="min"
             placeholder="min price"
-            className="text-xs rounded-2xl pl-2  h-8 ring-1 ring-gray-400 w-full sm:w-9/12 md:w-3/5 lg:w-48"
+            className="text-xs rounded-2xl pl-2 h-8 focus:ring-2 focus:ring-productPage-accent focus:outline-none w-full sm:w-9/12 md:w-3/5 lg:w-48"
             onChange={handleFilterChange}
             defaultValue={searchParams.get("name")?.toString()}
           />
@@ -192,7 +183,7 @@ const Filters = ({ products }: FilterProps) => {
         <div className="flex flex-col">
           <label
             htmlFor="max"
-            className="block text-sm font-medium text-gray-700 pl-2 mb-1"
+            className="block text-sm font-medium text-productPage-secondary pl-2 mb-1"
           >
             Max Price
           </label>
@@ -200,7 +191,7 @@ const Filters = ({ products }: FilterProps) => {
             type="text"
             name="max"
             placeholder="max price"
-            className="text-xs rounded-2xl h-8 pl-2 ring-1 ring-gray-400 w-full sm:w-9/12 md:w-3/5 lg:w-48"
+            className="text-xs rounded-2xl h-8 pl-2 focus:ring-2 focus:ring-productPage-accent focus:outline-none w-full sm:w-9/12 md:w-3/5 lg:w-48"
             onChange={handleFilterChange}
             defaultValue={searchParams.get("name")?.toString()}
           />
@@ -210,7 +201,7 @@ const Filters = ({ products }: FilterProps) => {
         <div className="flex flex-col">
           <label
             htmlFor="color"
-            className="block text-sm font-medium text-gray-700 pl-2 mb-1"
+            className="block text-sm font-medium text-productPage-secondary pl-2 mb-1"
           >
             Color
           </label>
@@ -233,7 +224,7 @@ const Filters = ({ products }: FilterProps) => {
         <div className="flex flex-col">
           <label
             htmlFor="sort"
-            className="block text-sm font-medium text-gray-700 pl-2 mb-1"
+            className="block text-sm font-medium text-productPage-secondary pl-2 mb-1"
           >
             Sort By
           </label>
@@ -258,14 +249,14 @@ const Filters = ({ products }: FilterProps) => {
         <button
           type="button"
           onClick={handleResetFilters}
-          className="h-12 px-3 py-2 bg-black text-white hover:bg-blue-500 hover:text-black rounded-lg w-full sm:w-9/12 md:w-3/5 lg:w-48"
+          className="h-12 px-3 py-2 bg-productPage-accent text-productDetails-primary hover:bg-yellow-400 hover:text-black rounded-lg w-full sm:w-9/12 md:w-3/5 lg:w-48"
         >
           Reset Filters
         </button>
       </form>
 
       {/* display filtered products here */}
-      <div className="grid gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 mt-20">
+      <article className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-20">
         {paginatedProducts.length > 0 ? (
           paginatedProducts.map((product) => (
             <Suspense key={product._id} fallback={<ProductCardSkeleton />}>
@@ -275,7 +266,7 @@ const Filters = ({ products }: FilterProps) => {
         ) : (
           <p>No products found matching the selected filters.</p>
         )}
-      </div>
+      </article>
 
       {/* Pagination Controls */}
       <div className="flex justify-center mt-10">
@@ -285,12 +276,12 @@ const Filters = ({ products }: FilterProps) => {
           className={`px-4 py-2 rounded-lg ${
             currentPage === 1
               ? "bg-gray-300"
-              : "bg-black hover:bg-green-800 text-white"
+              : "bg-productPage-secondary text-white hover:bg-green-800"
           }`}
         >
           Previous
         </button>
-        <span className="px-4 py-2 mx-2 bg-gray-100 rounded-lg">
+        <span className="px-4 py-2 mx-2 bg-productDetails-primary text-productPage-secondary rounded-lg">
           Page {currentPage} of {totalPages}
         </span>
         <button
@@ -301,13 +292,13 @@ const Filters = ({ products }: FilterProps) => {
           className={`px-4 py-2 rounded-lg ${
             currentPage === totalPages
               ? "bg-gray-300"
-              : "bg-black hover:bg-green-800 text-white"
+              : "bg-productPage-secondary text-white hover:bg-green-800"
           }`}
         >
           Next
         </button>
       </div>
-    </>
+    </section>
   );
 };
 

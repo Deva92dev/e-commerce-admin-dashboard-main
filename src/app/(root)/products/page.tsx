@@ -18,13 +18,15 @@ const ProductPage = async () => {
   }
 
   return (
-    <div className=" px-4 md:px-6 lg:px-12 xl:px-24 my-8">
-      <h1>Products Page</h1>
-      <Separator className="mb-4" />
+    <main className="px-4 md:px-6 lg:px-12 xl:px-24 pb-8 bg-productPage-primary">
+      <h1 className="text-4xl font-bold text-gray-800 text-center py-4 tracking-tight">
+        Products Page
+      </h1>
+      <Separator className="mb-4 h-1" />
       <Suspense fallback={<Loader />}>
         <Filters products={products} />
       </Suspense>
-    </div>
+    </main>
   );
 };
 

@@ -4,12 +4,9 @@ import ProductCard from "@/components/custom-ui/ProductCard";
 import { CollectionType, ProductType } from "@/lib/types";
 import { notFound } from "next/navigation";
 import { getCollectionDetails } from "@/lib/actions";
+import Link from "next/link";
 
-export const revalidate = 15 * 24 * 60 * 60; // Revalidate every 15 days
-
-export async function generateStaticParams() {
-  return [];
-}
+export const revalidate = 1296000;
 
 export async function generateMetadata({
   params,
@@ -44,29 +41,41 @@ const CollectionDetailsPage = async ({
   }
 
   return (
-    <div className=" px-4 md:px-6 lg:px-12 xl:px-24 my-8">
-      <h2 className="text-3xl font-bold text-center mb-4">Shop By Category</h2>
-      <div className="rounded-lg flex flex-col items-center gap-8 shadow-md">
-        <Image
-          src={collectionDetails.image}
-          alt={`Image of ${collectionDetails.title} collection`}
-          width={600} // for mobile devices
-          height={400} // for mobile devices
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          priority
-          placeholder="blur"
-          blurDataURL="data:image/jpeg;base64,[BASE64_STRING]"
-          className="w-full h-[400px] object-cover rounded-t-xl"
-        />
-        <p className="font-bold text-xl px-2 mb-2">{collectionDetails.title}</p>
-        <p className="text-lg px-2 mb-2">{collectionDetails.description}</p>
+    <section className="px-4 md:px-6 lg:px-12 xl:px-24 py-8 bg-collectionsDetails-primary">
+      <h1 className="text-4xl font-bold text-center text-collectionsDetails-secondary mb-10">
+        {collectionDetails.title} Category
+      </h1>
+      <div className="rounded-lg flex flex-col items-center gap-6 shadow-lg bg-collectionsDetails-secondary/20">
+        <div className="relative w-full aspect-[16/9] overflow-hidden rounded-t-lg">
+          <Image
+            src={collectionDetails.image}
+            alt={`Image of ${collectionDetails.title} collection`}
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
+        <h3 className="font-extrabold text-gray-700 text-2xl">
+          {collectionDetails.title}
+        </h3>
+        <p className="text-lg text-gray-900 text-center max-w-2xl">
+          {collectionDetails.description}
+        </p>
       </div>
-      <div className="mt-10 grid gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-10 grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
         {collectionDetails.products.map((product: ProductType, index) => (
           <ProductCard product={product} key={product._id || index} />
         ))}
       </div>
-    </div>
+      <div className="text-center mt-12">
+        <Link
+          href="/collections"
+          className="bg-collectionsDetails-accent text-white font-semibold px-6 py-3 rounded-lg hover:bg-collectionsDetails-accent/90"
+        >
+          Explore More Collections
+        </Link>
+      </div>
+    </section>
   );
 };
 

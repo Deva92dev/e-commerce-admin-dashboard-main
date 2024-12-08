@@ -10,7 +10,6 @@ import Product from "@/lib/models/Product";
 export const GET = async (req: NextRequest) => {
   try {
     await ConnectDB();
-
     const orders = await Order.find({})
       .populate({ path: "customer", model: Customer, select: "name email" })
       .populate({

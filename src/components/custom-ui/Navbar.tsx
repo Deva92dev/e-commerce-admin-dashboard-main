@@ -5,11 +5,9 @@ import Menu from "./Menu";
 import SearchBar from "./SearchBar";
 import NavIcons from "./NavIcons";
 
-// use html semantics, use clsx for inline links styling, only show cart item when we logged in
-
 const Navbar = () => {
   return (
-    <div className="h-20 bg-white px-4 md:px-6 lg:px-12 xl:px-24 relative max-sm:p-2">
+    <header className="h-24 px-4 md:px-6 lg:px-12 xl:px-24 relative max-sm:p-2 bg-navbar-background text-navbar-text">
       {/* smaller screens */}
       <div className="h-full flex items-center justify-between pt-4 lg:hidden">
         <Link href="/">
@@ -19,6 +17,7 @@ const Navbar = () => {
             width={100}
             height={70}
             priority
+            sizes="(max-width: 768px) 80px, 125px"
           />
         </Link>
         <SearchBar />
@@ -26,7 +25,7 @@ const Navbar = () => {
       </div>
 
       {/* bigger screens */}
-      <div className="max-lg:hidden lg:flex items-center justify-between h-full">
+      <header className="max-lg:hidden lg:flex items-center justify-between h-full ">
         {/* left */}
         <div className="flex items-center gap-10">
           <Link href="/">
@@ -37,10 +36,13 @@ const Navbar = () => {
               height={100}
             />
           </Link>
-          <ul className="flex gap-8 lg:gap-10">
+          <ul className="flex gap-8">
             {navbarLinks.map((link) => (
               <li key={link.label}>
-                <Link href={link.url} className="hover:underline ">
+                <Link
+                  href={link.url}
+                  className="hover:text-navbar-hover hover:underline transition duration-200"
+                >
                   {link.label}
                 </Link>
               </li>
@@ -52,8 +54,8 @@ const Navbar = () => {
           <SearchBar />
           <NavIcons />
         </div>
-      </div>
-    </div>
+      </header>
+    </header>
   );
 };
 

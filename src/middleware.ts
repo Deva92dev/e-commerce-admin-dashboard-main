@@ -1,7 +1,6 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-// Define public and admin routes
 const PUBLIC_ROUTES = [
   "/",
   "/products(.*)",
@@ -15,21 +14,22 @@ const PUBLIC_ROUTES = [
 
 const ADMIN_ROUTES = ["/admin(.*)"];
 
-// Helper function to match routes
 const isRouteMatch = (url: string, routes: string[]) =>
   routes.some((route) => new RegExp(`^${route}$`).test(url));
 
-// Middleware function
 export default clerkMiddleware(async (auth, req) => {
+  const isTestEnv = process.env.NODE_ENV === "test";
+
+  if (isTestEnv) {
+    return NextResponse.next(); // Bypass middleware in test environment
+  }
   const { userId } = await auth();
   const { pathname } = req.nextUrl;
 
-  // Handle public routes
   if (isRouteMatch(pathname, PUBLIC_ROUTES)) {
     return NextResponse.next();
   }
 
-  // Handle admin routes
   if (isRouteMatch(pathname, ADMIN_ROUTES)) {
     const isAdminUser = userId === process.env.ADMIN_USER_ID;
 

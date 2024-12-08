@@ -1,11 +1,11 @@
 import {
-  CreditCard,
-  HandCoins,
   LayoutDashboard,
   Package,
   Shapes,
+  Shield,
   ShoppingBag,
   Tag,
+  Truck,
   UserRound,
 } from "lucide-react";
 
@@ -49,6 +49,10 @@ export const navbarLinks = [
     label: "Products",
   },
   {
+    url: "/collections",
+    label: "Collections",
+  },
+  {
     url: "/contact",
     label: "Contact-Us",
   },
@@ -57,19 +61,19 @@ export const navbarLinks = [
 // services links
 export const servicesLinks = [
   {
-    icon: <Package />,
+    icon: <Truck />,
     label: "Free Shipping Method",
     details:
       "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi est quibusdam vitae reprehenderit harum nisi ad sit dolorem quos excepturi.",
   },
   {
-    icon: <CreditCard />,
+    icon: <Shield />,
     label: "Secure Payment System",
     details:
       "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi est quibusdam vitae reprehenderit harum nisi ad sit dolorem quos excepturi.",
   },
   {
-    icon: <HandCoins />,
+    icon: <Package />,
     label: "Cash On Delivery",
     details:
       "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi est quibusdam vitae reprehenderit harum nisi ad sit dolorem quos excepturi.",
@@ -94,7 +98,7 @@ export const footerGeneralLinks = [
     label: "Privacy-Policy",
   },
   {
-    url: "/returns",
+    url: "/shipping-policy",
     label: "Returns and Shipping Policy",
   },
 ];

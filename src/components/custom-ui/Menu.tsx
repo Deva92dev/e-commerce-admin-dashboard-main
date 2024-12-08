@@ -13,6 +13,7 @@ import { CircleUserRound, MenuIcon, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "../ui/button";
+import { navbarLinks } from "@/lib/constants";
 
 const Menu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,15 +27,24 @@ const Menu = () => {
         onClick={() => setIsOpen((prev) => !prev)}
       />
       {isOpen && (
-        <div className="absolute bg-[#4D4c4C] text-white w-full h-[calc((100vh-80px)/2)] top-20 right-0 flex flex-col items-center justify-center text-lg gap-6 z-30">
-          <Link href="/">Home</Link>
-          <Link href="/products">Products</Link>
-          <Link href="/contact">Contact-Us</Link>
+        <div className="fixed inset-x-0 bg-[#4D4c4C] text-white w-full top-24 h-[calc(50vh-6rem)] overflow-y-auto flex flex-col items-center justify-start py-8 text-lg gap-4 z-30 shadow-lg">
+          <ul className="flex flex-col gap-4">
+            {navbarLinks.map((link) => (
+              <li key={link.label}>
+                <Link
+                  href={link.url}
+                  className="hover:text-navbar-hover hover:underline transition duration-200"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
           {user ? (
-            <div className="flex flex-col items-center justify-center gap-6">
+            <div className="flex flex-col items-center justify-center gap-4">
               <Link href="/cart" className="relative">
                 <ShoppingCart />
-                <span className="absolute -top-3 right-0 text-lg text-[#FF69B4]">
+                <span className="absolute -top-3 right-0 text-lg text-gray-300">
                   {cart.cartItems.length}
                 </span>
               </Link>
@@ -42,7 +52,7 @@ const Menu = () => {
               <Link href="/orders">Orders</Link>
               <SignedIn>
                 <SignOutButton>
-                  <Link href="/" className="w-full text-left">
+                  <Link href="/" className="text-center">
                     <CircleUserRound />
                   </Link>
                 </SignOutButton>
@@ -52,12 +62,12 @@ const Menu = () => {
             <div className="flex flex-row gap-4">
               <SignedOut>
                 <SignInButton mode="modal">
-                  <Button className="w-full text-center hover:bg-blue-400">
+                  <Button className="w-full text-center bg-gray-900 text-white hover:bg-gray-700">
                     Login
                   </Button>
                 </SignInButton>
                 <SignUpButton mode="modal">
-                  <Button className="w-full text-center hover:bg-blue-400">
+                  <Button className="w-full text-center bg-gray-900 text-white hover:bg-gray-700">
                     Register
                   </Button>
                 </SignUpButton>

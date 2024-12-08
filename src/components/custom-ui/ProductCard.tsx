@@ -14,28 +14,32 @@ const ProductCard = ({ product, updateSignedInUser }: ProductCardProps) => {
     <Link
       href={`/products/${product._id}`}
       key={product._id}
-      className="bg-border rounded-lg"
+      className="bg-border aspect-[4/3] rounded-lg hover:shadow-2xl bg-landingPage-latest-link hover:transition-transform hover:scale-105"
     >
       <div className="relative h-72">
         <Image
           src={product.media[0]}
           alt={product.title}
           fill
-          loading="lazy"
+          priority
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          placeholder="blur"
-          blurDataURL="data:image/jpeg;base64,[BASE64_STRING]"
-          className="object-cover overflow-hidden rounded-t-lg"
+          className="object-cover overflow-hidden rounded-t-lg group-hover:opacity-90"
         />
       </div>
       {/* text section */}
       <div className="px-2 my-4">
-        <div className="flex flex-col justify-between my-4">
-          <h2 className="text-base font-bold">{product.title} </h2>
-          <p className="text-sm">{product.category}</p>
+        <div className="flex flex-row justify-between my-4 bg-gray-200 rounded-lg p-2">
+          <h2 className="text-base font-semibold font-serif text-productPage-secondary">
+            {product.title}
+          </h2>
+          <p className="text-sm font-medium text-gray-500">
+            {product.category}
+          </p>
         </div>
         <div className="flex flex-row justify-between">
-          <p>{formatPrice(product.price)}</p>
+          <div className="rounded-lg font-bold p-3 text-productPage-secondary w-max">
+            <p>{formatPrice(product.price)}</p>
+          </div>
           <HeartFavorite
             product={product}
             updateSignedInUser={updateSignedInUser}

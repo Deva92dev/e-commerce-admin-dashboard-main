@@ -3,10 +3,14 @@ import mongoose, { Schema } from "mongoose";
 const UserSchema = new Schema(
   {
     clerkId: { type: String, required: true, unique: true },
-    wishlist: {
-      type: Array,
-      default: [],
-    },
+    // wishlist: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Product",
+    //     default: [],
+    //   },
+    // ],
+    wishlist: { type: [String], default: [] },
     createdAt: {
       type: Date,
       default: Date.now,

@@ -6,6 +6,8 @@ import { notFound } from "next/navigation";
 
 const OrdersPage = async () => {
   const order = await getOrders();
+  // console.log(order);
+
   if (!order) {
     notFound();
   }
