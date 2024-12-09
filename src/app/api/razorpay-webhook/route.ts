@@ -6,11 +6,7 @@ import crypto from "crypto";
 import { ConnectDB } from "@/lib/mongoDB";
 import Order from "@/lib/models/Order";
 import Customer from "@/lib/models/Customer";
-
-const razorpay = new Razorpay({
-  key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
-  key_secret: process.env.RAZORPAY_KEY_SECRET!,
-});
+import { razorpay } from "@/lib/razorpay";
 
 export const POST = async (req: NextRequest) => {
   try {

@@ -1,16 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import Razorpay from "razorpay";
 import crypto from "crypto";
 import { ConnectDB } from "@/lib/mongoDB";
 import Payment from "@/lib/models/Payment";
 import Order from "@/lib/models/Order";
-
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID!,
-  key_secret: process.env.RAZORPAY_KEY_SECRET!,
-});
+import { razorpay } from "@/lib/razorpay";
 
 export const POST = async (req: NextRequest) => {
   try {
