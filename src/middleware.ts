@@ -5,11 +5,8 @@ const PUBLIC_ROUTES = [
   "/",
   "/products(.*)",
   "/contact",
-  "/api/collections(.*)",
-  "/api/products(.*)",
-  "/api/orders(.*)",
-  "/api/reviews(.*)",
-  "/api/customers",
+  "/collection(.*)",
+  "/api/(.*)",
 ];
 
 const ADMIN_ROUTES = ["/admin(.*)"];
