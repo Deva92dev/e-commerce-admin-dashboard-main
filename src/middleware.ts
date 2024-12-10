@@ -18,11 +18,6 @@ const isRouteMatch = (url: string, routes: string[]) =>
   routes.some((route) => new RegExp(`^${route}$`).test(url));
 
 export default clerkMiddleware(async (auth, req) => {
-  const isTestEnv = process.env.NODE_ENV === "test";
-
-  if (isTestEnv) {
-    return NextResponse.next(); // Bypass middleware in test environment
-  }
   const { userId } = await auth();
   const { pathname } = req.nextUrl;
 

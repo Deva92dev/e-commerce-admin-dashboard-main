@@ -11,7 +11,7 @@ import {
 import { cookies } from "next/headers";
 
 // change for production
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const getUserDetails = async () => {
   const user = await currentUser();
@@ -29,7 +29,7 @@ export const getUserDetails = async () => {
 
 export const getCollection = async () => {
   try {
-    const res = await fetch(`${baseUrl}/api/collections`, {
+    const res = await fetch(`${baseUrl}/collections`, {
       method: "GET",
       next: {
         revalidate: 1296000, // 15 days
@@ -45,7 +45,7 @@ export const getCollection = async () => {
 
 export const getCollectionDetails = async (collectionId: string) => {
   try {
-    const res = await fetch(`${baseUrl}/api/collections/${collectionId}`, {
+    const res = await fetch(`${baseUrl}/collections/${collectionId}`, {
       method: "GET",
     });
     if (!res.ok) {
@@ -61,7 +61,7 @@ export const getCollectionDetails = async (collectionId: string) => {
 
 export const getCustomerOrders = async (customerId: string) => {
   try {
-    const res = await fetch(`${baseUrl}/api/orders/customers/${customerId}`, {
+    const res = await fetch(`${baseUrl}/orders/customers/${customerId}`, {
       method: "GET",
     });
     const orders = await res.json();
@@ -74,7 +74,7 @@ export const getCustomerOrders = async (customerId: string) => {
 
 export const getOrderDetails = async (orderId: string) => {
   try {
-    const res = await fetch(`${baseUrl}/api/orders/${orderId}`, {
+    const res = await fetch(`${baseUrl}/orders/${orderId}`, {
       method: "GET",
     });
     const order: OrderDetailsType = await res.json();
@@ -87,7 +87,7 @@ export const getOrderDetails = async (orderId: string) => {
 
 export const getOrders = async () => {
   try {
-    const res = await fetch(`${baseUrl}/api/orders`, {
+    const res = await fetch(`${baseUrl}/orders`, {
       method: "GET",
     });
 
@@ -102,7 +102,7 @@ export const getOrders = async () => {
 // changed order of params
 export const getPaidCustomers = async (productId: string, userId: string) => {
   try {
-    const res = await fetch(`${baseUrl}/api/customers/${userId}/${productId}`, {
+    const res = await fetch(`${baseUrl}/customers/${userId}/${productId}`, {
       method: "GET",
       credentials: "include",
     });
@@ -116,7 +116,7 @@ export const getPaidCustomers = async (productId: string, userId: string) => {
 
 export const getProductDetails = async (productId: string) => {
   try {
-    const res = await fetch(`${baseUrl}/api/products/${productId}`, {
+    const res = await fetch(`${baseUrl}/products/${productId}`, {
       method: "GET",
     });
     if (!res.ok) {
@@ -132,7 +132,7 @@ export const getProductDetails = async (productId: string) => {
 
 export const getProducts = async () => {
   try {
-    const res = await fetch(`${baseUrl}/api/products`, {
+    const res = await fetch(`${baseUrl}/products`, {
       method: "GET",
       next: {
         revalidate: 1296000, // 15 days
@@ -148,7 +148,7 @@ export const getProducts = async () => {
 
 export const getRelatedProducts = async (productId: string) => {
   try {
-    const res = await fetch(`${baseUrl}/api/products/${productId}/related`, {
+    const res = await fetch(`${baseUrl}/products/${productId}/related`, {
       method: "GET",
     });
     const relatedProducts = await res.json();
@@ -161,7 +161,7 @@ export const getRelatedProducts = async (productId: string) => {
 
 export const getTotalSale = async () => {
   try {
-    const res = await fetch(`${baseUrl}/api/sales`, {
+    const res = await fetch(`${baseUrl}/sales`, {
       method: "GET",
     });
     const sales = await res.json();
@@ -174,7 +174,7 @@ export const getTotalSale = async () => {
 
 export const getTotalPaidCustomers = async () => {
   try {
-    const res = await fetch(`${baseUrl}/api/customers`, {
+    const res = await fetch(`${baseUrl}/customers`, {
       method: "GET",
     });
     const totalPaidCustomers = await res.json();
@@ -187,7 +187,7 @@ export const getTotalPaidCustomers = async () => {
 
 export async function updateOrderStatus(orderId: string, status: string) {
   try {
-    const response = await fetch(`${baseUrl}/api/orders/${orderId}`, {
+    const response = await fetch(`${baseUrl}/orders/${orderId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -209,7 +209,7 @@ export async function updateOrderStatus(orderId: string, status: string) {
 export const getWishlistProducts = async () => {
   const cookieHeader = await cookies().toString();
   try {
-    const res = await fetch(`${baseUrl}/api/users/wishlist`, {
+    const res = await fetch(`${baseUrl}/users/wishlist`, {
       method: "GET",
       cache: "no-cache",
       credentials: "include",
