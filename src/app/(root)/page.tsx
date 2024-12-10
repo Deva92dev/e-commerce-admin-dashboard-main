@@ -6,7 +6,7 @@ import { getCollection, getProducts } from "@/lib/actions";
 import { ProductType } from "@/lib/types";
 import { notFound } from "next/navigation";
 
-// before deploying check for razorpay deployment videos
+// before deploying check for razorpay deployment videos, add sitemap and robot.ts code
 export default async function Home() {
   const latestProducts: ProductType[] = await getProducts();
   const collection = await getCollection();

@@ -24,6 +24,7 @@ const Menu = () => {
     <div>
       <MenuIcon
         className="cursor-pointer"
+        style={{ minWidth: "30px", height: "30px" }}
         onClick={() => setIsOpen((prev) => !prev)}
       />
       {isOpen && (

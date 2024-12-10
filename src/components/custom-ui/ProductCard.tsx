@@ -29,12 +29,10 @@ const ProductCard = ({ product, updateSignedInUser }: ProductCardProps) => {
       {/* text section */}
       <div className="px-2 my-4">
         <div className="flex flex-row justify-between my-4 bg-gray-200 rounded-lg p-2">
-          <h2 className="text-base font-semibold font-serif text-productPage-secondary">
+          <h2 className="text-base font-semibold font-serif text-gray-800">
             {product.title}
           </h2>
-          <p className="text-sm font-medium text-gray-500">
-            {product.category}
-          </p>
+          <p className="text-sm font-medium text-black">{product.category}</p>
         </div>
         <div className="flex flex-row justify-between">
           <div className="rounded-lg font-bold p-3 text-productPage-secondary w-max">

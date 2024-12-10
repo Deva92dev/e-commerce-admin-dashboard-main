@@ -401,9 +401,9 @@ const Reviews = ({
                     loading="lazy"
                   />
                   <div className="flex flex-col gap-1">
-                    <h3 className="text-productDetails-accent font-bold">
+                    <p className="text-black font-bold">
                       {review.customer.name || userName}
-                    </h3>
+                    </p>
                     <StarRating initialRating={review.rating} readonly={true} />
                   </div>
                 </div>
@@ -425,9 +425,9 @@ const Reviews = ({
                     loading="lazy"
                   />
                   <div className="flex flex-col gap-1">
-                    <h3 className="text-productDetails-accent font-bold">
+                    <p className="text-black font-bold">
                       {review.customer.name}
-                    </h3>
+                    </p>
                     <StarRating initialRating={review.rating} readonly={true} />
                   </div>
                 </div>

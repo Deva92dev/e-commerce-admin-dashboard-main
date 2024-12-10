@@ -7,10 +7,10 @@ import NavIcons from "./NavIcons";
 
 const Navbar = () => {
   return (
-    <header className="h-24 px-4 md:px-6 lg:px-12 xl:px-24 relative max-sm:p-2 bg-navbar-background text-navbar-text">
+    <header className="h-24 px-4 md:px-6 lg:px-12 xl:px-24 relative bg-navbar-background text-navbar-text">
       {/* smaller screens */}
       <div className="h-full flex items-center justify-between pt-4 lg:hidden">
-        <Link href="/">
+        <Link href="/" className="flex-shrink-0">
           <Image
             src="/logo.svg"
             alt="logo of website"
@@ -20,15 +20,17 @@ const Navbar = () => {
             sizes="(max-width: 768px) 80px, 125px"
           />
         </Link>
-        <SearchBar />
+        <div className="px-4">
+          <SearchBar />
+        </div>
         <Menu />
       </div>
 
       {/* bigger screens */}
-      <header className="max-lg:hidden lg:flex items-center justify-between h-full ">
+      <div className="hidden lg:flex items-center justify-between h-full">
         {/* left */}
         <div className="flex items-center gap-10">
-          <Link href="/">
+          <Link href="/" className="flex-shrink-0">
             <Image
               src="/logo.svg"
               alt="logo of website"
@@ -54,7 +56,7 @@ const Navbar = () => {
           <SearchBar />
           <NavIcons />
         </div>
-      </header>
+      </div>
     </header>
   );
 };

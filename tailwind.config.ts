@@ -60,7 +60,7 @@ const config = {
         },
         productPage: {
           primary: "#D4C5B3",
-          secondary: "#4A5D4C",
+          secondary: "#3F4C3D",
           accent: "#FFB5B5",
           background: "#FFFFFF",
           text: "#2C1810",

@@ -32,26 +32,39 @@ const NavIcons = () => {
       {user ? (
         <div className="flex items-center justify-center gap-4 min-h-12">
           <Link
-            href={"/wishlist"}
-            className="text-white hover:text-gray-300 hover:underline"
+            href="/wishlist"
+            className={`text-white hover:text-gray-300 hover:underline ${
+              user ? "visible" : "invisible"
+            }`}
           >
             Wishlist
           </Link>
           <Link
             href="/orders"
-            className="text-white hover:text-gray-300 hover:underline"
+            className={`text-white hover:text-gray-300 hover:underline ${
+              user ? "visible" : "invisible"
+            }`}
           >
             Orders
           </Link>
           <Link href="/cart" className="relative text-white">
             <ShoppingCart />
-            <span className="absolute -top-3 right-0 text-lg text-gray-300">
-              {cart.cartItems.length}
+            <span
+              className="absolute -top-3 right-0 text-lg text-gray-300"
+              style={{
+                minWidth: "1.5rem",
+                display: "inline-block",
+                textAlign: "center",
+              }}
+            >
+              {cart.cartItems.length > 0 ? cart.cartItems.length : ""}
             </span>
           </Link>
           <SignedIn>
             <Button
-              className="w-full text-center bg-gray-900 text-white hover:bg-gray-700"
+              className={`w-full text-center bg-gray-900 text-white hover:bg-gray-700 ${
+                user ? "visible" : "hidden"
+              }`}
               onClick={handleLogout}
             >
               Logout
@@ -62,14 +75,18 @@ const NavIcons = () => {
         <div className="flex flex-row gap-4">
           <SignedOut>
             <Button
-              className="w-full text-center bg-gray-900 text-white hover:bg-gray-700"
+              className={`w-full text-center bg-gray-900 text-white hover:bg-gray-700 ${
+                !user ? "visible" : "hidden"
+              }`}
               onClick={handleLogin}
             >
               Login
             </Button>
 
             <Button
-              className="w-full text-center bg-gray-900 text-white hover:bg-gray-700"
+              className={`w-full text-center bg-gray-900 text-white hover:bg-gray-700 ${
+                !user ? "visible" : "hidden"
+              }`}
               onClick={handleRegister}
             >
               Register

@@ -249,7 +249,7 @@ const Filters = ({ products }: FilterProps) => {
         <button
           type="button"
           onClick={handleResetFilters}
-          className="h-12 px-3 py-2 bg-productPage-accent text-productDetails-primary hover:bg-yellow-400 hover:text-black rounded-lg w-full sm:w-9/12 md:w-3/5 lg:w-48"
+          className="h-12 px-3 py-2 bg-productPage-accent text-black hover:bg-yellow-500 rounded-lg w-full sm:w-9/12 md:w-3/5 lg:w-48"
         >
           Reset Filters
         </button>

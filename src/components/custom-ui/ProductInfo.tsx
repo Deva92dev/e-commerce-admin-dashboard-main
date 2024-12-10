@@ -69,13 +69,11 @@ const ProductInfo = ({ product, orderId }: ProductInfoProps) => {
       <p className="font-bold border text-lg bg-gray-100 w-max p-2 rounded-lg">
         {formatPrice(price)}
       </p>
-      <p className="text-privacyPolicy-secondary font-black">
+      <p className="text-black font-black">
         {stockQuantity > 0 ? "In Stock" : "Out of Stock"}
       </p>
       <div className="flex flex-col text-gray-500">
-        <span className="text-privacyPolicy-secondary font-semibold">
-          Description :
-        </span>
+        <span className="text-black font-semibold">Description :</span>
         {description}
       </div>
 
@@ -138,7 +136,7 @@ const ProductInfo = ({ product, orderId }: ProductInfoProps) => {
 
       {user ? (
         <button
-          className="bg-productDetails-accent text-gray-700  hover:bg-productDetails-accent/60 text-base font-bold rounded-lg px-2 py-3"
+          className="bg-black text-white  hover:bg-black/60 text-base font-bold rounded-lg px-2 py-3"
           onClick={() => {
             cart.addItem({
               item: product,
