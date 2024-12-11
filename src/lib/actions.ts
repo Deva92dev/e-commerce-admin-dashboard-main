@@ -1,5 +1,4 @@
 "use server";
-import "whatwg-fetch";
 
 import { currentUser } from "@clerk/nextjs/server";
 import {
@@ -12,7 +11,6 @@ import { cookies } from "next/headers";
 
 // change for production
 const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-console.log("NEXT_PUBLIC_API_URL:", process.env.NEXT_PUBLIC_API_URL);
 
 export const getUserDetails = async () => {
   const user = await currentUser();
