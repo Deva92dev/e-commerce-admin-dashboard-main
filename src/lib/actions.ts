@@ -11,7 +11,7 @@ import {
 import { cookies } from "next/headers";
 
 // change for production
-const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 export const getUserDetails = async () => {
   const user = await currentUser();
