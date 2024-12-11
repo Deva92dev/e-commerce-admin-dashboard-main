@@ -16,15 +16,18 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: "/Hero.jpg", // Match the static image path
+        source: "/Hero.jpg",
         headers: [
           {
             key: "Cache-Control",
-            value: "public, max-age=31536000, immutable", // Cache for 1 year
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },
     ];
+  },
+  experimental: {
+    appDir: true,
   },
 };
 
