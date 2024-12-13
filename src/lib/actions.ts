@@ -1,5 +1,3 @@
-"use server";
-
 import { currentUser } from "@clerk/nextjs/server";
 import {
   CollectionType,
@@ -8,9 +6,10 @@ import {
   ProductType,
 } from "./types";
 import { cookies } from "next/headers";
+import { env } from "../../env";
 
 // change for production
-const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+const baseUrl = env.NEXT_PUBLIC_BASE_URL;
 
 export const getUserDetails = async () => {
   const user = await currentUser();

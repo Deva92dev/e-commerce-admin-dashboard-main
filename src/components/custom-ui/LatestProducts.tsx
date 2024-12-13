@@ -2,12 +2,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatPrice } from "@/lib/formatPrice";
 import { ProductType } from "@/lib/types";
+import { getProducts } from "@/lib/actions";
+import { notFound } from "next/navigation";
 
-interface LatestProductsProps {
-  latestProducts: ProductType[];
-}
+const LatestProducts = async () => {
+  const latestProducts: ProductType[] = await getProducts();
 
-const LatestProducts = async ({ latestProducts }: LatestProductsProps) => {
+  if (!latestProducts) {
+    notFound();
+  }
+
   return (
     <section className="px-4 py-8 md:px-6 lg:px-12 xl:px-24 bg-sand-light rounded-lg">
       <h2 className="text-3xl font-bold text-olive-dark text-center mb-8 tracking-tight">

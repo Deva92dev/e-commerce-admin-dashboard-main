@@ -1,14 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CollectionType } from "@/lib/types";
-
-interface CategoryProps {
-  collection: CollectionType[];
-}
+import { getCollection } from "@/lib/actions";
+import { notFound } from "next/navigation";
 
 // put animation and improve coloring, infinite scroll with load more component
 
-const Category = ({ collection }: CategoryProps) => {
+const Category = async () => {
+  const collection = await getCollection();
+
+  if (!collection) {
+    notFound();
+  }
+
   return (
     <section className="px-4 md:px-6 lg:px-12 xl:px-24 bg-sand-light py-12 rounded-lg">
       <h2 className="text-3xl font-bold text-olive-dark text-center mb-8 tracking-tight">

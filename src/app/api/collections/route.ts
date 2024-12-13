@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
-
 import Collection from "@/lib/models/Collections";
 import { ConnectDB } from "@/lib/mongoDB";
 
@@ -60,5 +59,3 @@ export const GET = async (request: NextRequest) => {
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 };
-
-export const dynamic = "force-dynamic";

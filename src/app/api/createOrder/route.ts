@@ -7,10 +7,11 @@ import { NextRequest, NextResponse } from "next/server";
 import Razorpay from "razorpay";
 import Customer from "@/lib/models/Customer";
 import Product from "@/lib/models/Product";
+import { env } from "../../../../env";
 
 const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID!,
-  key_secret: process.env.RAZORPAY_KEY_SECRET!,
+  key_id: env.RAZORPAY_KEY_ID,
+  key_secret: env.RAZORPAY_KEY_SECRET,
 });
 
 export const POST = async (req: NextRequest) => {

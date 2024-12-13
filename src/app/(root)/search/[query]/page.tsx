@@ -3,13 +3,17 @@ import ProductCardSkeleton from "@/components/custom-ui/ProductCardSkeleton";
 import { ProductType } from "@/lib/types";
 import { Metadata } from "next";
 import { Suspense } from "react";
+import { env } from "../../../../../env";
 
 export const metadata: Metadata = {
   title: "Search - Own Closet",
 };
 
+// change for production
+const baseUrl = env.NEXT_PUBLIC_BASE_URL;
+
 const SearchPage = async ({ params }: { params: { query: string } }) => {
-  const res = await fetch(`http://localhost:3000/api/search/${params.query}`);
+  const res = await fetch(`${baseUrl}/api/search/${params.query}`);
   const searchedProducts = await res.json();
 
   const decodedQuery = decodeURIComponent(params.query);
@@ -36,4 +40,4 @@ const SearchPage = async ({ params }: { params: { query: string } }) => {
 
 export default SearchPage;
 
-export const dynamic = "force-dynamic";;
+export const dynamic = "force-dynamic";
