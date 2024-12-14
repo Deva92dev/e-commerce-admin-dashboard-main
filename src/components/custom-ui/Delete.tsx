@@ -42,7 +42,7 @@ const Delete = ({ id, item }: DeleteProps) => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("An error ocurred while deleting. Please try again");
+      toast.error("An error occurred while deleting. Please try again");
     }
   };
 

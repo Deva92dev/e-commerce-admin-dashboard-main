@@ -8,12 +8,14 @@ cloudinary.config({
 });
 
 export async function POST(request: Request) {
+  console.log("Cloudinary API Key:", env.CLOUDINARY_API_KEY);
+  console.log("Cloudinary API Secret:", env.CLOUDINARY_API_SECRET);
   const body = await request.json();
   const { paramsToSign } = body;
 
   const signature = cloudinary.utils.api_sign_request(
     paramsToSign,
-    process.env.CLOUDINARY_API_SECRET as string
+    env.CLOUDINARY_API_SECRET
   );
 
   return Response.json({ signature });

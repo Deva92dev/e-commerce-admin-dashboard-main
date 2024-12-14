@@ -1,7 +1,8 @@
 /* eslint-disable no-var */
 import mongoose, { Mongoose } from "mongoose";
+import { env } from "../../env";
 
-const MONGO_URI = process.env.MONGO_URI!;
+const MONGO_URI = env.MONGO_URI;
 
 if (!MONGO_URI) {
   console.error("MONGO_URI is missing in the environment.");

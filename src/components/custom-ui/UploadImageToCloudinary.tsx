@@ -5,6 +5,7 @@ import { useState } from "react";
 import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
 import Loader from "./Loader";
+import { env } from "../../../env";
 
 interface UploadImagesProps {
   multiple?: boolean;
@@ -48,7 +49,7 @@ const UploadImages: React.FC<UploadImagesProps> = ({
     <div>
       <CldUploadWidget
         signatureEndpoint="/api/sign-cloudinary-params"
-        uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+        uploadPreset={env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
         onSuccess={handleSuccess}
         options={{ multiple }}
         onOpen={() => setLoading(true)}

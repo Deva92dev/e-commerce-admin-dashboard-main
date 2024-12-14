@@ -1,5 +1,6 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { env } from "../env";
 
 const PUBLIC_ROUTES = [
   "/",
@@ -23,7 +24,7 @@ export default clerkMiddleware(async (auth, req) => {
   }
 
   if (isRouteMatch(pathname, ADMIN_ROUTES)) {
-    const isAdminUser = userId === process.env.ADMIN_USER_ID;
+    const isAdminUser = userId === env.ADMIN_USER_ID;
 
     if (!isAdminUser) {
       return NextResponse.redirect(new URL("/", req.url));
