@@ -10,7 +10,14 @@ const TopNavBar = () => {
     <div className="lg:hidden w-full h-20 px-4 flex flex-row justify-between items-center bg-[#75a7dd] relative">
       <Link href="/">
         <div className="w-24 h-20 flex items-center justify-center">
-          <Image src="/logo.svg" alt="logo of store" width={100} height={70} />
+          <Image
+            src="/logo.svg"
+            alt="logo of website"
+            width={100}
+            height={70}
+            priority
+            sizes="(max-width: 768px) 80px, 125px"
+          />
         </div>
       </Link>
       <div className="flex flex-row gap-6 max-md:hidden">

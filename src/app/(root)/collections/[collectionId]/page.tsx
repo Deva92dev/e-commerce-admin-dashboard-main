@@ -6,8 +6,6 @@ import { notFound } from "next/navigation";
 import { getCollectionDetails } from "@/lib/actions";
 import Link from "next/link";
 
-export const revalidate = 1296000;
-
 export async function generateMetadata({
   params,
 }: {
@@ -78,5 +76,7 @@ const CollectionDetailsPage = async ({
     </section>
   );
 };
+
+export const dynamic = "force-dynamic";
 
 export default CollectionDetailsPage;

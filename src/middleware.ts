@@ -24,7 +24,7 @@ export default clerkMiddleware(async (auth, req) => {
   }
 
   if (isRouteMatch(pathname, ADMIN_ROUTES)) {
-    const isAdminUser = userId === env.ADMIN_USER_ID;
+    const isAdminUser = userId === env.ADMIN_USER_ID!;
 
     if (!isAdminUser) {
       return NextResponse.redirect(new URL("/", req.url));

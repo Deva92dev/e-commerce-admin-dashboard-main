@@ -11,10 +11,11 @@ const Sidebar = () => {
       <Link href="/" className="w-24 h-20">
         <Image
           src="/logo.svg"
-          priority
-          alt="logo of store"
+          alt="logo of website"
           width={100}
           height={70}
+          priority
+          sizes="(max-width: 768px) 80px, 125px"
         />
       </Link>
       <div className="flex flex-col gap-20 pt-24">

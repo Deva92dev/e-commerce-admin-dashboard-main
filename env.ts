@@ -12,10 +12,10 @@ export const env = createEnv({
     RAZORPAY_KEY_ID: z.string().min(1, "RazorPay Key id is required"),
     RAZORPAY_KEY_SECRET: z.string().min(1, "RazorPat Key secret is required"),
     CLOUDINARY_API_SECRET: z.string(),
-    CLOUDINARY_API_KEY: z.string(),
     NODE_ENV: z.string(),
   },
   client: {
+    NEXT_PUBLIC_CLOUDINARY_API_KEY: z.string(),
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
     NEXT_PUBLIC_BASE_URL: z.string(),
     NEXT_PUBLIC_RAZORPAY_KEY_ID: z
@@ -42,7 +42,7 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME:
       process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-    CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
+    NEXT_PUBLIC_CLOUDINARY_API_KEY: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
     NEXT_PUBLIC_RAZORPAY_KEY_ID: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
     NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET:
       process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
